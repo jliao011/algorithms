@@ -32,6 +32,9 @@ public class QuickSort {
 	}
 
 	private static int partition(int[] list, int first, int last) {
+		// swap mid and last for better runtime
+		int mid = first + (last - first) / 2;
+		swap(list, mid, last);
 		int pivot = list[last];
 		int wall = first - 1;
 		for (int i = first; i < last; i++) {

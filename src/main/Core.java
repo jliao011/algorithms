@@ -1,13 +1,17 @@
 package main;
 
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
 import algorithms.*;
 
 public class Core {
 	public static void main(String[] args) {
-		int[] list = { 2, 3, 2, 5, 6, 1, -2, 3, 14, 12 };
+		int[] list = { 2, 5, 1, 8, 9, 6, 3, 7, 4 };
 		MergeSort.test(list);
 		QuickSort.test(list);
 		SortColors.test("abcbcbacbacbaabccb");
+		FindKthLargest.test(list, 4);
 	}
 
 	public static void print(int[] list) {
