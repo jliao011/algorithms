@@ -11,7 +11,11 @@ public class Core {
 		MergeSort.test(list);
 		QuickSort.test(list);
 		SortColors.test("abcbcbacbacbaabccb");
-		FindKthLargest.test(list, 4);
+		FindKthLargest.test(list, 1);
+
+		PriorityQueue<Map.Entry<Integer, Integer>> queue = new PriorityQueue<>(k, new Comparator<>() {
+
+		});
 	}
 
 	public static void print(int[] list) {
