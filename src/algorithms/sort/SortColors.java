@@ -1,4 +1,4 @@
-package algorithms;
+package algorithms.sort;
 
 public class SortColors {
 	public static String sortColors(String s) {
@@ -23,9 +23,4 @@ public class SortColors {
 		return c;
 	}
 
-	public static void test(String s) {
-		System.out.println("Color sort:");
-		System.out.println(s);
-		System.out.println(sortColors(s));
-	}
 }

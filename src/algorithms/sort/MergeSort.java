@@ -1,6 +1,6 @@
-package algorithms;
+package algorithms.sort;
 
-import main.Core;
+import core.Core;
 
 public class MergeSort {
 	public static void mergeSort(int[] list) {
@@ -8,14 +8,6 @@ public class MergeSort {
 			return;
 		mergeSort(list, 0, list.length - 1);
 
-	}
-
-	public static void test(int[] list) {
-		System.out.println("Merge sort:");
-		int[] result = list.clone();
-		mergeSort(result);
-		Core.print(list);
-		Core.print(result);
 	}
 
 	private static void mergeSort(int[] list, int left, int right) {

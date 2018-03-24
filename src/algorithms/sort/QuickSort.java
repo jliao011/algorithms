@@ -1,20 +1,12 @@
-package algorithms;
+package algorithms.sort;
 
-import main.Core;
+import core.Core;
 
 public class QuickSort {
 	public static void quickSort(int[] list) {
 		if (list.length <= 1)
 			return;
 		quickSort(list, 0, list.length - 1);
-	}
-
-	public static void test(int[] list) {
-		System.out.println("Quick sort:");
-		int[] result = list.clone();
-		quickSort(result);
-		Core.print(list);
-		Core.print(result);
 	}
 
 	private static void quickSort(int[] list, int first, int last) {

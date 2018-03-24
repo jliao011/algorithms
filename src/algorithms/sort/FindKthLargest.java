@@ -1,19 +1,15 @@
-package algorithms;
+package algorithms.sort;
 
-import main.Core;
+import core.Core;
 
 public class FindKthLargest {
-	public static void test(int[] nums, int k) {
-		int[] clone = nums.clone();
-		int result = findKthLargest(clone, k);
-		System.out.println("Find " + k + "th Largest is " + result + " in:");
-		Core.print(nums);
-	}
+	// time O(n) space O(1)
 
 	public static int findKthLargest(int[] nums, int k) {
 		// use quick sort partition
+		// could write recursive
 		int left = 0, right = nums.length - 1;
-		k--;
+		k--;// 0 based
 		while (left < right) {
 			int pivot = partition(nums, left, right);
 			if (k == pivot)
