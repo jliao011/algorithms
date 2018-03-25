@@ -5,13 +5,13 @@ import java.util.*;
 public class Tool {
 	public static void print(int[] list) {
 		for (int i : list)
-			System.out.print(i + " ");
+			System.out.print(i + ", ");
 		System.out.println();
 	}
 
 	public static void print(List<Integer> list) {
 		for (int i : list)
-			System.out.print(i + " ");
+			System.out.print(i + ", ");
 		System.out.println();
 	}
 
@@ -19,7 +19,7 @@ public class Tool {
 		System.out.println("From top to bottom:");
 		List<Integer> list = new ArrayList<>(stack);
 		for (int i = list.size() - 1; i >= 0; i--)
-			System.out.print(list.get(i) + " ");
+			System.out.print(list.get(i) + ", ");
 		System.out.println();
 	}
 

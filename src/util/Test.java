@@ -3,6 +3,7 @@ package util;
 import java.util.*;
 
 import algorithms.binarySearch.*;
+import algorithms.slidingWindow.MaxSlidingWindow;
 import algorithms.sort.*;
 import algorithms.stack.*;
 
@@ -63,5 +64,12 @@ public class Test {
 		Tool.print(heights);
 		int result = LargestHistogramRectangle.largestHigtogramRectangle(heights);
 		System.out.println(result);
+	}
+
+	public static void maxSlidingWindow(int[] nums, int k) {
+		System.out.println("Max Sliding Window Size " + k);
+		Tool.print(nums);
+		int[] result = MaxSlidingWindow.maxSlidingWindow(nums, k);
+		Tool.print(result);
 	}
 }
