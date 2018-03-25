@@ -14,8 +14,8 @@ public class Core {
 		Test.searchRange(new int[] { 5, 7, 7, 8, 8, 10 }, 5);
 		Test.findClosestElements(new int[] { 1, 2, 3, 4, 5 }, 4, 3);
 
-		Test.stackSort(Tool.getStack(10));
-
+		Test.stackSort(Tool.getIntStack(10, 10));
+		Test.largestHistogramRectangle(Tool.getIntArray(3, 4));
 	}
 
 }

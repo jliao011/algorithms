@@ -23,12 +23,20 @@ public class Tool {
 		System.out.println();
 	}
 
-	public static Stack<Integer> getStack(int size) {
+	public static Stack<Integer> getIntStack(int size, int range) {
 		Stack<Integer> stack = new Stack<>();
 		Random random = new Random();
 		for (int i = 0; i < size; i++) {
-			stack.push(random.nextInt(10));
+			stack.push(random.nextInt(range));
 		}
 		return stack;
+	}
+
+	public static int[] getIntArray(int size, int range) {
+		int[] array = new int[size];
+		Random random = new Random();
+		for (int i = 0; i < size; i++)
+			array[i] = random.nextInt(range);
+		return array;
 	}
 }

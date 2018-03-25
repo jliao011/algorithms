@@ -4,6 +4,7 @@ import java.util.*;
 
 import algorithms.binarySearch.*;
 import algorithms.sort.*;
+import algorithms.stack.*;
 
 public class Test {
 
@@ -55,5 +56,12 @@ public class Test {
 		Tool.print(stack);
 		StackSort.stackSort(stack);
 		Tool.print(stack);
+	}
+
+	public static void largestHistogramRectangle(int[] heights) {
+		System.out.println("Largest Rectangle");
+		Tool.print(heights);
+		int result = LargestHistogramRectangle.largestHigtogramRectangle(heights);
+		System.out.println(result);
 	}
 }
