@@ -1,6 +1,6 @@
 package util;
 
-import java.util.List;
+import java.util.*;
 
 public class Tool {
 	public static void print(int[] list) {
@@ -15,4 +15,20 @@ public class Tool {
 		System.out.println();
 	}
 
+	public static void print(Stack<Integer> stack) {
+		System.out.println("From top to bottom:");
+		List<Integer> list = new ArrayList<>(stack);
+		for (int i = list.size() - 1; i >= 0; i--)
+			System.out.print(list.get(i) + " ");
+		System.out.println();
+	}
+
+	public static Stack<Integer> getStack(int size) {
+		Stack<Integer> stack = new Stack<>();
+		Random random = new Random();
+		for (int i = 0; i < size; i++) {
+			stack.push(random.nextInt(10));
+		}
+		return stack;
+	}
 }

@@ -1,6 +1,6 @@
 package util;
 
-import java.util.List;
+import java.util.*;
 
 import algorithms.binarySearch.*;
 import algorithms.sort.*;
@@ -48,5 +48,12 @@ public class Test {
 		Tool.print(arr);
 		List<Integer> result = FindKClosestElements.findKClosestElements(arr, k, x);
 		Tool.print(result);
+	}
+
+	public static void stackSort(Stack<Integer> stack) {
+		System.out.println("Stack sort:");
+		Tool.print(stack);
+		StackSort.stackSort(stack);
+		Tool.print(stack);
 	}
 }
