@@ -1,5 +1,7 @@
 package core;
 
+import java.util.*;
+
 import util.*;
 
 public class Core {
@@ -11,6 +13,8 @@ public class Core {
 		Test.findKthLargest(list, 1);
 		Test.searchRange(new int[] { 5, 7, 7, 8, 8, 10 }, 5);
 		Test.findClosestElements(new int[] { 1, 2, 3, 4, 5 }, 4, 3);
+		Stack<Integer> a = new Stack<>();
+
 	}
 
 }
