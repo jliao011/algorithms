@@ -3,6 +3,8 @@ package algorithms.stack;
 import java.util.Stack;
 
 public class LargestHistogramRectangle {
+	// Maintains an increasing stack
+	// encounter smaller height, check all previous areas.
 	public static int largestHigtogramRectangle(int[] heights) {
 		Stack<Integer> idxStack = new Stack<>();
 		int maxArea = 0;
