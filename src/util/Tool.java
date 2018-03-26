@@ -9,6 +9,15 @@ public class Tool {
 		System.out.println();
 	}
 
+	public static void print(int[][] matrix) {
+		for (int[] row : matrix) {
+			for (int num : row) {
+				System.out.print((String.valueOf(num).length() == 1 ? " " : "") + num + ",");
+			}
+			System.out.println();
+		}
+	}
+
 	public static void print(List<Integer> list) {
 		for (int i : list)
 			System.out.print(i + ", ");
@@ -38,5 +47,14 @@ public class Tool {
 		for (int i = 0; i < size; i++)
 			array[i] = random.nextInt(range);
 		return array;
+	}
+
+	public static int[][] getIntMatrix(int row, int col, int range) {
+		int[][] matrix = new int[row][col];
+		Random random = new Random();
+		for (int i = 0; i < row; i++)
+			for (int j = 0; j < col; j++)
+				matrix[i][j] = random.nextInt(range);
+		return matrix;
 	}
 }

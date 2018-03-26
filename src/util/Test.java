@@ -3,6 +3,7 @@ package util;
 import java.util.*;
 
 import algorithms.binarySearch.*;
+import algorithms.heap.KthSmallestInSortedMatrix;
 import algorithms.slidingWindow.LengthOfLongestSubstringTwoDistinct;
 import algorithms.slidingWindow.MaxSlidingWindow;
 import algorithms.slidingWindow.MinWindowSubstring;
@@ -86,5 +87,14 @@ public class Test {
 		System.out.println("Minimum Window Substring: " + s + ", " + t);
 		String result = MinWindowSubstring.minWindowSubstring(s, t);
 		System.out.println(result);
+	}
+
+	public static void kthSmallestSortedMatrix(int k) {
+		System.out.println(k + " th smallest element in sorted matrix:");
+		int[][] matrix = new int[][] { { 1, 5, 9 }, { 10, 11, 13 }, { 12, 13, 15 } };
+		Tool.print(matrix);
+		int result = KthSmallestInSortedMatrix.kthSmallestInSortedMatrix(matrix, k);
+		System.out.println(result);
+
 	}
 }

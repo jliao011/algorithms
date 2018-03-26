@@ -17,7 +17,8 @@ public class Core {
 //		Test.largestHistogramRectangle(Tool.getIntArray(3, 4));
 //		Test.maxSlidingWindow(Tool.getIntArray(10, 20), 3);
 //		Test.lengthOfLongestSubStringTwoDistinct("ecebaaabbbabaabbccabbccabc");
-		Test.minWindowSubstring("ADOBECODEBANC", "ABC");
+//		Test.minWindowSubstring("ADOBECODEBANC", "ABC");
+		Test.kthSmallestSortedMatrix(1);
 	}
 
 }
