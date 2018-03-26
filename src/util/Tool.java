@@ -49,6 +49,15 @@ public class Tool {
 		return array;
 	}
 
+	public static int[] getSortedIntArray(int size, int start, int diff) {
+		int[] array = new int[size];
+		array[0] = start;
+		Random random = new Random();
+		for (int i = 1; i < size; i++)
+			array[i] = array[i - 1] + random.nextInt(diff);
+		return array;
+	}
+
 	public static int[][] getIntMatrix(int row, int col, int range) {
 		int[][] matrix = new int[row][col];
 		Random random = new Random();
