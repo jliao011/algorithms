@@ -3,7 +3,6 @@ package util;
 import java.util.*;
 
 import algorithms.binarySearch.*;
-import algorithms.heap.KthSmallestInSortedMatrix;
 import algorithms.slidingWindow.LengthOfLongestSubstringTwoDistinct;
 import algorithms.slidingWindow.MaxSlidingWindow;
 import algorithms.slidingWindow.MinWindowSubstring;
@@ -94,7 +93,8 @@ public class Test {
 		int[][] matrix = new int[][] { { 1, 5, 9 }, { 10, 11, 13 }, { 12, 13, 15 } };
 		Tool.print(matrix);
 		int result = KthSmallestInSortedMatrix.kthSmallestInSortedMatrix(matrix, k);
-		System.out.println(result);
+		int result2 = KthSmallestInSortedMatrix.kthSmallest(matrix, k);
+		System.out.println("Heap: " + result + " BinarySearch: " + result2);
 
 	}
 }

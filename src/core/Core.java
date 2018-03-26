@@ -18,7 +18,7 @@ public class Core {
 //		Test.maxSlidingWindow(Tool.getIntArray(10, 20), 3);
 //		Test.lengthOfLongestSubStringTwoDistinct("ecebaaabbbabaabbccabbccabc");
 //		Test.minWindowSubstring("ADOBECODEBANC", "ABC");
-		Test.kthSmallestSortedMatrix(1);
+		Test.kthSmallestSortedMatrix(4);
 	}
 
 }
