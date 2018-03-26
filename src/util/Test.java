@@ -3,7 +3,9 @@ package util;
 import java.util.*;
 
 import algorithms.binarySearch.*;
+import algorithms.slidingWindow.LengthOfLongestSubstringTwoDistinct;
 import algorithms.slidingWindow.MaxSlidingWindow;
+import algorithms.slidingWindow.MinWindowSubstring;
 import algorithms.sort.*;
 import algorithms.stack.*;
 
@@ -71,5 +73,18 @@ public class Test {
 		Tool.print(nums);
 		int[] result = MaxSlidingWindow.maxSlidingWindow(nums, k);
 		Tool.print(result);
+	}
+
+	public static void lengthOfLongestSubStringTwoDistinct(String s) {
+		System.out.println("Length of longest substring two distince");
+		System.out.println(s);
+		int result = LengthOfLongestSubstringTwoDistinct.lengthOfLongestSubStringTwoDistinct(s);
+		System.out.println("result is " + result);
+	}
+
+	public static void minWindowSubstring(String s, String t) {
+		System.out.println("Minimum Window Substring: " + s + ", " + t);
+		String result = MinWindowSubstring.minWindowSubstring(s, t);
+		System.out.println(result);
 	}
 }

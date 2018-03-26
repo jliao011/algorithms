@@ -15,7 +15,9 @@ public class Core {
 //		Test.findClosestElements(new int[] { 1, 2, 3, 4, 5 }, 4, 3);
 //		Test.stackSort(Tool.getIntStack(10, 10));
 //		Test.largestHistogramRectangle(Tool.getIntArray(3, 4));
-		Test.maxSlidingWindow(Tool.getIntArray(10, 20), 3);
+//		Test.maxSlidingWindow(Tool.getIntArray(10, 20), 3);
+//		Test.lengthOfLongestSubStringTwoDistinct("ecebaaabbbabaabbccabbccabc");
+		Test.minWindowSubstring("ADOBECODEBANC", "ABC");
 	}
 
 }
