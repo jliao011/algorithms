@@ -49,12 +49,12 @@ public class Tool {
 		return array;
 	}
 
-	public static int[] getSortedIntArray(int size, int start, int diff) {
+	public static int[] getSortedIntArray(int size, int start, int diff, boolean duplicate) {
 		int[] array = new int[size];
 		array[0] = start;
 		Random random = new Random();
 		for (int i = 1; i < size; i++)
-			array[i] = array[i - 1] + random.nextInt(diff);
+			array[i] = array[i - 1] + random.nextInt(diff) + (duplicate ? 0 : 1);
 		return array;
 	}
 

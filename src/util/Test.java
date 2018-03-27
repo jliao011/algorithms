@@ -95,6 +95,19 @@ public class Test {
 		int result = KthSmallestInSortedMatrix.kthSmallestInSortedMatrix(matrix, k);
 		int result2 = KthSmallestInSortedMatrix.kthSmallest(matrix, k);
 		System.out.println("Heap: " + result + " BinarySearch: " + result2);
+	}
 
+	public static void kthSmallestPrimeFraction(int[] A, int K) {
+		System.out.println("Kth Smallest Prime Fraction");
+		Tool.print(A);
+		int[] result = KthSmallestPrimeFraction.kthSmallestPrimeFraction(A, K);
+		Tool.print(result);
+	}
+
+	public static void KthSmallestPairDistance(int[] nums, int k) {
+		System.out.println(k + " th smallest pair distance");
+		Tool.print(nums);
+		int result = KthSmallestPairDistance.kthSmallestPairDistance(nums, k);
+		System.out.println("result: " + result);
 	}
 }
