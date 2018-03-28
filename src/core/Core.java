@@ -21,6 +21,7 @@ public class Core {
 //		Test.kthSmallestSortedMatrix(4);
 //		Test.kthSmallestPrimeFraction(new int[] { 1, 2, 3, 5 }, 3);
 //		Test.KthSmallestPairDistance(Tool.getSortedIntArray(5, 0, 5, false), 2);
+		System.out.println(4 & ~(4 - 1));
 	}
 
 }
