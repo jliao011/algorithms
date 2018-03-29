@@ -2,6 +2,7 @@ package util;
 
 import java.util.*;
 
+import algorithms.array.MergeKSortedArray;
 import algorithms.binarySearch.*;
 import algorithms.linkedList.MergeKSortedLists;
 import algorithms.slidingWindow.LengthOfLongestSubstringTwoDistinct;
@@ -124,6 +125,16 @@ public class Test {
 		ListNode head2 = MergeKSortedLists.mergeKSortedListII(lists2);
 		Tool.print(head1);
 		Tool.print(head2);
+	}
 
+	public static void mergeKSortedArray(int k) {
+		System.out.println("Merge K sorted arrays");
+		List<int[]> list = new ArrayList<>();
+		for (int i = 0; i < k; i++) {
+			int[] a = Tool.getIntArray(5, i, 10, true);
+			list.add(a);
+		}
+		int[] result = MergeKSortedArray.mergeKSortedArray(list);
+		Tool.print(result);
 	}
 }

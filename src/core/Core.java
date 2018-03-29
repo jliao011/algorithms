@@ -23,5 +23,6 @@ public class Core {
 //		Test.kthSmallestPrimeFraction(new int[] { 1, 2, 3, 5 }, 3);
 //		Test.KthSmallestPairDistance(Tool.getSortedIntArray(5, 0, 5, false), 2);
 		Test.mergeKSortedLists(5);
+		Test.mergeKSortedArray(3);
 	}
 }
