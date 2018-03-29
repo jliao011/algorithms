@@ -7,7 +7,6 @@ import util.*;
 
 public class Core {
 	public static void main(String[] args) {
-		int[] list = { 2, 5, 1, 8, 9, 6, 3, 7, 4 };
 //		Test.mergeSort(Tool.getIntArray(10, 100));
 //		Test.quickSort(list);
 //		Test.sortColors("abcbcbacbacbaabccb");
