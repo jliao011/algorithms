@@ -3,11 +3,13 @@ package util;
 import java.util.*;
 
 import algorithms.binarySearch.*;
+import algorithms.linkedList.MergeKSortedLists;
 import algorithms.slidingWindow.LengthOfLongestSubstringTwoDistinct;
 import algorithms.slidingWindow.MaxSlidingWindow;
 import algorithms.slidingWindow.MinWindowSubstring;
 import algorithms.sort.*;
 import algorithms.stack.*;
+import util.structure.ListNode;
 
 public class Test {
 
@@ -109,5 +111,19 @@ public class Test {
 		Tool.print(nums);
 		int result = KthSmallestPairDistance.kthSmallestPairDistance(nums, k);
 		System.out.println("result: " + result);
+	}
+
+	public static void mergeKSortedLists(int k) {
+		System.out.println("Merge K sorted Lists");
+		ListNode[] lists = new ListNode[k], lists2 = new ListNode[k];
+		for (int i = 0; i < lists.length; i++) {
+			lists[i] = ListNode.getList(3, i, 100, true);
+			lists2[i] = lists[i].copy();
+		}
+		ListNode head1 = MergeKSortedLists.mergeKSortedListsI(lists);
+		ListNode head2 = MergeKSortedLists.mergeKSortedListII(lists2);
+		Tool.print(head1);
+		Tool.print(head2);
+
 	}
 }

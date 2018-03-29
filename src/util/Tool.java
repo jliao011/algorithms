@@ -2,6 +2,8 @@ package util;
 
 import java.util.*;
 
+import util.structure.ListNode;
+
 public class Tool {
 	public static void print(int[] list) {
 		for (int i : list)
@@ -49,7 +51,7 @@ public class Tool {
 		return array;
 	}
 
-	public static int[] getSortedIntArray(int size, int start, int diff, boolean duplicate) {
+	public static int[] getIntArray(int size, int start, int diff, boolean duplicate) {
 		int[] array = new int[size];
 		array[0] = start;
 		Random random = new Random();
@@ -65,5 +67,15 @@ public class Tool {
 			for (int j = 0; j < col; j++)
 				matrix[i][j] = random.nextInt(range);
 		return matrix;
+	}
+
+	public static void print(ListNode head) {
+		while (head != null) {
+			System.out.print(head.val);
+			if (head.next != null)
+				System.out.print(" -> ");
+			head = head.next;
+		}
+		System.out.println();
 	}
 }

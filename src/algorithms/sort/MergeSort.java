@@ -1,7 +1,5 @@
 package algorithms.sort;
 
-import core.Core;
-
 public class MergeSort {
 	public static void mergeSort(int[] list) {
 		if (list.length <= 1)
