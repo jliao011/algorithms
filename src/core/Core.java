@@ -24,13 +24,10 @@ public class Core {
 //		Test.KthSmallestPairDistance(Tool.getSortedIntArray(5, 0, 5, false), 2);
 //		Test.mergeKSortedLists(5);
 //		Test.mergeKSortedArray(3);
-		Integer[] a = new Integer[10];
-		for (int i = 0; i < 10; i++)
-			a[i] = i;
-		test(a);
+
 	}
 
-	public static <T> void test(T[] array) {
+	public static <K> void test(K[] array) {
 		String name = array.getClass().getName();
 		System.out.println(name);
 
