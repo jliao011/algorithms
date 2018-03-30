@@ -1,4 +1,4 @@
-package algorithms.sort;
+package algorithms.intervals;
 
 import java.util.*;
 import util.structure.Interval;
