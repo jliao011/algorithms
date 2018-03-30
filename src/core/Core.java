@@ -1,5 +1,6 @@
 package core;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import util.structure.*;
 
@@ -21,7 +22,17 @@ public class Core {
 //		Test.kthSmallestSortedMatrix(4);
 //		Test.kthSmallestPrimeFraction(new int[] { 1, 2, 3, 5 }, 3);
 //		Test.KthSmallestPairDistance(Tool.getSortedIntArray(5, 0, 5, false), 2);
-		Test.mergeKSortedLists(5);
-		Test.mergeKSortedArray(3);
+//		Test.mergeKSortedLists(5);
+//		Test.mergeKSortedArray(3);
+		Integer[] a = new Integer[10];
+		for (int i = 0; i < 10; i++)
+			a[i] = i;
+		test(a);
+	}
+
+	public static <T> void test(T[] array) {
+		String name = array.getClass().getName();
+		System.out.println(name);
+
 	}
 }
