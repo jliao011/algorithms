@@ -30,7 +30,7 @@ public class LengthOfLongestSubstringDistinct {
 		int[] bin = new int[26];	// case only alphabet, save index
 		for (int head = 0, tail = 0; tail < s.length(); tail++) {
 			head = Math.max(head, bin[s.charAt(tail) - 'a']);	// maybe 0
-			bin[s.charAt(tail) - 'a'] = tail - 1;
+			bin[s.charAt(tail) - 'a'] = tail + 1; // save same's next
 			maxLen = Math.max(maxLen, tail - head + 1);
 		}
 		return maxLen;

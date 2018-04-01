@@ -24,7 +24,9 @@ public class Core {
 //		Test.KthSmallestPairDistance(Tool.getSortedIntArray(5, 0, 5, false), 2);
 //		Test.mergeKSortedLists(5);
 //		Test.mergeKSortedArray(3);
-
+		String a = "";
+		a += 'a';
+		System.out.println(-123 % 10);
 	}
 
 	public static <K> void test(K[] array) {
