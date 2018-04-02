@@ -2,6 +2,8 @@ package core;
 
 import java.lang.reflect.Array;
 import java.util.*;
+
+import algorithms.dp.KnapSack;
 import util.structure.*;
 
 import util.*;
@@ -25,8 +27,7 @@ public class Core {
 //		Test.mergeKSortedLists(5);
 //		Test.mergeKSortedArray(3);
 		String a = "";
-		a += 'a';
-		System.out.println(-123 % 10);
+		System.out.println(KnapSack.backPack2D(11, new int[] { 2, 3, 5, 7 }));
 	}
 
 	public static <K> void test(K[] array) {
