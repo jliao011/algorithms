@@ -4,6 +4,8 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 import algorithms.dp.KnapSack;
+import algorithms.personal.ReverseWordsInString;
+import algorithms.personal.StringDeduplication;
 import util.structure.*;
 
 import util.*;
@@ -26,13 +28,33 @@ public class Core {
 //		Test.KthSmallestPairDistance(Tool.getSortedIntArray(5, 0, 5, false), 2);
 //		Test.mergeKSortedLists(5);
 //		Test.mergeKSortedArray(3);
-		String a = "";
-		System.out.println(KnapSack.backPack2D(11, new int[] { 2, 3, 5, 7 }));
-	}
-
-	public static <K> void test(K[] array) {
-		String name = array.getClass().getName();
-		System.out.println(name);
 
 	}
+
+	public List<String> wordBreak(String s, Set<String> wordDict) {
+		return word_Break(s, wordDict, 0);
+	}
+
+	HashMap<Integer, List<String>> map = new HashMap<>();
+
+	public List<String> word_Break(String s, Set<String> wordDict, int start) {
+		if (map.containsKey(start)) {
+			return map.get(start);
+		}
+		LinkedList<String> res = new LinkedList<>();
+		if (start == s.length()) {
+			res.add("");
+		}
+		for (int end = start + 1; end <= s.length(); end++) {
+			if (wordDict.contains(s.substring(start, end))) {
+				List<String> list = word_Break(s, wordDict, end);
+				for (String l : list) {
+					res.add(s.substring(start, end) + (l.equals("") ? "" : " ") + l);
+				}
+			}
+		}
+		map.put(start, res);
+		return res;
+	}
+
 }
