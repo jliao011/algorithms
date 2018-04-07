@@ -15,6 +15,7 @@ public class Core {
 	private final static Logger logger = LoggerFactory.getLogger(Core.class);
 
 	public static void main(String[] args) {
+		logger.debug("Core main function runs");
 //		Test.mergeSort(Tool.getIntArray(10, 100));
 //		Test.quickSort(list);
 //		Test.sortColors("abcbcbacbacbaabccb");
@@ -31,8 +32,27 @@ public class Core {
 //		Test.KthSmallestPairDistance(Tool.getSortedIntArray(5, 0, 5, false), 2);
 //		Test.mergeKSortedLists(10);
 //		Test.mergeKSortedArray(3);
-		logger.debug("Core main function runs");
+		arrayNesting(new int[] { 5, 4, 0, 3, 1, 6, 2 });
+	}
 
+	public static int arrayNesting(int[] nums) {
+		int result = 0;
+		// only visit once, could modify nums
+		for (int i = 0; i < nums.length; i++) {
+			if (nums[i] == -1)
+				continue;
+			int count = 0, curr = i;
+			while (nums[curr] != -1) {
+				int idx = nums[curr];
+				logger.debug("i={},idx={},curr={}", i, idx, curr);
+				nums[curr] = -1;
+				curr = idx;
+				count++;
+			}
+			result = Math.max(result, count);
+			count = 0;
+		}
+		return result;
 	}
 
 }

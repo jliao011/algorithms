@@ -1,6 +1,6 @@
 # algorithms
 
-Java data structure and algorithm implementations, including ToolBox for debugging and testing convinience.
+Java data structure and algorithm implementations, including Logger and ToolBox for debugging and testing convinience.
 
 ------
 
