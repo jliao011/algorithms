@@ -11,8 +11,11 @@ import algorithms.slidingWindow.MinWindowSubstring;
 import algorithms.sort.*;
 import algorithms.stack.*;
 import util.structure.ListNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Test {
+	private static final Logger logger = LoggerFactory.getLogger(Test.class);
 
 	public static void findKthLargest(int[] nums, int k) {
 		int[] clone = nums.clone();
@@ -121,6 +124,7 @@ public class Test {
 			lists[i] = ListNode.getList(3, i, 100, true);
 			lists2[i] = lists[i].copy();
 		}
+		logger.info("Sorted list length:{}", lists.length);
 		ListNode head1 = MergeKSortedLists.mergeKSortedListsI(lists);
 		ListNode head2 = MergeKSortedLists.mergeKSortedListII(lists2);
 		Tool.print(head1);

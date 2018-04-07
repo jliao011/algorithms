@@ -4,8 +4,12 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 
 import util.structure.ListNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MergeKSortedLists {
+	private final static Logger logger = LoggerFactory.getLogger(MergeKSortedLists.class);
+
 	public static ListNode mergeKSortedListsI(ListNode[] lists) {
 		if (lists == null || lists.length == 0)
 			return null;
@@ -13,6 +17,7 @@ public class MergeKSortedLists {
 	}
 
 	private static ListNode partition(ListNode[] lists, int left, int right) {
+		logger.debug("left pointer {}, right pointer {}", left, right);
 		if (left > right)
 			return null;
 		if (left == right)
