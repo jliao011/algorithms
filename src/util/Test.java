@@ -4,12 +4,14 @@ import java.util.*;
 
 import algorithms.array.MergeKSortedArray;
 import algorithms.binarySearch.*;
+import algorithms.dp.RegularExpressionMatch;
 import algorithms.linkedList.MergeKSortedLists;
 import algorithms.slidingWindow.LengthOfLongestSubstringTwoDistinct;
 import algorithms.slidingWindow.MaxSlidingWindow;
 import algorithms.slidingWindow.MinWindowSubstring;
 import algorithms.sort.*;
 import algorithms.stack.*;
+import algorithms.tree.InorderPreorderGetPostorder;
 import util.structure.ListNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -140,5 +142,14 @@ public class Test {
 		}
 		int[] result = MergeKSortedArray.mergeKSortedArray(list);
 		Tool.print(result);
+	}
+
+	public static void regularExpressionMatch(String s, String p) {
+		logger.info("start test regular expression match");
+		logger.info("result is {}", RegularExpressionMatch.regularExpressionMatch(s, p));
+	}
+
+	public static void inorderPreorderGetPostorder(int[] inorder, int[] preorder) {
+		InorderPreorderGetPostorder.getPostorder(preorder, inorder);
 	}
 }

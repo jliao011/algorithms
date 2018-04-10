@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 import algorithms.dp.KnapSack;
+import algorithms.personal.Other;
 import algorithms.personal.ReverseWordsInString;
 import algorithms.personal.StringDeduplication;
 import util.structure.*;
@@ -15,7 +16,12 @@ public class Core {
 	private final static Logger logger = LoggerFactory.getLogger(Core.class);
 
 	public static void main(String[] args) {
-		logger.debug("Core main function runs");
+		logger.info("Core main function runs");
+		tests();
+	}
+
+	private static void tests() {
+		logger.info("test function runs");
 //		Test.mergeSort(Tool.getIntArray(10, 100));
 //		Test.quickSort(list);
 //		Test.sortColors("abcbcbacbacbaabccb");
@@ -32,27 +38,10 @@ public class Core {
 //		Test.KthSmallestPairDistance(Tool.getSortedIntArray(5, 0, 5, false), 2);
 //		Test.mergeKSortedLists(10);
 //		Test.mergeKSortedArray(3);
-		arrayNesting(new int[] { 5, 4, 0, 3, 1, 6, 2 });
-	}
+//		arrayNesting(new int[] { 5, 4, 0, 3, 1, 6, 2 });
+//		Test.regularExpressionMatch("xabyc", "xa*b.*");
+//		Test.inorderPreorderGetPostorder(new int[] { 1, 2, 3, 4, 5, 6, 7 }, new int[] { 4, 2, 1, 3, 6, 5, 7 });
 
-	public static int arrayNesting(int[] nums) {
-		int result = 0;
-		// only visit once, could modify nums
-		for (int i = 0; i < nums.length; i++) {
-			if (nums[i] == -1)
-				continue;
-			int count = 0, curr = i;
-			while (nums[curr] != -1) {
-				int idx = nums[curr];
-				logger.debug("i={},idx={},curr={}", i, idx, curr);
-				nums[curr] = -1;
-				curr = idx;
-				count++;
-			}
-			result = Math.max(result, count);
-			count = 0;
-		}
-		return result;
 	}
 
 }
