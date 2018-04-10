@@ -4,3 +4,40 @@ Java data structure and algorithm implementations, including Logger and ToolBox 
 
 ------
 
+[Go to Real Cool Heading section](#real-cool-heading)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Real Cool Heading
