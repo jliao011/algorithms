@@ -1,4 +1,4 @@
-[TOC]
+[50 ~ 100]: #50.-Pow(x,n)-(medium)
 
 
 
@@ -1233,7 +1233,7 @@ Given a 2d grid map of `'1'`s (land) and `'0'`s (water), count the number of isl
 00011
 ```
 
-**dfs approach**
+**dfs approach time O(mn), space O(mn) worst** 
 
 ```java
     public int numIslands(char[][] grid) {
@@ -1264,6 +1264,51 @@ Given a 2d grid map of `'1'`s (land) and `'0'`s (water), count the number of isl
         dfs(grid,i+1,j);
         dfs(grid,i,j-1);
         dfs(grid,i,j+1);
+    }
+```
+
+**BFS approach, time O(mn), space O(min(m,n))**
+
+```java
+    public int numIslands(char[][] grid) {
+        // bfs approach
+        if(grid==null || grid.length==0 || grid[0].length==0)
+            return 0;
+        int count = 0;
+        int m = grid.length, n = grid[0].length;
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                // only care about 1
+                if(grid[i][j] == '1'){
+                    count ++;
+                    grid[i][j] = '0';
+                    int[] curr = {i,j};
+                    Queue<int[]> queue = new LinkedList<>();
+                    queue.offer(curr);
+                    while(!queue.isEmpty()){
+                        curr = queue.poll();
+                        int row = curr[0], col = curr[1];
+                        if(row-1>=0 && grid[row-1][col] == '1'){
+                            queue.offer(new int[]{row-1,col});
+                            grid[row-1][col] = '0';
+                        }
+                        if(row+1<m && grid[row+1][col] == '1'){
+                            queue.offer(new int[]{row+1,col});
+                            grid[row+1][col] = '0';
+                        }
+                        if(col-1>=0 && grid[row][col-1] == '1'){
+                            queue.offer(new int[]{row,col-1});
+                            grid[row][col-1] = '0';
+                        }
+                        if(col+1<n && grid[row][col+1] == '1'){
+                            queue.offer(new int[]{row,col+1});
+                            grid[row][col+1] = '0';
+                        }                        
+                    }
+                }
+            }
+        }
+        return count;
     }
 ```
 
