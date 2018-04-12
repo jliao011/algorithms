@@ -1,4 +1,4 @@
-[50 ~ 100](#50-powxn-medium)
+#### [50 ~ 100](#50-powxn-medium)
 
 
 
