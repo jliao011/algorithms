@@ -18,6 +18,11 @@ public class Core {
 	public static void main(String[] args) {
 		logger.info("Core main function runs");
 		tests();
+		Set<Character> rowSet = new HashSet<>();
+		Map<String, List<String>> map = new HashMap<>();
+		Integer a = -2147483648;
+		logger.debug("{}", -1 * a);
+
 	}
 
 	private static void tests() {
