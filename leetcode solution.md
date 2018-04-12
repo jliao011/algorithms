@@ -1,4 +1,8 @@
-#### 32.-Longest-Valid-Parentheses (hard)
+[TOC]
+
+
+
+#### 32. Longest Valid Parentheses (hard)
 
 Given a string containing just the characters `'('` and `')'`, find the length of the longest valid (well-formed) parentheses substring.
 
@@ -811,10 +815,376 @@ There exist two distinct solutions to the 4-queens puzzle:
 ```
 
 ```java
-
+    public List<List<String>> solveNQueens(int n) {
+        List<List<String>> result = new ArrayList<>();
+        // construct blank board
+        char[][] board = new char[n][n];
+        for(int i=0;i<n;i++)
+            for(int j=0;j<n;j++)
+                board[i][j] = '.';
+        // backtracking
+        backtrack(result,board,0);
+        return result; 
+    }
+    
+    private void backtrack(List<List<String>> result,char[][] board,int col){
+        if(col == board.length){
+            result.add(build(board));
+            return;
+        }
+        // for each row, try each col, only one loop need
+        for(int row=0;row<board.length;row++){
+            if(isValid(board,row,col)){
+                board[row][col] = 'Q';
+                backtrack(result,board,col+1);
+                board[row][col] = '.';
+            }
+        }
+    }
+    
+    private boolean isValid(char[][] board,int row,int col){
+        int n = board.length;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                if(board[i][j] == '.')
+                    continue;
+                // in same row, same col, same diagnal
+                if(i==row  || j==col || Math.abs(i-row)==Math.abs(j-col))
+                    return false;
+            }
+        }
+        return true;
+    }
+    
+    private List<String> build(char[][] board){
+        // build board to a result instance
+        int n = board.length;
+        List<String> rows = new ArrayList<>();
+        for(int i=0;i<n;i++)
+            rows.add(String.valueOf(board[i]));
+        return rows;
+    }
 ```
 
 ---
+
+#### 52. N-Queens II (hard)
+
+Now, instead outputting board configurations, return the total number of distinct solutions.
+
+```java
+    public int totalNQueens(int n) {
+        // only check valid cases
+        // use 4 boolean arrays to mark:
+        //     1. traverse each row, no check same row
+        //     2. same col occupied
+        //     3. 45 diagnal occupied: y=x+b => b=y-x constant
+        //     4. 135 diagnal occupied y=-x+b => b=y+x constant
+        //         board has 2n-1 diagnals each case
+        int[] result = new int[1];
+        boolean[] cols = new boolean[n];         // for col
+        boolean[] diag1 = new boolean[2*n-1];   // for y-x
+        boolean[] diag2 = new boolean[2*n-1];   // for y+x
+        backtrack(result,0,cols,diag1,diag2);
+        return result[0];        
+    }
+    private void backtrack(int[] result,int col,boolean[] cols,boolean[] diag1,boolean[] diag2){
+        // traverse along rows, 
+        int n = cols.length;
+        if(col == n){
+            result[0]++;
+            return;
+        }
+        for(int row=0;row<n;row++){
+            int idx1 = col - row + n - 1; // n-1 offset
+            int idx2 = col + row;
+            if(cols[row] || diag1[idx1] || diag2[idx2])
+                continue;
+            cols[row] = true;
+            diag1[idx1] = true;
+            diag2[idx2] = true;
+            backtrack(result,col+1,cols,diag1,diag2);
+            cols[row] = false;
+            diag1[idx1] = false;
+            diag2[idx2] = false;
+        }
+    }
+```
+
+---
+
+#### 53. Maximum subarray (easy)
+
+Find the contiguous subarray within an array (containing at least one number) which has the largest sum.
+
+For example, given the array `[-2,1,-3,4,-1,2,1,-5,4]`,
+the contiguous subarray `[4,-1,2,1]` has the largest sum = `6`.
+
+```java
+    public int maxSubArray(int[] nums) {
+        // save currSum and maxSum 
+        int currSum = 0, maxSum = nums[0];
+        for(int num: nums){
+            currSum = Math.max(num,num+currSum);
+            maxSum = Math.max(maxSum,currSum);
+        }
+        return maxSum;
+    }
+```
+
+---
+
+#### 54. Spiral Matrix (medium)
+
+Given a matrix of *m* x *n* elements (*m* rows, *n* columns), return all elements of the matrix in spiral order.
+
+For example,
+Given the following matrix:
+
+```
+[
+ [ 1, 2, 3 ],
+ [ 4, 5, 6 ],
+ [ 7, 8, 9 ]
+]
+```
+
+You should return `[1,2,3,6,9,8,7,4,5]`.
+
+![SpiralMatrix](https://leetcode.com/problems/spiral-matrix/Figures/54_spiralmatrix.png)
+
+```java
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> result = new ArrayList<>();
+        if(matrix.length==0 || matrix[0].length==0)
+            return result;
+        int r1 = 0, r2 = matrix.length-1;
+        int c1 = 0, c2 = matrix[0].length-1;
+        while(r1<=r2 && c1<=c2){
+            // add all r1
+            for(int c=c1;c<=c2;c++)
+                result.add(matrix[r1][c]);
+            // add all c2
+            for(int r=r1+1;r<=r2;r++)
+                result.add(matrix[r][c2]);
+            // if las row or col break
+            if(r1==r2 || c1==c2)
+                break;
+            // add all r2
+            for(int c=c2-1;c>=c1+1;c--)
+                result.add(matrix[r2][c]);
+            // add all c1
+            for(int r=r2;r>=r1+1;r--)
+                result.add(matrix[r][c1]);
+            // update
+            r1++;r2--;c1++;c2--;
+        }
+        return result;
+    }
+```
+
+---
+
+#### 55. Jump Game (medium)
+
+Given an array of non-negative integers, you are initially positioned at the first index of the array.
+
+Each element in the array represents your maximum jump length at that position. 
+
+Determine if you are able to reach the last index.
+
+For example:
+A = `[2,3,1,1,4]`, return `true`.
+
+A = `[3,2,1,0,4]`, return `false`.
+
+**end to head, check whether it's a good point**
+
+```java
+    public boolean canJump(int[] nums) {
+        if(nums.length == 0)
+            return false;
+        // last index that is a good point
+        int last = nums.length - 1;
+        for(int i=last-1;i>=0;i--){
+            if(i + nums[i] >= last)
+                last = i;
+        }
+        return last == 0;
+    }
+```
+
+---
+
+#### 56. Merge Intervals (medium)
+
+Given a collection of intervals, merge all overlapping intervals.
+
+For example,
+Given `[1,3],[2,6],[8,10],[15,18]`,
+return `[1,6],[8,10],[15,18]`.
+
+```java
+    /**
+     * Definition for an interval.
+     * public class Interval {
+     *     int start;
+     *     int end;
+     *     Interval() { start = 0; end = 0; }
+     *     Interval(int s, int e) { start = s; end = e; }
+     * }
+     */
+    public List<Interval> merge(List<Interval> intervals) {
+        List<Interval> result = new ArrayList<>();
+        if(intervals==null || intervals.size()==0)
+            return result;
+        Collections.sort(intervals,(o1,o2)->o1.start-o2.start);
+        Interval prev = null;
+        for(Interval curr : intervals){
+            // result blank or no overlapping
+            if(prev==null || curr.start>prev.end){
+                prev = curr;
+                result.add(prev);
+            }else   // have overlapping
+                prev.end = Math.max(prev.end,curr.end);
+        }
+        return result;
+    }
+```
+
+---
+
+#### 57. Insert Interval (hard)
+
+Given a set of *non-overlapping* intervals, insert a new interval into the intervals (merge if necessary).
+
+You may assume that the intervals were initially sorted according to their start times.
+
+**Example 1:**
+Given intervals `[1,3],[6,9]`, insert and merge `[2,5]` in as `[1,5],[6,9]`.
+
+**Example 2:**
+Given `[1,2],[3,5],[6,7],[8,10],[12,16]`, insert and merge `[4,9]` in as `[1,2],[3,10],[12,16]`.
+
+This is because the new interval `[4,9]` overlaps with `[3,5],[6,7],[8,10]`.
+
+```java
+    /**
+     * Definition for an interval.
+     * public class Interval {
+     *     int start;
+     *     int end;
+     *     Interval() { start = 0; end = 0; }
+     *     Interval(int s, int e) { start = s; end = e; }
+     * }
+     */
+    public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
+        List<Interval> result = new ArrayList<>();
+        // assume already sorted
+        // Collections.sort(intervals,(o1,o2)->o1.start-o2.start);
+        int idx = 0;
+        // add intervals before newIntervals first, no overlapping
+        while(idx<intervals.size() && intervals.get(idx).end<newInterval.start){
+            result.add(intervals.get(idx));
+            idx++;
+        }
+        // merge overlapping intervals, curr.end >= new.start
+        while(idx<intervals.size() && intervals.get(idx).start<=newInterval.end){
+            Interval curr = intervals.get(idx);
+            newInterval.start = Math.min(newInterval.start,curr.start);
+            newInterval.end = Math.max(newInterval.end,curr.end);
+            idx++;
+        }
+        result.add(newInterval);
+        // add intervals after newIntervals, no overlapping
+        while(idx<intervals.size()){
+            result.add(intervals.get(idx));
+            idx++;
+        }
+        return result;
+    }
+```
+
+---
+
+#### 58. Length of Last Word (easy)
+
+Given a string *s* consists of upper/lower-case alphabets and empty space characters `' '`, return the length of last word in the string.
+
+If the last word does not exist, return 0.
+
+**Note:** A word is defined as a character sequence consists of non-space characters only.
+
+**Example:**
+
+```
+Input: "Hello World"
+Output: 5
+```
+
+```java
+    public int lengthOfLastWord(String s) {
+        int tail = s.length()-1;
+        while(tail>=0 && s.charAt(tail)==' ')
+            tail--;
+        int head = tail;
+        while(head>=0 && s.charAt(head)!=' ')
+            head--;
+        return tail - head;
+    }
+```
+
+---
+
+#### 59. Spiral Matrix II (medium)
+
+Given an integer *n*, generate a square matrix filled with elements from 1 to *n*2 in spiral order.
+
+For example,
+Given *n* = `3`,
+
+You should return the following matrix:
+
+```
+[
+ [ 1, 2, 3 ],
+ [ 8, 9, 4 ],
+ [ 7, 6, 5 ]
+]
+```
+
+```java
+    public int[][] generateMatrix(int n) {
+        int[][] result = new int[n][n];
+        int num = 1;
+        int r1 = 0, r2 = n - 1;
+        int c1 = 0, c2 = n - 1;
+        while(r1<=r2 && c1<=c2){
+            for(int c=c1;c<=c2;c++)
+                result[r1][c] = num++;
+            for(int r=r1+1;r<=r2;r++)
+                result[r][c2] = num++;
+            if(r1==r2 || c1==c2)
+                break;
+            for(int c=c2-1;c>=c1+1;c--)
+                result[r2][c] = num++;
+            for(int r=r2;r>=r1+1;r--)
+                result[r][c1] = num++;
+            r1++;r2--;c1++;c2--;
+        }
+        return result;
+    }
+```
+
+---
+
+
+
+
+
+
+
+----
 
 #### 69. int sqrt(x) (easy)
 
@@ -836,6 +1206,64 @@ There exist two distinct solutions to the 4-queens puzzle:
                 left = mid + 1;
             }
         }
+    }
+```
+
+---
+
+#### 200. Number of Islands (medium)
+
+Given a 2d grid map of `'1'`s (land) and `'0'`s (water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+
+**\*Example 1:* Answer: 1**
+
+```
+11110
+11010
+11000
+00000
+```
+
+**\*Example 2:*** Answer: 3
+
+```
+11000
+11000
+00100
+00011
+```
+
+**dfs approach**
+
+```java
+    public int numIslands(char[][] grid) {
+        if(grid==null || grid.length==0 || grid[0].length==0)
+            return 0;
+        // dfs approach, connected component idea
+        int m = grid.length, n = grid[0].length;
+        int count = 0;
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                // if 1, count ++, traverse neighbor
+                if(grid[i][j] == '1'){
+                    count ++;
+                    dfs(grid,i,j);
+                }
+            }
+        }
+        return count;
+    }
+    private void dfs(char[][] grid,int i,int j){
+        int m = grid.length, n = grid[0].length;
+        // if out of bound, or not island
+        if(i<0 || i>=m || j<0 || j>=n || grid[i][j]=='0')
+            return;
+        grid[i][j] = '0';   // set visited
+        // visit up down left right
+        dfs(grid,i-1,j);
+        dfs(grid,i+1,j);
+        dfs(grid,i,j-1);
+        dfs(grid,i,j+1);
     }
 ```
 
