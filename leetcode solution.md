@@ -1,5 +1,11 @@
 #### [50 ~ 100](#50-powxn-medium)
 
+|                                                              |
+| ------------------------------------------------------------ |
+|                                                              |
+|                                                              |
+| [419. Battleships in a Board (medium)](#419-battleships-in-a-board-medium) |
+
 
 
 #### 32. Longest Valid Parentheses (hard)
@@ -660,7 +666,7 @@ You have to rotate the image **in-place**, which means you have to modify the in
 
 **clockwise: upside down first, then symmetry**
 
-**anticlockwise: left right first, then symmetry**
+**anti-clockwise: left right first, then symmetry**
 
 ```java
     public void rotate(int[][] matrix) {
@@ -735,7 +741,7 @@ Return:
 
 ---
 
-#### 50. Pow(x,n) (medium)
+#### 50. Pow(x,n) (medium) 
 
 **recursion**
 
@@ -1306,6 +1312,62 @@ Given a 2d grid map of `'1'`s (land) and `'0'`s (water), count the number of isl
                         }                        
                     }
                 }
+            }
+        }
+        return count;
+    }
+```
+
+---
+
+
+
+#### 419. Battleships in a Board (medium)
+
+Given an 2D board, count how many battleships are in it. The battleships are represented with 
+
+`'X'`s, empty slots are represented with `'.'`s. You may assume the following rules:
+
+- You receive a valid board, made of only battleships or empty slots.
+- Battleships can only be placed horizontally or vertically. In other words, they can only be made of the shape `1xN` (1 row, N columns) or `Nx1` (N rows, 1 column), where N can be of any size.
+- At least one horizontal or vertical cell separates between two battleships - there are no adjacent battleships.
+
+**Example:**
+
+```
+X..X
+...X
+...X
+```
+
+In the above board there are 2 battleships.
+
+**Invalid Example:**
+
+```
+...X
+XXXX
+...X
+```
+
+This is an invalid board that you will not receive - as battleships will always have a cell separating between them.
+
+```java
+    public int countBattleships(char[][] board) {
+        // idea only find ship head, left top cell
+        if(board==null || board.length==0 || board[0].length==0)
+            return 0;
+        final int m = board.length, n = board[0].length;
+        int count = 0;
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(board[i][j] == '.')
+                    continue;
+                if(i>0 && board[i-1][j] == 'X')
+                    continue;
+                if(j>0 && board[i][j-1] == 'X')
+                    continue;
+                count ++;
             }
         }
         return count;
