@@ -1,18 +1,32 @@
 #### [50 ~ 100](#50-powxn-medium)
 
-|                                                              |
-| ------------------------------------------------------------ |
-| [61. Rotate List (medium)](#61-rotate-list-medium)           |
-| [62. Unique Paths (medium)](#62-unique-paths-medium)         |
-| [63. Unique Paths II (medium)](#63-unique-paths-ii-medium)   |
-| [64. Minimum Path Sum (medium)](#64-minimum-path-sum-medium) |
-| [66. Plus One (easy)](#66-plus-one-easy)                     |
-| [67-add-binary-easy](#67-add-binary-easy)                    |
-|                                                              |
-|                                                              |
-| [#70-climbing-stairs-easy](#70-climbing-stairs-easy)         |
-| [#71-simplify-path-medium](#71-simplify-path-medium)         |
-| [419. Battleships in a Board (medium)](#419-battleships-in-a-board-medium) |
+
+
+| 1 ~ 100                                                      | 101 ~ 200                                                    |
+| :----------------------------------------------------------- | :----------------------------------------------------------- |
+|                                                              | [#149-max-points-on-a-line-hard](#149-max-points-on-a-line-hard) |
+| [61. Rotate List (medium)](#61-rotate-list-medium)           |                                                              |
+| [62. Unique Paths (medium)](#62-unique-paths-medium)         |                                                              |
+| [63. Unique Paths II (medium)](#63-unique-paths-ii-medium)   |                                                              |
+| [64. Minimum Path Sum (medium)](#64-minimum-path-sum-medium) |                                                              |
+| [66. Plus One (easy)](#66-plus-one-easy)                     |                                                              |
+| [67-add-binary-easy](#67-add-binary-easy)                    |                                                              |
+|                                                              |                                                              |
+|                                                              |                                                              |
+| [#70-climbing-stairs-easy](#70-climbing-stairs-easy)         |                                                              |
+| [#71-simplify-path-medium](#71-simplify-path-medium)         |                                                              |
+| [#73-set-matrix-zeros-medium](#73-set-matrix-zeros-medium)   |                                                              |
+| [#74-search-a-2d-matrix-medium](#74-search-a-2d-matrix-medium) |                                                              |
+| [#75-sort-colors-medium](#75-sort-colors-medium)             |                                                              |
+|                                                              |                                                              |
+|                                                              |                                                              |
+|                                                              |                                                              |
+
+| 201 ~ 300 | 301 ~ 400                                                    |
+| --------- | ------------------------------------------------------------ |
+|           | [419. Battleships in a Board (medium)](#419-battleships-in-a-board-medium) |
+|           |                                                              |
+|           |                                                              |
 
 
 
@@ -1543,6 +1557,166 @@ For example,
         return sb.toString();
     }
 ```
+
+---
+
+#### #73-set-matrix-zeros-medium
+
+Given a *m* x *n* matrix, if an element is 0, set its entire row and column to 0. Do it in place.
+
+Did you use extra space?
+A straight forward solution using O(*m**n*) space is probably a bad idea.
+A simple improvement uses O(*m* + *n*) space, but still not the best solution.
+Could you devise a constant space solution?
+
+```java
+    public void setZeroes(int[][] matrix) {
+        // set all leading row & col to zeros
+        if(matrix.length==0 || matrix[0].length==0)
+            return;
+        boolean firstRow = false, firstCol = false;
+        int row = matrix.length, col = matrix[0].length;
+        // check first col
+        for(int i=0;i<row;i++)
+            if(matrix[i][0] == 0)
+                firstCol = true;
+        // check first row
+        for(int j=0;j<col;j++)
+            if(matrix[0][j] == 0)
+                firstRow = true;
+        // the other
+        for(int i=1;i<row;i++){
+            for(int j=1;j<col;j++){
+                if(matrix[i][j] == 0){
+                    matrix[i][0] = 0;
+                    matrix[0][j] = 0;
+                }
+            }
+        }
+        // set 0 skip first row & col
+        for(int i=1;i<row;i++){
+            for(int j=1;j<col;j++){
+                if(matrix[i][0]==0 || matrix[0][j]==0)
+                    matrix[i][j] = 0;
+            }
+        }
+        // update first row & col can cause problem
+        // update first row & col
+        if(firstRow)
+            for(int j=0;j<col;j++)
+                matrix[0][j] = 0;
+        if(firstCol)
+            for(int i=0;i<row;i++)
+                matrix[i][0] = 0;
+    }
+```
+
+---
+
+#### #74-search-a-2d-matrix-medium
+
+Write an efficient algorithm that searches for a value in an *m* x *n* matrix. This matrix has the following properties:
+
+- Integers in each row are sorted from left to right.
+- The first integer of each row is greater than the last integer of the previous row.
+
+For example,
+
+Consider the following matrix:
+
+```
+[
+  [1,   3,  5,  7],
+  [10, 11, 16, 20],
+  [23, 30, 34, 50]
+]
+```
+
+Given **target** = `3`, return `true`.
+
+```java
+    public boolean searchMatrix(int[][] matrix, int target) {
+        // convert to binary search
+        if(matrix==null || matrix.length==0 || matrix[0].length==0)
+            return false;
+        final int m = matrix.length, n = matrix[0].length;
+        // left right should be index
+        int left = 0, right = m * n - 1;
+        while(left <= right){
+            int mid = left + (right-left)/2;
+            int row = mid / n;
+            int col = mid % n;
+            if(matrix[row][col] == target)
+                return true;
+            else if(matrix[row][col] < target)
+                left = mid + 1;
+            else
+                right = mid - 1;
+        }
+        return false;
+    }
+```
+
+---
+
+#### #75-sort-colors-medium
+
+Given an array with *n* objects colored red, white or blue, sort them so that objects of the same color are adjacent, with the colors in the order red, white and blue.
+
+Here, we will use the integers 0, 1, and 2 to represent the color red, white, and blue respectively.
+
+**Note:**
+You are not suppose to use the library's sort function for this problem.
+
+```java
+    public void sortColors(int[] nums) {
+        //  0000|i|1111|j|????|k|2222
+        if(nums==null || nums.length==0)
+            return;
+        int i = 0, j = 0, k = nums.length-1;
+        // j is unvisited, notice j = k
+        while(j <= k){
+            if(nums[j] == 0){
+                swap(nums,i++,j++);
+            }else if(nums[j] == 1)
+                j++;
+            else if(nums[j] == 2)
+                swap(nums,j,k--);
+        }
+    }
+    private void swap(int[] nums,int i,int j){
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+```
+
+```java
+    public void sortColors(int[] nums) {
+        //  0000|i|1111|j|????|k|2222
+        if(nums==null || nums.length==0)
+            return;
+        int i = 0, j = 0, k = nums.length-1;
+        // j is unvisited, notice j = k
+        while(j <= k){
+            if(nums[j] == 0){
+                nums[j++] = nums[i];
+                nums[i++] = 0;
+            }else if(nums[j] == 1){
+                j ++;
+            }else if(nums[j] == 2){
+                nums[j] = nums[k];
+                nums[k--] = 2;
+            }
+        }
+    }
+```
+
+---
+
+#### #149-max-points-on-a-line-hard
+
+
 
 
 
