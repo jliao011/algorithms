@@ -6,7 +6,7 @@
 | [62. Unique Paths (medium)](#62-unique-paths-medium)         |
 | [63. Unique Paths II (medium)](#63-unique-paths-ii-medium)   |
 | [64. Minimum Path Sum (medium)](#64-minimum-path-sum-medium) |
-| [66. Plus One (easy)](#66-Plus-one-easy)                     |
+| [66. Plus One (easy)](#66-plus-one-easy)                     |
 |                                                              |
 | [419. Battleships in a Board (medium)](#419-battleships-in-a-board-medium) |
 
