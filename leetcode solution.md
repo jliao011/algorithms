@@ -7,7 +7,11 @@
 | [63. Unique Paths II (medium)](#63-unique-paths-ii-medium)   |
 | [64. Minimum Path Sum (medium)](#64-minimum-path-sum-medium) |
 | [66. Plus One (easy)](#66-plus-one-easy)                     |
+| [67-add-binary-easy](#67-add-binary-easy)                    |
 |                                                              |
+|                                                              |
+| [#70-climbing-stairs-easy](#70-climbing-stairs-easy)         |
+| [#71-simplify-path-medium](#71-simplify-path-medium)         |
 | [419. Battleships in a Board (medium)](#419-battleships-in-a-board-medium) |
 
 
@@ -1357,7 +1361,68 @@ Given the above grid map, return
 
 #### 66. Plus One (easy)
 
+Given a non-negative integer represented as a **non-empty** array of digits, plus one to the integer.
 
+You may assume the integer do not contain any leading zero, except the number 0 itself.
+
+The digits are stored such that the most significant digit is at the head of the list.
+
+```java
+    public int[] plusOne(int[] digits) {
+        if(digits==null || digits.length==0)
+            return new int[0];
+        // if 9, continue check previous,
+        // if not 9, +1 will stop
+        for(int i=digits.length-1;i>=0;i--){
+            if(digits[i] == 9)
+                digits[i] = 0;
+            else{
+                digits[i] ++;
+                break;
+            }
+        }
+        // if all 0
+        if(digits[0] == 0){
+            int[] result = new int[digits.length+1];
+            result[0] = 1;
+            return result;
+        }
+        return digits;
+    }
+```
+
+---
+
+#### 67-add-binary-easy
+
+Given two binary strings, return their sum (also a binary string).
+
+For example,
+a = `"11"`
+b = `"1"`
+Return `"100"`.
+
+```java
+    public String addBinary(String a, String b) {
+        if(a == null || b == null)
+            return "";
+        // use string builder and reverse
+        StringBuilder sb = new StringBuilder();
+        int i = a.length() - 1, j = b.length() - 1;
+        int sum = 0;
+        while(i >= 0 || j >= 0){
+            if(i >= 0)
+                sum += a.charAt(i--) - '0';
+            if(j >= 0)
+                sum += b.charAt(j--) - '0';
+            sb.append(sum % 2);
+            sum /= 2;
+        }
+        if(sum != 0)
+            sb.append(sum);
+        return sb.reverse().toString();    
+    }
+```
 
 ----
 
@@ -1383,6 +1448,103 @@ Given the above grid map, return
         }
     }
 ```
+
+---
+
+#### #70-climbing-stairs-easy
+
+You are climbing a stair case. It takes *n* steps to reach to the top.
+
+Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+
+**Note:** Given *n* will be a positive integer.
+
+**Example 1:**
+
+```
+Input: 2
+Output:  2
+Explanation:  There are two ways to climb to the top.
+
+1. 1 step + 1 step
+2. 2 steps
+```
+
+**Example 2:**
+
+```
+Input: 3
+Output:  3
+Explanation:  There are three ways to climb to the top.
+
+1. 1 step + 1 step + 1 step
+2. 1 step + 2 steps
+3. 2 steps + 1 step
+```
+
+```java
+    public int climbStairs(int n) {
+        // n step is count n-1 step + count n-2 step
+        if(n <= 2)
+            return n;
+        int first = 1, second = 2, curr = 0;
+        for(int i=3;i<=n;i++){
+            curr = first + second;
+            first = second;
+            second = curr;
+        }
+        return curr;
+    }
+```
+
+---
+
+#### #71-simplify-path-medium
+
+Given an absolute path for a file (Unix-style), simplify it.
+
+For example,
+**path** = `"/home/"`, => `"/home"`
+**path** = `"/a/./b/../../c/"`, => `"/c"`
+
+- Did you consider the case where **path** = `"/../"`?
+  In this case, you should return `"/"`.
+- Another corner case is the path might contain multiple slashes `'/'` together, such as `"/home//foo/"`.
+  In this case, you should ignore redundant slashes and return `"/home/foo"`.
+
+```java
+    public String simplifyPath(String path) {
+        // use stack .. pop else push
+        if(path == null || path.length() == 0)
+            return "";
+        Stack<String> stack = new Stack<>();
+        for(String s : path.split("/")){
+            // case .(curr folder) continue
+            if(s.equals("."))
+                continue;
+            // case .. prev folder
+            else if(s.equals("..")){
+                if(!stack.isEmpty())
+                    stack.pop();
+            // case name dir, not empty, not ///
+            }else if(!s.isEmpty()){
+                stack.push(s);
+            }
+        }
+        // case /
+        if(stack.isEmpty())
+            return "/";
+        // pop and build result
+        StringBuilder sb = new StringBuilder();
+        // build list from stack
+        List<String> list = new ArrayList<>(stack);
+        for(String s : list)
+            sb.append("/").append(s);
+        return sb.toString();
+    }
+```
+
+
 
 ---
 
