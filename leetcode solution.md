@@ -2,7 +2,7 @@
 
 |                                                              |
 | ------------------------------------------------------------ |
-| [61. Rotate List (medium)](#61-Rotate-List-medium)           |
+| [61. Rotate List (medium)](#61-rotate-list-medium)           |
 |                                                              |
 | [419. Battleships in a Board (medium)](#419-battleships-in-a-board-medium) |
 
