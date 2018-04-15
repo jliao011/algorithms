@@ -3,6 +3,10 @@
 |                                                              |
 | ------------------------------------------------------------ |
 | [61. Rotate List (medium)](#61-rotate-list-medium)           |
+| [62. Unique Paths (medium)](#62-unique-paths-medium)         |
+| [63. Unique Paths II (medium)](#63-unique-paths-ii-medium)   |
+| [64. Minimum Path Sum (medium)](#64-minimum-path-sum-medium) |
+|                                                              |
 |                                                              |
 | [419. Battleships in a Board (medium)](#419-battleships-in-a-board-medium) |
 
@@ -1193,6 +1197,147 @@ Given a list, rotate the list to the right by *k* places, where *k* is non-negat
 ```
 Given 1->2->3->4->5->NULL and k = 2,
 return 4->5->1->2->3->NULL.
+```
+
+```java
+    /**
+     * Definition for singly-linked list.
+     * public class ListNode {
+     *     int val;
+     *     ListNode next;
+     *     ListNode(int x) { val = x; }
+     * }
+     */
+    public ListNode rotateRight(ListNode head, int k) {
+        // notice corner case
+        if(head == null || head.next == null)
+            return head;
+        ListNode dummy = new ListNode(0), fast = dummy;
+        dummy.next = head;
+        // find length first, and end node
+        int len = 0;
+        while(fast.next != null){
+            len ++;
+            fast = fast.next;
+        }
+        // find node before new head
+        // k may larger than len => %
+        ListNode slow = dummy;
+        for(int i=0;i<len-k%len;i++)
+            slow = slow.next;
+        // rotation order, 
+        fast.next = dummy.next;
+        dummy.next = slow.next;
+        slow.next = null;
+        return dummy.next;
+    }   
+```
+
+---
+
+#### 62. Unique Paths (medium)
+
+A robot is located at the top-left corner of a *m* x *n* grid (marked 'Start' in the diagram below).
+
+The robot can only move either down or right at any point in time. The robot is trying to reach the bottom-right corner of the grid (marked 'Finish' in the diagram below).
+
+How many possible unique paths are there?
+
+![img](https://leetcode.com/static/images/problemset/robot_maze.png)
+
+Above is a 3 x 7 grid. How many possible unique paths are there?
+
+**Note:** *m* and *n* will be at most 100.
+
+```java
+    public int uniquePaths(int m, int n) {
+        // time O(mn), space O(min(m,n))
+        if(m <= 0 || n <=0)
+            return 0;
+        // use 1D dp 
+        int[] dp = new int[n];
+        Arrays.fill(dp,1);
+        for(int i=1;i<m;i++){
+            for(int j=1;j<n;j++){
+                dp[j] += dp[j-1];
+            }
+        }
+        return dp[n-1];
+    }
+```
+
+---
+
+#### 63. Unique Paths II (medium)
+
+Follow up for "Unique Paths":
+
+Now consider if some obstacles are added to the grids. How many unique paths would there be?
+
+An obstacle and empty space is marked as `1` and `0` respectively in the grid.
+
+For example,
+
+There is one obstacle in the middle of a 3x3 grid as illustrated below.
+
+```
+[
+  [0,0,0],
+  [0,1,0],
+  [0,0,0]
+]
+```
+
+The total number of unique paths is `2`.
+
+```java
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        // similar to previous, use 1D DP
+        if(obstacleGrid==null || obstacleGrid.length==0 || obstacleGrid[0].length==0)
+            return 0;
+        int m = obstacleGrid.length, n = obstacleGrid[0].length;
+        int[] dp = new int[n];
+        dp[0] = 1;  // init head as 0
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                // obstacle, curr count reset 0
+                if(obstacleGrid[i][j] == 1)
+                    dp[j] = 0;
+                // accumulate when j > 0
+                else if(j > 0)
+                    dp[j] += dp[j-1];
+            }
+        }
+        return dp[n-1];
+    }
+```
+
+---
+
+#### 64. Minimum Path Sum (medium)
+
+Given a *m* x *n* grid filled with non-negative numbers, find a path from top left to bottom right which *minimizes* the sum of all numbers along its path.
+
+**Note:** You can only move either down or right at any point in time.
+
+**Example 1:**
+
+```
+[[1,3,1],
+ [1,5,1],
+ [4,2,1]]
+```
+
+Given the above grid map, return 
+
+```
+7
+```
+
+. Because the path 1→3→1→1→1 minimizes the sum.
+
+```java
+
 ```
 
 
