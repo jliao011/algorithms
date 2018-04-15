@@ -2,7 +2,7 @@ package core;
 
 import java.lang.reflect.Array;
 import java.util.*;
-
+import java.io.*;
 import algorithms.dp.KnapSack;
 import algorithms.personal.Other;
 import algorithms.personal.ReverseWordsInString;
@@ -17,15 +17,12 @@ public class Core {
 
 	public static void main(String[] args) {
 		logger.info("Core main function runs");
+
 		tests();
-        Set<Character> rowSet = new HashSet<>();
-        Map<String,List<String>> map = new HashMap<>();
-        int a = -2147483648;
-        logger.debug("{}",a+1);
-        
+
 	}
 
-	private static void tests() {
+	private static void tests() throws RuntimeException {
 		logger.info("test function runs");
 //		Test.mergeSort(Tool.getIntArray(10, 100));
 //		Test.quickSort(list);
@@ -46,7 +43,9 @@ public class Core {
 //		arrayNesting(new int[] { 5, 4, 0, 3, 1, 6, 2 });
 //		Test.regularExpressionMatch("xabyc", "xa*b.*");
 //		Test.inorderPreorderGetPostorder(new int[] { 1, 2, 3, 4, 5, 6, 7 }, new int[] { 4, 2, 1, 3, 6, 5, 7 });
-
+		List<Integer> list = null;
+		if (list == null)
+			throw new IllegalArgumentException();
 	}
 
 }

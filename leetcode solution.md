@@ -2,7 +2,7 @@
 
 |                                                              |
 | ------------------------------------------------------------ |
-|                                                              |
+| [61. Rotate List (medium)](#61-Rotate-List-medium)           |
 |                                                              |
 | [419. Battleships in a Board (medium)](#419-battleships-in-a-board-medium) |
 
@@ -1184,7 +1184,16 @@ You should return the following matrix:
 
 ---
 
+#### 61. Rotate List (medium)
 
+Given a list, rotate the list to the right by *k* places, where *k* is non-negative.
+
+**Example:**
+
+```
+Given 1->2->3->4->5->NULL and k = 2,
+return 4->5->1->2->3->NULL.
+```
 
 
 
