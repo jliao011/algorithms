@@ -17,12 +17,11 @@ public class Core {
 
 	public static void main(String[] args) {
 		logger.info("Core main function runs");
-
-		tests();
-
+//		tests();
+		logger.debug("{}", -2 % 3);
 	}
 
-	private static void tests() throws RuntimeException {
+	private static void tests() throws IOException {
 		logger.info("test function runs");
 //		Test.mergeSort(Tool.getIntArray(10, 100));
 //		Test.quickSort(list);

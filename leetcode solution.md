@@ -4,13 +4,15 @@
 
 | 1 ~ 100                                                      | 101 ~ 200                                                    |
 | :----------------------------------------------------------- | :----------------------------------------------------------- |
+| [#22-generate-parentheses-medium](#22-generate-parentheses-medium) |                                                              |
+| [#32-longest-valid-parentheses-hard](#32-longest-valid-parentheses-hard) |                                                              |
 |                                                              | [#149-max-points-on-a-line-hard](#149-max-points-on-a-line-hard) |
-| [61. Rotate List (medium)](#61-rotate-list-medium)           |                                                              |
-| [62. Unique Paths (medium)](#62-unique-paths-medium)         |                                                              |
-| [63. Unique Paths II (medium)](#63-unique-paths-ii-medium)   |                                                              |
-| [64. Minimum Path Sum (medium)](#64-minimum-path-sum-medium) |                                                              |
-| [66. Plus One (easy)](#66-plus-one-easy)                     |                                                              |
-| [67-add-binary-easy](#67-add-binary-easy)                    |                                                              |
+| [#61-rotate-list-medium](#61-rotate-list-medium)             |                                                              |
+| [#62-unique-paths-medium](#62-unique-paths-medium)           |                                                              |
+| [#63-unique-paths-ii-medium](#63-unique-paths-ii-medium)     |                                                              |
+| [#64-minimum-path-sum-medium](#64-minimum-path-sum-medium)   |                                                              |
+| [#66-plus-one-easy](#66-plus-one-easy)                       |                                                              |
+| [#67-add-binary-easy](#67-add-binary-easy)                   |                                                              |
 |                                                              |                                                              |
 |                                                              |                                                              |
 | [#70-climbing-stairs-easy](#70-climbing-stairs-easy)         |                                                              |
@@ -18,19 +20,71 @@
 | [#73-set-matrix-zeros-medium](#73-set-matrix-zeros-medium)   |                                                              |
 | [#74-search-a-2d-matrix-medium](#74-search-a-2d-matrix-medium) |                                                              |
 | [#75-sort-colors-medium](#75-sort-colors-medium)             |                                                              |
+| [#76-minimun-window-substring-hard](#76-minimun-window-substring-hard) |                                                              |
+| [#77-combinations-medium](#77-combinations-medium)           |                                                              |
+| [#78-subsets-medium](#78-subsets-medium)                     |                                                              |
+| [#79-word-search-medium](#79-word-search-medium)             |                                                              |
+| [#80-remove-duplicates-from-sorted-array-ii-medium](#80-remove-duplicates-from-sorted-array-ii-medium) |                                                              |
+|                                                              |                                                              |
 |                                                              |                                                              |
 |                                                              |                                                              |
 |                                                              |                                                              |
 
 | 201 ~ 300 | 301 ~ 400                                                    |
 | --------- | ------------------------------------------------------------ |
-|           | [419. Battleships in a Board (medium)](#419-battleships-in-a-board-medium) |
+|           | [#419-battleships-in-a-board-medium](#419-battleships-in-a-board-medium) |
 |           |                                                              |
 |           |                                                              |
 
+#### #22-generate-parentheses-medium
+
+Given *n* pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+
+For example, given *n* = 3, a solution set is:
+
+```
+[
+  "((()))",
+  "(()())",
+  "(())()",
+  "()(())",
+  "()()()"
+]
+```
+
+```java
+    public List<String> generateParenthesis(int n) {
+        // utilizing backtracking
+        List<String> result = new ArrayList<>();
+        backtrack(result,new StringBuilder(),0,0,n);
+        return result;
+    }
+    private void backtrack(List<String> result,StringBuilder temp,int left,int right,int n){
+        if(temp.length() == n * 2){
+            result.add(temp.toString());
+            return;
+        }
+        int len = temp.length();
+        // append (
+        if(left < n){
+            temp.append('(');
+            backtrack(result,temp,left+1,right,n);
+            temp.setLength(len);
+        }
+        // append )
+        if(right < left){
+            temp.append(')');
+            backtrack(result,temp,left,right+1,n);
+            temp.setLength(len);
+        }
+    }
+```
 
 
-#### 32. Longest Valid Parentheses (hard)
+
+---
+
+#### #32-longest-valid-parentheses-hard
 
 Given a string containing just the characters `'('` and `')'`, find the length of the longest valid (well-formed) parentheses substring.
 
@@ -1713,6 +1767,220 @@ You are not suppose to use the library's sort function for this problem.
 ```
 
 ---
+
+#### #76-minimun-window-substring-hard
+
+Given a string S and a string T, find the minimum window in S which will contain all the characters in T in complexity O(n).
+
+For example,
+**S** = `"ADOBECODEBANC"`
+**T** = `"ABC"`
+
+Minimum window is `"BANC"`.
+
+**Note:**
+If there is no such window in S that covers all characters in T, return the empty string `""`.
+
+If there are multiple such windows, you are guaranteed that there will always be only one unique minimum window in S.
+
+```java
+    public String minWindow(String s, String t) {
+        if(s==null || t==null)
+            return "";
+        // find t histogram first
+        int[] bin = new int[256];
+        for(char c : t.toCharArray())
+            bin[c] ++;
+        // sliding window
+        int head = 0, count = t.length();
+        int minLen = s.length() + 1, minHead = 0;
+        for(int tail=0;tail<s.length();tail++){
+            if(bin[s.charAt(tail)] > 0)
+                count --;
+            bin[s.charAt(tail)]--;
+            // valid edge condition
+            while(count == 0){
+                // update min then shift window
+                if(tail-head+1 < minLen){
+                    minLen = tail - head + 1;
+                    minHead = head;
+                }
+                if(bin[s.charAt(head)] == 0)
+                    count ++;
+                bin[s.charAt(head)]++;
+                head++;
+            }
+        }
+        return minLen > s.length() ? "" : s.substring(minHead,minHead+minLen);
+    }
+```
+
+---
+
+#### #77-combinations-medium
+
+Given two integers *n* and *k*, return all possible combinations of *k* numbers out of 1 ... *n*.
+
+For example,
+If *n* = 4 and *k* = 2, a solution is:
+
+```
+[
+  [2,4],
+  [3,4],
+  [2,3],
+  [1,2],
+  [1,3],
+  [1,4],
+]
+```
+
+```java
+    public List<List<Integer>> combine(int n, int k) {
+        // backtracking
+        List<List<Integer>> result = new ArrayList<>();
+        backtrack(result,new ArrayList<>(),1,n,k);
+        return result;
+    }
+    private void backtrack(List<List<Integer>> result,List<Integer> temp,int start,int end,int count){
+        // optimization here, if start to close to end so no enough elements
+        if(count - temp.size() > end - start + 1)
+            return;
+        //////////////////////////////////////
+        if(temp.size() == count){
+            result.add(new ArrayList<>(temp));
+            return;
+        }
+        for(int i=start;i<=end;i++){
+            temp.add(i);
+            backtrack(result,temp,i+1,end,count);
+            temp.remove(temp.size()-1);
+        }
+    }
+```
+
+---
+
+#### #78-subsets-medium
+
+Given a set of **distinct** integers, *nums*, return all possible subsets (the power set).
+
+**Note:** The solution set must not contain duplicate subsets.
+
+For example,
+If **nums** = `[1,2,3]`, a solution is:
+
+```
+[
+  [3],
+  [1],
+  [2],
+  [1,2,3],
+  [1,3],
+  [2,3],
+  [1,2],
+  []
+]
+```
+
+```java
+    public List<List<Integer>> subsets(int[] nums) {
+        // backtracking // distinct
+        List<List<Integer>> result = new ArrayList<>();
+        backtrack(result,nums,new ArrayList<>(),0);
+        return result;
+    }
+    private void backtrack(List<List<Integer>> result, int[] nums,List<Integer> temp,int idx){
+        // add result each level
+        result.add(new ArrayList<>(temp));
+        for(int i=idx;i<nums.length;i++){
+            temp.add(nums[i]);
+            backtrack(result,nums,temp,i+1);
+            temp.remove(temp.size()-1);
+        }
+    }
+```
+
+---
+
+#### #79-word-search-medium
+
+Given a 2D board and a word, find if the word exists in the grid.
+
+The word can be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once.
+
+For example,
+Given **board** = 
+
+```
+[
+  ['A','B','C','E'],
+  ['S','F','C','S'],
+  ['A','D','E','E']
+]
+```
+
+word = `"ABCCED"`, -> returns `true`,
+
+word = `"SEE"`, -> returns `true`,
+
+word = `"ABCB"`, -> returns `false`.
+
+```java
+    public boolean exist(char[][] board, String word) {
+        // similar to num of island
+        // use ^256 to obtain space O(1)
+        if(board==null || board.length==0 || board[0].length==0)
+            return false;
+        final int m = board.length, n = board[0].length;
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(helper(board,word,0,i,j))
+                    return true;
+            }
+        }
+        return false;
+    }
+    private boolean helper(char[][] board,String word,int idx,int x,int y){
+        if(idx == word.length())
+            return true;
+        if(x<0 || x>=board.length || y<0 || y>=board[0].length || 
+           word.charAt(idx)!=board[x][y])
+            return false;
+        // set to not a valid letter
+        board[x][y] ^= 256;
+        if(helper(board,word,idx+1,x-1,y) ||
+          helper(board,word,idx+1,x+1,y) ||
+          helper(board,word,idx+1,x,y-1) ||
+          helper(board,word,idx+1,x,y+1))
+            return true;
+        // reset to letter
+        board[x][y] ^= 256;
+        return false;
+    }
+```
+
+---
+
+#### #80-remove-duplicates-from-sorted-array-ii-medium
+
+Follow up for "Remove Duplicates":
+What if duplicates are allowed at most *twice*?
+
+For example,
+Given sorted array *nums* = `[1,1,1,2,2,3]`,
+
+Your function should return length = `5`, with the first five elements of *nums* being `1`, `1`, `2`, `2` and `3`. It doesn't matter what you leave beyond the new length.
+
+```java
+
+```
+
+
+
+---
+
+
 
 #### #149-max-points-on-a-line-hard
 
