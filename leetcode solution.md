@@ -6,7 +6,10 @@
 | :----------------------------------------------------------- | :----------------------------------------------------------- |
 | [#22-generate-parentheses-medium](#22-generate-parentheses-medium) |                                                              |
 | [#32-longest-valid-parentheses-hard](#32-longest-valid-parentheses-hard) |                                                              |
+| [#33-search-in-rotated-sorted-array-medium](#33-search-in-rotated-sorted-array-medium) |                                                              |
+| [#42-trapping-rain-water-hard](#42-trapping-rain-water-hard) |                                                              |
 |                                                              | [#149-max-points-on-a-line-hard](#149-max-points-on-a-line-hard) |
+|                                                              |                                                              |
 | [#61-rotate-list-medium](#61-rotate-list-medium)             |                                                              |
 | [#62-unique-paths-medium](#62-unique-paths-medium)           |                                                              |
 | [#63-unique-paths-ii-medium](#63-unique-paths-ii-medium)     |                                                              |
@@ -25,16 +28,19 @@
 | [#78-subsets-medium](#78-subsets-medium)                     |                                                              |
 | [#79-word-search-medium](#79-word-search-medium)             |                                                              |
 | [#80-remove-duplicates-from-sorted-array-ii-medium](#80-remove-duplicates-from-sorted-array-ii-medium) |                                                              |
-|                                                              |                                                              |
-|                                                              |                                                              |
-|                                                              |                                                              |
-|                                                              |                                                              |
+| [**#81-search-in-rotated-sorted-array-ii-medium**](#81-search-in-rotated-sorted-array-ii-medium) |                                                              |
+| [#82-remove-duplicates-from-sorted-list-ii-medium](#82-remove-duplicates-from-sorted-list-ii-medium) |                                                              |
+| [#83-remove-duplicates-from-sorted-list-easy](#83-remove-duplicates-from-sorted-list-easy) |                                                              |
+| [#84-largest-rectangle-in-histogram-hard](#84-largest-rectangle-in-histogram-hard) |                                                              |
 
-| 201 ~ 300 | 301 ~ 400                                                    |
-| --------- | ------------------------------------------------------------ |
-|           | [#419-battleships-in-a-board-medium](#419-battleships-in-a-board-medium) |
-|           |                                                              |
-|           |                                                              |
+| 201 ~ 300                                                    | 301 ~ 400                                                    |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+|                                                              | [#419-battleships-in-a-board-medium](#419-battleships-in-a-board-medium) |
+| [#243-shortest-word-distance-easy](#243-shortest-word-distance-easy) |                                                              |
+| [#244-shortest-word-distance-ii-medium](#244-shortest-word-distance-ii-medium) |                                                              |
+| [#245-shortest-word-distance-iii-medium](#245-shortest-word-distance-iii-medium) |                                                              |
+
+
 
 #### #22-generate-parentheses-medium
 
@@ -116,6 +122,63 @@ Another example is `")()())"`, where the longest valid parentheses substring is 
 ```
 
 ---------------------------------
+
+#### #33-search-in-rotated-sorted-array-medium
+
+Suppose an array sorted in ascending order is rotated at some pivot unknown to you beforehand.
+
+(i.e., `[0,1,2,4,5,6,7]` might become `[4,5,6,7,0,1,2]`).
+
+You are given a target value to search. If found in the array return its index, otherwise return `-1`.
+
+You may assume no duplicate exists in the array.
+
+Your algorithm's runtime complexity must be in the order of *O*(log *n*).
+
+**Example 1:**
+
+```
+Input: nums = [4,5,6,7,0,1,2], target = 0
+Output: 4
+```
+
+**Example 2:**
+
+```
+Input: nums = [4,5,6,7,0,1,2], target = 3
+Output: -1
+```
+
+```java
+    public int search(int[] nums, int target) {
+        if(nums==null || nums.length==0)
+            return -1;
+        int left = 0, right = nums.length - 1;
+        while(left <= right){
+            int mid = left + (right-left)/2;
+            if(nums[mid] == target)
+                return mid;
+            // left half not rotate
+            if(nums[left] <= nums[mid]){
+                // mid in not rotate part
+                if(nums[left]<=target && target<nums[mid])
+                    right = mid - 1;
+                // mid in rotate part
+                else left = mid + 1;
+            // right half not rotate
+            }else{
+                // mid in not rotate part
+                if(nums[mid]<target && target<=nums[right])
+                    left = mid + 1;
+                // mid in rotate part
+                else right = mid -1;
+            }
+        }
+        return -1;
+    }
+```
+
+---
 
 #### 36. Valid Sudoku (medium)
 
@@ -411,7 +474,7 @@ Your algorithm should run in *O*(*n*) time and uses constant space.
 
 ---
 
-#### 42. Trapping Rain Water (hard)
+#### #42-trapping-rain-water-hard
 
 Given *n* non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it is able to trap after raining.
 
@@ -1973,12 +2036,257 @@ Given sorted array *nums* = `[1,1,1,2,2,3]`,
 Your function should return length = `5`, with the first five elements of *nums* being `1`, `1`, `2`, `2` and `3`. It doesn't matter what you leave beyond the new length.
 
 ```java
+    public int removeDuplicates(int[] nums) {
+        if(nums==null)
+            return 0;
+        if(nums.length <= 2)
+            return nums.length;
+        int tail = 2;
+        // similar but check tail - 2
+        for(int i=2;i<nums.length;i++){
+            if(nums[i] != nums[tail-2])
+                nums[tail++] = nums[i];
+        }
+        return tail;
+    }
+    public int removeDuplicates(int[] nums) {
+        // optimized
+        if(nums==null)
+            return 0;
+        if(nums.length <= 2)
+            return nums.length;
+        int tail = 0;
+        for(int num : nums){
+            if(tail < 2 || num != nums[tail-2])
+                nums[tail++] = num;
+        }
+        return tail;
+    }
+```
 
+---
+
+#### #81-search-in-rotated-sorted-array-ii-medium
+
+> *Follow up* for "Search in Rotated Sorted Array":
+> What if *duplicates* are allowed?
+>
+> Would this affect the run-time complexity? How and why?
+
+[#33-search-in-rotated-sorted-array-medium](#33-search-in-rotated-sorted-array-medium)
+
+Suppose an array sorted in ascending order is rotated at some pivot unknown to you beforehand.
+
+(i.e., `0 1 2 4 5 6 7` might become `4 5 6 7 0 1 2`).
+
+Write a function to determine if a given target is in the array.
+
+The array may contain duplicates.
+
+```java
+    public boolean search(int[] nums, int target) {
+// 1) everytime check if targe == nums[mid], if so, we find it.
+// 2) otherwise, we check if the first half is in order (i.e. nums[left]<=nums[mid]) 
+//   and if so, go to step 3), otherwise, the second half is in order,   go to step 4)
+// 3) check if target in the range of [left, mid-1] (i.e. nums[left]<=target < nums[mid]), 
+//         if so, do search in the first half, i.e. right = mid-1; otherwise, search in the second half left = mid+1;
+// 4)  check if target in the range of [mid+1, right] (i.e. nums[mid]<target <= nums[right]), 
+//         if so, do search in the second half, i.e. left = mid+1; otherwise search in the first half right = mid-1;
+        if(nums==null || nums.length==0)
+            return false;
+        int left = 0, right = nums.length - 1;
+        while(left <= right){
+            int mid = left + (right-left)/2;
+            if(nums[mid] == target)
+                return true;
+            // difference to deal with duplicate here
+            if(nums[left]==nums[mid] && nums[mid]==nums[right]){
+            left++;
+            right--;
+            // left half not rotate
+            }else if(nums[left] <= nums[mid]){
+                // mid in not rotate part
+                if(nums[left]<=target && target<nums[mid])
+                    right = mid - 1;
+                // mid in rotate part
+                else left = mid + 1;
+            // right half not rotate
+            }else if(nums[mid] <= nums[right]){
+                // mid in not rotate part
+                if(nums[mid]<target && target<=nums[right])
+                    left = mid + 1;
+                // mid in rotate part
+                else right = mid -1;
+            }
+        }
+        return false;       
+    }
+```
+
+---
+
+#### #82-remove-duplicates-from-sorted-list-ii-medium
+
+Given a sorted linked list, delete all nodes that have duplicate numbers, leaving only *distinct* numbers from the original list.
+
+For example,
+Given `1->2->3->3->4->4->5`, return `1->2->5`.
+Given `1->1->1->2->3`, return `2->3`.
+
+```java
+    /**
+     * Definition for singly-linked list.
+     * public class ListNode {
+     *     int val;
+     *     ListNode next;
+     *     ListNode(int x) { val = x; }
+     * }
+     */
+    public ListNode deleteDuplicates(ListNode head) {
+        if(head == null || head.next == null)
+            return head;
+        ListNode dummy = new ListNode(0);
+        ListNode prev = dummy, curr = head;
+        dummy.next = head;
+        while(curr != null){
+            // if next val = curr val, check next
+            while(curr.next!=null && curr.val==curr.next.val)
+                curr = curr.next;
+            // if curr is distinct
+            if(prev.next == curr)
+                prev = prev.next;
+            else    
+            // prev stays, case next sequence duplication
+            // curr is the last duplication
+                prev.next = curr.next;   
+            curr = curr.next;
+            
+        }
+        return dummy.next;
+    }
+```
+
+---
+
+#### #83-remove-duplicates-from-sorted-list-easy
+
+Given a sorted linked list, delete all duplicates such that each element appear only *once*.
+
+For example,
+Given `1->1->2`, return `1->2`.
+Given `1->1->2->3->3`, return `1->2->3`.
+
+**iteration**
+
+```java
+    public ListNode deleteDuplicates(ListNode head) {
+        if(head==null || head.next==null)
+            return head;
+        ListNode curr = head;
+        while(curr != null){
+            while(curr.next!=null && curr.val==curr.next.val)
+                curr.next = curr.next.next;
+            curr = curr.next;
+        }
+        return head;
+    }
+```
+
+**recursion**
+
+```java
+    public ListNode deleteDuplicates(ListNode head) {
+        if(head == null || head.next == null)
+            return head;
+        head.next = deleteDuplicates(head.next);
+        // here head.next != null
+        return head.val == head.next.val ? head.next : head;
+    }
+```
+
+---
+
+#### #84-largest-rectangle-in-histogram-hard
+
+Given *n* non-negative integers representing the histogram's bar height where the width of each bar is 1, find the area of largest rectangle in the histogram.
+
+![img](https://leetcode.com/static/images/problemset/histogram.png)
+
+Above is a histogram where width of each bar is 1, given height = `[2,1,5,6,2,3]`.
+
+![img](https://leetcode.com/static/images/problemset/histogram_area.png)
+
+The largest rectangle is shown in the shaded area, which has area = `10` unit.
+
+For example,
+Given heights = `[2,1,5,6,2,3]`,
+return `10`.
+
+[#42-trapping-rain-water-hard](#42-trapping-rain-water-hard)
+
+```java
+	// Maintains an increasing stack
+	// encounter smaller height, check all previous areas.
+	public int largestRectangleArea(int[] heights) {
+		Stack<Integer> idxStack = new Stack<>();
+		int maxArea = 0;
+		for (int i = 0; i <= heights.length; i++) {
+			// push -1 for last, to pop all previous
+			int height = i == heights.length ? 0 : heights[i];
+			// when increasing is broken
+			while (!idxStack.isEmpty() && heights[idxStack.peek()] >= height) {
+				// get previous higher one, compute previous area
+				// it's all area from smaller to the highest
+				int h = heights[idxStack.pop()];
+				// if is empty, there is a bottom rectangle from current to head
+				int w = idxStack.isEmpty() ? i : i - 1 - idxStack.peek();
+				maxArea = Math.max(maxArea, h * w);
+			}
+			idxStack.push(i);
+		}
+		return maxArea;
+	}
+```
+
+**optimized beats 98%, check left then right idea **
+
+```java
+    public int largestRectangleArea(int[] heights) {
+        // save left and right index
+        // width is most left & right idx whose h is larger
+        if(heights==null || heights.length==0)
+            return 0;
+        int[] left = new int[heights.length];
+        int[] right = new int[heights.length];
+        // find left/right index whose h is larger
+        // utilize previous result to reduce run time
+        for(int i=0;i<heights.length;i++){
+            int l = i-1;
+            while(l>=0 && heights[l]>=heights[i])
+                l = left[l];
+            left[i] = l;
+        }
+        for(int i=heights.length-1;i>=0;i--){
+            int r = i+1;
+            while(r<heights.length && heights[r]>=heights[i])
+                r = right[r];
+            right[i] = r;
+        }        
+        // then for h, the width is r - l - 1;
+        int maxArea = 0;
+        for(int i=0;i<heights.length;i++){
+            int w = right[i] - left[i] - 1;
+            maxArea = Math.max(maxArea,heights[i]*w);
+        }
+        return maxArea;
+    }
 ```
 
 
 
----
+
+
+
 
 
 
@@ -2093,7 +2401,166 @@ Given a 2d grid map of `'1'`s (land) and `'0'`s (water), count the number of isl
 
 ---
 
+#### #243-shortest-word-distance-easy
 
+Given a list of words and two words *word1* and *word2*, return the shortest distance between these two words in the list.
+
+For example,
+Assume that words = `["practice", "makes", "perfect", "coding", "makes"]`.
+
+Given *word1* = `“coding”`, *word2* = `“practice”`, return 3.
+Given *word1* = `"makes"`, *word2* = `"coding"`, return 1.
+
+**Note:**
+You may assume that *word1* **does not equal to** *word2*, and *word1* and *word2* are both in the list.
+
+```java
+    public int shortestDistance(String[] words, String word1, String word2) {
+        if(words==null || words.length==0)
+            return 0;
+        int idx1 = -1, idx2 = -1, min = words.length;
+        for(int i=0;i<words.length;i++){
+            if(words[i].equals(word1))
+                idx1 = i;
+            else if(words[i].equals(word2))
+                idx2 = i;
+            // need to check whether idx are set
+            if(idx1!=-1 && idx2!=-1)
+                min = Math.min(min,Math.abs(idx1-idx2));
+        }
+        return min;
+    }
+```
+
+---
+
+#### #244-shortest-word-distance-ii-medium
+
+This is a **follow up** of [Shortest Word Distance](https://leetcode.com/problems/shortest-word-distance). The only difference is now you are given the list of words and your method will be called *repeatedly* many times with different parameters. How would you optimize it?
+
+Design a class which receives a list of words in the constructor, and implements a method that takes two words *word1* and *word2* and return the shortest distance between these two words in the list.
+
+For example,
+Assume that words = `["practice", "makes", "perfect", "coding", "makes"]`.
+
+Given *word1* = `“coding”`, *word2* = `“practice”`, return 3.
+Given *word1* = `"makes"`, *word2* = `"coding"`, return 1.
+
+**Note:**
+You may assume that *word1* **does not equal to** *word2*, and *word1* and *word2* are both in the list.
+
+```java
+class WordDistance {
+    Map<String,List<Integer>> map;
+    public WordDistance(String[] words) {
+        map = new HashMap<>();
+        for(int i=0;i<words.length;i++){
+            if(!map.containsKey(words[i]))
+                map.put(words[i],new ArrayList<>());
+            map.get(words[i]).add(i);
+        }
+    }
+    
+    public int shortest(String word1, String word2) {
+        List<Integer> l1 = map.get(word1);
+        List<Integer> l2 = map.get(word2);
+        int min = Integer.MAX_VALUE;
+        int idx1 = 0, idx2 = 0;
+        // utilize two pointer to optimize
+        while(idx1<l1.size() && idx2<l2.size()){
+            min = Math.min(min,Math.abs(l1.get(idx1)-l2.get(idx2)));
+            if(l1.get(idx1) < l2.get(idx2))
+                idx1++;
+            else
+                idx2++;
+        }
+        return min;
+    }
+}
+```
+
+---
+
+#### #245-shortest-word-distance-iii-medium
+
+This is a **follow up** of [Shortest Word Distance](https://leetcode.com/problems/shortest-word-distance). The only difference is now *word1* could be the same as *word2*.
+
+Given a list of words and two words *word1* and *word2*, return the shortest distance between these two words in the list.
+
+*word1* and *word2* may be the same and they represent two individual words in the list.
+
+For example,
+Assume that words = `["practice", "makes", "perfect", "coding", "makes"]`.
+
+Given *word1* = `“makes”`, *word2* = `“coding”`, return 1.
+Given *word1* = `"makes"`, *word2* = `"makes"`, return 3.
+
+**Note:**
+You may assume *word1* and *word2* are both in the list.
+
+```java
+    public int shortestWordDistance(String[] words, String word1, String word2) {
+        if(words==null || words.length==0)
+            return 0;
+        int min = words.length;
+        int idx1 = -1, idx2 = -1;
+        for(int i=0; i<words.length; i++){
+            if(words[i].equals(word1))
+                idx1 = i;
+            if(words[i].equals(word2)){
+                if(word1.equals(word2))
+                // set idx1 to prev idx2
+                    idx1 = idx2;
+                idx2 = i;
+            }
+            if(idx1 != -1 && idx2 != -1){
+                min = Math.min(min,Math.abs(idx1-idx2));
+            }
+        }
+        return min;
+    }
+```
+
+**quicker**
+
+```java
+    public int shortestWordDistance(String[] words, String word1, String word2) {
+        if(words==null || words.length==0)
+            return 0;
+        int min = words.length;
+        int idx1 = -1, idx2 = -1;
+        if(word1.equals(word2)){
+            for(int i=0;i<words.length;i++){
+                if(words[i].equals(word1)){
+                    if(idx1 == -1)
+                        idx1 = i;
+                    else{
+                        min = Math.min(min,i-idx1);
+                        idx1 = i;
+                    }
+                }
+            }            
+        }else{
+            for(int i=0;i<words.length;i++){
+                if(words[i].equals(word1))
+                    idx1 = i;
+                else if(words[i].equals(word2))
+                    idx2 = i;
+                if(idx1!=-1 && idx2!=-1)
+                    min = Math.min(min,Math.abs(idx1-idx2));
+            }
+        }
+        return min;
+    }
+```
+
+---
+
+
+
+
+
+---
 
 #### 419. Battleships in a Board (medium)
 
