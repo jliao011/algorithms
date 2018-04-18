@@ -17,11 +17,18 @@ public class Core {
 
 	public static void main(String[] args) {
 		logger.info("Core main function runs");
-//		tests();
-		logger.debug("{}", -2 % 3);
+		try {
+			tests();
+
+		} catch (RuntimeException e) {
+			logger.debug(e.toString());
+		} finally {
+			logger.debug("finally");
+		}
+
 	}
 
-	private static void tests() throws IOException {
+	private static void tests() {
 		logger.info("test function runs");
 //		Test.mergeSort(Tool.getIntArray(10, 100));
 //		Test.quickSort(list);
@@ -43,8 +50,8 @@ public class Core {
 //		Test.regularExpressionMatch("xabyc", "xa*b.*");
 //		Test.inorderPreorderGetPostorder(new int[] { 1, 2, 3, 4, 5, 6, 7 }, new int[] { 4, 2, 1, 3, 6, 5, 7 });
 		List<Integer> list = null;
-		if (list == null)
-			throw new IllegalArgumentException();
+//		if (list == null)
+		throw new RuntimeException();
 	}
 
 }

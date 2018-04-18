@@ -1,9 +1,8 @@
-#### [50 ~ 100](#50-powxn-medium)
-
-
+#### 1 ~ 200
 
 | 1 ~ 100                                                      | 101 ~ 200                                                    |
 | :----------------------------------------------------------- | :----------------------------------------------------------- |
+|                                                              | [#120-triangle-medium](#120-triangle-medium)                 |
 | [#22-generate-parentheses-medium](#22-generate-parentheses-medium) |                                                              |
 | [#32-longest-valid-parentheses-hard](#32-longest-valid-parentheses-hard) |                                                              |
 | [#33-search-in-rotated-sorted-array-medium](#33-search-in-rotated-sorted-array-medium) |                                                              |
@@ -33,12 +32,25 @@
 | [#83-remove-duplicates-from-sorted-list-easy](#83-remove-duplicates-from-sorted-list-easy) |                                                              |
 | [#84-largest-rectangle-in-histogram-hard](#84-largest-rectangle-in-histogram-hard) |                                                              |
 
+#### 201 ~ 400
+
 | 201 ~ 300                                                    | 301 ~ 400                                                    |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| [#201-bitwise-and-of-numbers-range-medium](#201-bitwise-and-of-numbers-range-medium) |                                                              |
 |                                                              | [#419-battleships-in-a-board-medium](#419-battleships-in-a-board-medium) |
+| [#241-different-ways-to-add-parentheses-medium](#241-different-ways-to-add-parentheses-medium) |                                                              |
+|                                                              |                                                              |
 | [#243-shortest-word-distance-easy](#243-shortest-word-distance-easy) |                                                              |
 | [#244-shortest-word-distance-ii-medium](#244-shortest-word-distance-ii-medium) |                                                              |
 | [#245-shortest-word-distance-iii-medium](#245-shortest-word-distance-iii-medium) |                                                              |
+
+#### 401 ~ 600
+
+| 401 ~ 500 | 501 ~ 600                                                    |
+| --------- | ------------------------------------------------------------ |
+|           | [#560-subarray-sum-equals-k-medium](#560-subarray-sum-equals-k-medium) |
+|           |                                                              |
+|           |                                                              |
 
 
 
@@ -2284,15 +2296,55 @@ return `10`.
 
 
 
+---
+
+#### #120-triangle-medium
+
+Given a triangle, find the minimum path sum from top to bottom. Each step you may move to adjacent numbers on the row below.
+
+For example, given the following triangle
+
+```
+[
+     [2],
+    [3,4],
+   [6,5,7],
+  [4,1,8,3]
+]
+```
+
+The minimum path sum from top to bottom is `11` (i.e., 2 + 3 + 5 + 1 = 11).
+
+**Note:**
+Bonus point if you are able to do this using only *O*(*n*) extra space, where *n* is the total number of rows in the triangle.
+
+```java
+    public int minimumTotal(List<List<Integer>> triangle) {
+        // add bottom up, so that space O(1)
+        if(triangle.size() == 0)
+            return 0;
+        int n = triangle.size();
+        // n+1 for the last line
+        int[] memo = new int[n+1];
+        // for location i, check i & i+1
+        for(int i=n-1; i>=0; i--){
+            for(int j=0; j<triangle.get(i).size(); j++){
+                int curr = triangle.get(i).get(j);
+                // memo is init as 0s
+                memo[j] = Math.min(memo[j],memo[j+1]) + curr;
+            }
+        }
+        return memo[0];
+    }
+```
 
 
 
-
-
+---
 
 #### #149-max-points-on-a-line-hard
 
-
+Given *n* points on a 2D plane, find the maximum number of points that lie on the same straight line.
 
 
 
@@ -2398,6 +2450,160 @@ Given a 2d grid map of `'1'`s (land) and `'0'`s (water), count the number of isl
         return count;
     }
 ```
+
+---
+
+#### #201-bitwise-and-of-numbers-range-medium
+
+Given a range [m, n] where 0 <= m <= n <= 2147483647, return the bitwise AND of all numbers in this range, inclusive.
+
+For example, given the range [5, 7], you should return 4.
+
+```java
+    public int rangeBitwiseAnd(int m, int n) {
+        // right shift, all tail digits are 0
+        // until m == n, this is the head
+        // append 0 tail to head
+        if(m == 0)
+            // 0 & x == 0
+            return 0;
+        int tailLen = 0;
+        while(m != n){
+            m >>= 1;
+            n >>= 1;
+            tailLen ++;
+        }
+        return m << tailLen;
+    }
+```
+
+------
+
+
+
+---
+
+#### #241-different-ways-to-add-parentheses-medium
+
+Given a string of numbers and operators, return all possible results from computing all the different possible ways to group numbers and operators. The valid operators are `+`, `-` and `*`.
+
+Example 1
+
+Input: `"2-1-1"`.
+
+```
+((2-1)-1) = 0
+(2-(1-1)) = 2
+```
+
+Output: `[0, 2]`
+
+Example 2
+
+Input: `"2*3-4*5"`
+
+```
+(2*(3-(4*5))) = -34
+((2*3)-(4*5)) = -14
+((2*(3-4))*5) = -10
+(2*((3-4)*5)) = -10
+(((2*3)-4)*5) = 10
+```
+
+Output: `[-34, -14, -10, -10, 10]`
+
+```java
+    public List<Integer> diffWaysToCompute(String input) {
+        // use recursion
+        List<Integer> result = new ArrayList<>();
+        for(int i=0;i<input.length();i++){
+            char c = input.charAt(i);
+            // divide input to two part
+            if(c=='+' || c=='-' || c=='*'){
+                String left = input.substring(0,i);
+                String right = input.substring(i+1);
+                List<Integer> list1 = diffWaysToCompute(left);
+                List<Integer> list2 = diffWaysToCompute(right);
+                // combine to subset
+                for(int num1 : list1){
+                    for(int num2 : list2){
+                        int temp = 0;
+                        switch(c){
+                            case '+': 
+                                temp = num1 + num2;
+                                break;
+                            case '-':
+                                temp = num1 - num2;
+                                break;
+                            case '*':
+                                temp = num1 * num2;
+                                break;
+                        }
+                        // one possible result
+                        result.add(temp);
+                    }
+                }
+            }
+        }
+        // case theres no operator in input
+        if(result.size() == 0)
+            result.add(Integer.parseInt(input));
+        return result;
+    }
+```
+
+**add memory and optimization**
+
+```java
+    public List<Integer> diffWaysToCompute(String input) {
+        Map<String,List<Integer>> map = new HashMap<>();
+        return dfs(input,map,0,input.length());
+    }
+    private List<Integer> dfs(String input,Map<String,List<Integer>> map,int start,int end){
+        // use recursion
+        // if this expression is saved
+        String expression = input.substring(start,end);
+        if(map.containsKey(expression))
+            return map.get(expression);
+        List<Integer> result = new ArrayList<>();
+        for(int i=start;i<end;i++){
+            char c = input.charAt(i);
+            // divide input to two part
+            if(c=='+' || c=='-' || c=='*'){
+                List<Integer> list1 = dfs(input,map,start,i);
+                List<Integer> list2 = dfs(input,map,i+1,end);
+                // combine to subset
+                for(int num1 : list1){
+                    for(int num2 : list2){
+                        int temp = 0;
+                        switch(c){
+                            case '+': 
+                                temp = num1 + num2;
+                                break;
+                            case '-':
+                                temp = num1 - num2;
+                                break;
+                            case '*':
+                                temp = num1 * num2;
+                                break;
+                        }
+                        // one possible result
+                        result.add(temp);
+                    }
+                }
+            }
+        }
+        // case theres no operator in input
+        if(result.size() == 0)
+            result.add(Integer.parseInt(expression));
+        map.put(expression,result);
+        return result;        
+    }
+```
+
+---
+
+
 
 ---
 
@@ -2609,6 +2815,41 @@ This is an invalid board that you will not receive - as battleships will always 
                     continue;
                 count ++;
             }
+        }
+        return count;
+    }
+```
+
+---
+
+#### #560-subarray-sum-equals-k-medium
+
+Given an array of integers and an integer **k**, you need to find the total number of continuous subarrays whose sum equals to **k**.
+
+**Example 1:**
+
+```
+Input:nums = [1,1,1], k = 2
+Output: 2
+```
+
+**Note:**
+
+1. The length of the array is in range [1, 20,000].
+2. The range of numbers in the array is [-1000, 1000] and the range of the integer **k** is [-1e7, 1e7].
+
+```java
+    public int subarraySum(int[] nums, int k) {
+        if(nums==null || nums.length==0)
+            return 0;
+        // use map to save curr sum & count
+        Map<Integer,Integer> map = new HashMap<>();
+        map.put(0,1);   // 
+        int count = 0, sum = 0;
+        for(int num : nums){
+            sum += num;
+            count += map.getOrDefault(sum-k,0);
+            map.put(sum,map.getOrDefault(sum,0)+1);
         }
         return count;
     }
