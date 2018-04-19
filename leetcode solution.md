@@ -4,15 +4,17 @@
 | :----------------------------------------------------------- | :----------------------------------------------------------- |
 |                                                              | [#120-triangle-medium](#120-triangle-medium)                 |
 | [#22-generate-parentheses-medium](#22-generate-parentheses-medium) |                                                              |
+|                                                              | [#130-surrounded-regions](#130-surrounded-regions)           |
 | [#32-longest-valid-parentheses-hard](#32-longest-valid-parentheses-hard) |                                                              |
-| [#33-search-in-rotated-sorted-array-medium](#33-search-in-rotated-sorted-array-medium) |                                                              |
+| [#33-search-in-rotated-sorted-array-medium](#33-search-in-rotated-sorted-array-medium) | [#133-clone-graph-medium](#133-clone-graph-medium)           |
 | [#42-trapping-rain-water-hard](#42-trapping-rain-water-hard) |                                                              |
 |                                                              | [#149-max-points-on-a-line-hard](#149-max-points-on-a-line-hard) |
-|                                                              |                                                              |
+|                                                              | [#156-binary-tree-upside-down-medium](#156-binary-tree-upside-down-medium) |
 | [#61-rotate-list-medium](#61-rotate-list-medium)             |                                                              |
 | [#62-unique-paths-medium](#62-unique-paths-medium)           |                                                              |
 | [#63-unique-paths-ii-medium](#63-unique-paths-ii-medium)     |                                                              |
 | [#64-minimum-path-sum-medium](#64-minimum-path-sum-medium)   |                                                              |
+|                                                              | [#165-compare-version-numbers-medium](#165-compare-version-numbers-medium) |
 | [#66-plus-one-easy](#66-plus-one-easy)                       |                                                              |
 | [#67-add-binary-easy](#67-add-binary-easy)                   |                                                              |
 |                                                              |                                                              |
@@ -37,20 +39,27 @@
 | 201 ~ 300                                                    | 301 ~ 400                                                    |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [#201-bitwise-and-of-numbers-range-medium](#201-bitwise-and-of-numbers-range-medium) |                                                              |
-|                                                              | [#419-battleships-in-a-board-medium](#419-battleships-in-a-board-medium) |
+|                                                              |                                                              |
+| [#223-rectangle-area-medium](#223-rectangle-area-medium)     |                                                              |
+| [#228-summary-ranges-medium](#228-summary-ranges-medium)     |                                                              |
+|                                                              | [#335-self-crossing-hard](#335-self-crossing-hard)           |
 | [#241-different-ways-to-add-parentheses-medium](#241-different-ways-to-add-parentheses-medium) |                                                              |
 |                                                              |                                                              |
 | [#243-shortest-word-distance-easy](#243-shortest-word-distance-easy) |                                                              |
 | [#244-shortest-word-distance-ii-medium](#244-shortest-word-distance-ii-medium) |                                                              |
 | [#245-shortest-word-distance-iii-medium](#245-shortest-word-distance-iii-medium) |                                                              |
+|                                                              | [#384-shuffle-an-array-medium](#384-shuffle-an-array-medium) |
 
 #### 401 ~ 600
 
-| 401 ~ 500 | 501 ~ 600                                                    |
-| --------- | ------------------------------------------------------------ |
-|           | [#560-subarray-sum-equals-k-medium](#560-subarray-sum-equals-k-medium) |
-|           |                                                              |
-|           |                                                              |
+| 401 ~ 500                                                    | 501 ~ 600                                                    |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| [#406-queue-reconstruction-by-height-medium](#406-queue-reconstruction-by-height-medium) |                                                              |
+| [#419-battleships-in-a-board-medium](#419-battleships-in-a-board-medium) |                                                              |
+|                                                              | [#560-subarray-sum-equals-k-medium](#560-subarray-sum-equals-k-medium) |
+|                                                              |                                                              |
+|                                                              |                                                              |
+|                                                              |                                                              |
 
 
 
@@ -2338,6 +2347,141 @@ Bonus point if you are able to do this using only *O*(*n*) extra space, where *n
     }
 ```
 
+---
+
+#### #130-surrounded-regions
+
+Given a 2D board containing `'X'` and `'O'` (the **letter** O), capture all regions surrounded by `'X'`.
+
+A region is captured by flipping all `'O'`s into `'X'`s in that surrounded region.
+
+For example,
+
+```
+X X X X
+X O O X
+X X O X
+X O X X
+```
+
+After running your function, the board should be:
+
+```
+X X X X
+X X X X
+X X X X
+X O X X
+```
+
+**Notice overflow case: **
+
+```
+OOOOOOOOOO
+XXXXXXXXXO
+OOOOOOOOOO
+OXXXXXXXXX
+OOOOOOOOOO
+XXXXXXXXXO
+OOOOOOOOOO
+OXXXXXXXXX
+OOOOOOOOOO
+XXXXXXXXXO
+```
+
+```
+OOOOOOOOOOOX
+XXXXXXXXXXOX
+XOOOOOOOOOOX
+XOXXXXXXXXXX
+XOOOOOOOOOOX
+XXXXXXXXXXOX
+XOOOOOOOOOOX
+XOXXXXXXXXXX
+XOOOOOOOOOOX
+XXXXXXXXXXOX
+```
+
+```java
+    public void solve(char[][] board) {
+        // if surrounded, must at edge
+        // check edge set 0 to 1
+        if(board==null||board.length==0||board[0].length==0)
+            return;
+        int m = board.length, n = board[0].length;
+        // set first last row
+        for(int j=0; j<n; j++){
+            check(board,m,n,0,j);
+            if(m > 1)
+                check(board,m,n,m-1,j);
+        }
+        // set left right col
+        for(int i=1; i<m; i++){
+            check(board,m,n,i,0);
+            if(n > 1)
+                check(board,m,n,i,n-1);
+        }
+        // set 1 to 0, 0 to X
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                if(board[i][j] == '1')
+                    board[i][j] = 'O';
+                else if(board[i][j] == 'O')
+                    board[i][j] = 'X';
+            }
+        }
+    }
+    private void check(char[][] board,int m,int n,int i,int j){
+        // use trick avoid TLE, skip first row and left col
+        // skip only one not both for best performance
+        if(board[i][j] == 'O'){
+            board[i][j] = '1';
+            // use i>1 instead of i>=1
+            if(i > 1)
+                check(board,m,n,i-1,j);
+            if(i < m-1)
+            check(board,m,n,i+1,j);
+            // use j>1 instead of j>=1
+            if(j > 1)
+                check(board,m,n,i,j-1);
+            if(j < n-1)
+                check(board,m,n,i,j+1);
+        }
+    }
+```
+
+---
+
+#### #133-clone-graph-medium
+
+Clone an undirected graph. Each node in the graph contains a `label` and a list of its `neighbors`.
+
+```java
+/**
+ * Definition for undirected graph.
+ * class UndirectedGraphNode {
+ *     int label;
+ *     List<UndirectedGraphNode> neighbors;
+ *     UndirectedGraphNode(int x) { label = x; neighbors = new ArrayList<UndirectedGraphNode>(); }
+ * };
+ */
+    public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
+        Map<Integer,UndirectedGraphNode> visited = new HashMap<>();
+        return clone(node,visited);
+    }
+    private UndirectedGraphNode clone(UndirectedGraphNode node, Map<Integer,UndirectedGraphNode> visited){
+        if(node == null)
+            return null;
+        if(visited.containsKey(node.label))
+            return visited.get(node.label);
+        UndirectedGraphNode newNode = new UndirectedGraphNode(node.label);
+        visited.put(node.label,newNode);
+        for(UndirectedGraphNode n : node.neighbors){
+            newNode.neighbors.add(clone(n,visited));
+        }
+        return newNode;
+    }
+```
+
 
 
 ---
@@ -2345,6 +2489,117 @@ Bonus point if you are able to do this using only *O*(*n*) extra space, where *n
 #### #149-max-points-on-a-line-hard
 
 Given *n* points on a 2D plane, find the maximum number of points that lie on the same straight line.
+
+
+
+---
+
+#### #156-binary-tree-upside-down-medium
+
+Given a binary tree where all the right nodes are either leaf nodes with a sibling (a left node that shares the same parent node) or empty, flip it upside down and turn it into a tree where the original right nodes turned into left leaf nodes. Return the new root.
+
+For example:
+Given a binary tree `{1,2,3,4,5}`,
+
+```
+    1
+   / \
+  2   3
+ / \
+4   5
+```
+
+return the root of the binary tree `[4,5,2,#,#,3,1]`.
+
+```
+   4
+  / \
+ 5   2
+    / \
+   3   1  
+   
+    1
+   / 
+  2 -- 3
+ / 
+4 -- 5
+```
+
+```java
+    public TreeNode upsideDownBinaryTree(TreeNode root) {
+        //     1
+        //    / \
+        //   2 - 3
+        //  / \
+        // 4 - 5    
+        TreeNode curr = root;
+        TreeNode next = null, prev = null, right = null;
+        while(curr != null){
+            next = curr.left;   // save left
+            
+            curr.left = right;
+            right = curr.right;
+            curr.right = prev;
+            
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+```
+
+---
+
+
+
+
+
+
+
+
+
+---
+
+#### #165-compare-version-numbers-medium
+
+Compare two version numbers *version1* and *version2*.
+If *version1* > *version2* return 1, if *version1* < *version2* return -1, otherwise return 0.
+
+You may assume that the version strings are non-empty and contain only digits and the `.` character.
+The `.` character does not represent a decimal point and is used to separate number sequences.
+For instance, `2.5` is not "two and a half" or "half way to version three", it is the fifth second-level revision of the second first-level revision.
+
+Here is an example of version numbers ordering:
+
+```
+0.1 < 1.1 < 1.2 < 13.37  
+01 = 1, 1.0 = 1
+```
+
+```java
+    public int compareVersion(String version1, String version2) {
+        // . match a char
+        String[] v1 = version1.split("\\.");
+        String[] v2 = version2.split("\\.");
+        for(int i=0,j=0;i<v1.length||j<v2.length;){
+            int num1 = i >= v1.length ? 0 : Integer.parseInt(v1[i++]);
+            int num2 = j >= v2.length ? 0 : Integer.parseInt(v2[j++]);
+            if(num1 == num2)
+                continue;
+            else if(num1 < num2)
+                return -1;
+            else
+                return 1;
+        }
+        return 0;
+    }
+```
+
+---
+
+
+
+
 
 
 
@@ -2478,6 +2733,131 @@ For example, given the range [5, 7], you should return 4.
 ```
 
 ------
+
+
+
+---
+
+#### #223-rectangle-area-medium
+
+Find the total area covered by two **rectilinear** rectangles in a **2D** plane.
+
+Each rectangle is defined by its bottom left corner and top right corner as shown in the figure.
+
+![Rectangle Area](https://leetcode.com/static/images/problemset/rectangle_area.png)
+
+Assume that the total area is never beyond the maximum possible value of **int**.
+
+```java
+    public int computeArea(int A, int B, int C, int D, int E, int F, int G, int H) {
+        // FIND INTERSECTION
+        // x axis: A---C E---F
+        int X = 0;
+        if(C-A>G-E && E>=A && G<=C)
+            X = G - E;
+        else if(C-A<=G-E && A>=E && C<=G)
+            X = C - A;
+        // after above 2, low priority
+        else if(G>A && E<A)
+            X = G - A;
+        else if(E<C && G>C)
+            X = C - E;
+        // y axis: B---D F---H
+        int Y = 0;
+        // check include relation first
+        if(D-B>H-F && F>=B && H<=D)
+            Y = H - F;
+        else if(D-B<=H-F && B>=F && D<=H)
+            Y = D - B;
+        else if(H>B && F<B)
+            Y = H - B;
+        else if(F<D && H>D)
+            Y = D - F;        
+        // compute
+        int area1 = (C-A) * (D-B);
+        int area2 = (G-E) * (H-F);
+        int area3 = X * Y;
+        return area1 + area2 - area3;
+
+    }
+```
+
+---
+
+
+
+---
+
+#### #228-summary-ranges-medium
+
+Given a sorted integer array without duplicates, return the summary of its ranges.
+
+**Example 1:**
+
+```
+Input: [0,1,2,4,5,7]
+Output: ["0->2","4->5","7"]
+```
+
+**Example 2:**
+
+```
+Input: [0,2,3,4,6,8,9]
+Output: ["0","2->4","6","8->9"]
+```
+
+```java
+    public List<String> summaryRanges(int[] nums) {
+        List<String> result = new ArrayList<>();
+        if(nums==null || nums.length==0)
+            return result;
+        Integer head = null;
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i<nums.length; i++){
+            if(head == null)
+                head = nums[i];
+            if(i<nums.length-1 && nums[i]+1==nums[i+1])
+                continue;
+            else{   // last one or new range
+                sb.append(head);
+                // notice one num
+                if(head != nums[i])
+                    sb.append("->"+nums[i]);
+                result.add(sb.toString());
+                sb.setLength(0);
+                head = null;
+            }
+        }
+        return result;
+    }
+```
+
+```java
+    public List<String> summaryRanges(int[] nums) {
+        List<String> result = new ArrayList<>();
+        if(nums==null || nums.length==0)
+            return result;
+        for(int head=0; head<nums.length; head++){
+            int tail = head;
+            while(tail<nums.length-1 && nums[tail]+1==nums[tail+1])
+                tail ++;
+            if(head != tail)
+                result.add(nums[head] + "->" + nums[tail]);
+            else
+                result.add(nums[head] + "");
+            head = tail;
+        }
+        return result;
+    }
+```
+
+
+
+---
+
+
+
+
 
 
 
@@ -2763,6 +3143,189 @@ You may assume *word1* and *word2* are both in the list.
 ---
 
 
+
+---
+
+#### #335-self-crossing-hard
+
+You are given an array *x* of `n` positive numbers. You start at point `(0,0)` and moves `x[0]` metres to the north, then `x[1]` metres to the west, `x[2]` metres to the south, `x[3]` metres to the east and so on. In other words, after each move your direction changes counter-clockwise.
+
+Write a one-pass algorithm with `O(1)` extra space to determine, if your path crosses itself, or not.
+
+**Example 1:**
+
+```
+Given x = [2, 1, 1, 2],
+?????
+?   ?
+???????>
+    ?
+
+Return true (self crossing)
+```
+
+**Example 2:**
+
+```
+Given x = [1, 2, 3, 4],
+????????
+?      ?
+?
+?
+?????????????>
+
+Return false (not self crossing)
+```
+
+**Example 3:**
+
+```
+Given x = [1, 1, 1, 1],
+?????
+?   ?
+?????>
+
+Return true (self crossing)
+```
+
+```java
+    public boolean isSelfCrossing(int[] x) {
+        // i could cross with i-3, i-4, i-5
+        if(x==null || x.length<=3)
+            return false;
+        // start from 3
+        for(int i=3; i<x.length; i++){
+            // check i & i-3
+            // 7 4: 7>=5, 6>=4
+            if(x[i]>=x[i-2] && x[i-1]<=x[i-3])
+                return true;
+            // check i & i-4
+            // 7 3: 7+3>=5, 6==4
+            if(i>=4 && x[i]+x[i-4]>=x[i-2] && x[i-1]==x[i-3])
+                return true;
+            // check i & i-5
+            // 7 2: 7+3>=5, 5>=3, 6+2>=4, 6<=4 !(4>=2)
+            if(i>=5 && x[i]+x[i-4]>=x[i-2] && x[i-2]>=x[i-4] &&
+              x[i-1]+x[i-5]>=x[i-3] && x[i-1]<=x[i-3])
+                return true;
+        }
+        return false;
+    }
+```
+
+---
+
+
+
+
+
+---
+
+#### #384-shuffle-an-array-medium
+
+Shuffle a set of numbers without duplicates.
+
+**Example:**
+
+```
+// Init an array with set 1, 2, and 3.
+int[] nums = {1,2,3};
+Solution solution = new Solution(nums);
+
+// Shuffle the array [1,2,3] and return its result. Any permutation of [1,2,3] must equally likely to be returned.
+solution.shuffle();
+
+// Resets the array back to its original configuration [1,2,3].
+solution.reset();
+
+// Returns the random shuffling of array [1,2,3].
+solution.shuffle();
+```
+
+```java
+class Solution {
+    int[] nums = null;
+    Random random;
+    public Solution(int[] nums) {
+        this.nums = nums;
+        random = new Random();
+    }
+    
+    /** Resets the array to its original configuration and return it. */
+    public int[] reset() {
+        return nums;
+    }
+    
+    /** Returns a random shuffling of the array. */
+    public int[] shuffle() {
+        int[] copy = nums.clone();
+        // i is at i P = 1/i+1
+        // i is not at i P = 1-1/i+1 = i/i+1
+        // i at the other i P = 1/ i;
+        // i at each location 0 to i is 1/i+1
+        for(int i=1;i<copy.length;i++){
+            // nextInt(a) a is exclusive
+            int j = random.nextInt(i+1);
+            swap(copy,i,j);
+        }
+        return copy;
+    }
+    
+    private void swap(int[] nums,int i,int j){
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+```
+
+---
+
+
+
+---
+
+#### #406-queue-reconstruction-by-height-medium
+
+Suppose you have a random list of people standing in a queue. Each person is described by a pair of integers `(h, k)`, where `h` is the height of the person and `k` is the number of people in front of this person who have a height greater than or equal to `h`. Write an algorithm to reconstruct the queue.
+
+**Note:**
+The number of people is less than 1,100.
+
+**Example**
+
+```
+Input:
+[[7,0], [4,4], [7,1], [5,0], [6,1], [5,2]]
+
+Output:
+[[5,0], [7,0], [5,2], [6,1], [4,4], [7,1]]
+```
+
+```java
+    public int[][] reconstructQueue(int[][] people) {
+        // height decrease, count increase, insert
+        if(people==null || people.length==0 || people[0].length==0)
+            return people;
+        Arrays.sort(people,new Comparator<int[]>(){
+            @Override
+            public int compare(int[] a,int[] b){
+                if(a[0] != b[0])    // decrease
+                    return b[0] - a[0];
+                else    // increase
+                    return a[1] - b[1];
+            }
+        });
+        List<int[]> result = new LinkedList<>();
+        for(int[] p : people)
+            result.add(p[1],p);
+        return result.toArray(new int[people.length][2]);
+    }
+```
+
+
+
+---
 
 
 
