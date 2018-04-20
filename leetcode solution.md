@@ -8,17 +8,18 @@
 | [#32-longest-valid-parentheses-hard](#32-longest-valid-parentheses-hard) |                                                              |
 | [#33-search-in-rotated-sorted-array-medium](#33-search-in-rotated-sorted-array-medium) | [#133-clone-graph-medium](#133-clone-graph-medium)           |
 | [#42-trapping-rain-water-hard](#42-trapping-rain-water-hard) |                                                              |
+|                                                              | [#146-lru-cache-hard](#146-lru-cache-hard)                   |
 |                                                              | [#149-max-points-on-a-line-hard](#149-max-points-on-a-line-hard) |
 |                                                              | [#156-binary-tree-upside-down-medium](#156-binary-tree-upside-down-medium) |
 | [#61-rotate-list-medium](#61-rotate-list-medium)             |                                                              |
 | [#62-unique-paths-medium](#62-unique-paths-medium)           |                                                              |
-| [#63-unique-paths-ii-medium](#63-unique-paths-ii-medium)     |                                                              |
+| [#63-unique-paths-ii-medium](#63-unique-paths-ii-medium)     | [#163-missing-ranges-medium](#163-missing-ranges-medium)     |
 | [#64-minimum-path-sum-medium](#64-minimum-path-sum-medium)   |                                                              |
 |                                                              | [#165-compare-version-numbers-medium](#165-compare-version-numbers-medium) |
 | [#66-plus-one-easy](#66-plus-one-easy)                       |                                                              |
 | [#67-add-binary-easy](#67-add-binary-easy)                   |                                                              |
 |                                                              |                                                              |
-|                                                              |                                                              |
+|                                                              | [#169-majority-element-easy](#169-majority-element-easy)     |
 | [#70-climbing-stairs-easy](#70-climbing-stairs-easy)         |                                                              |
 | [#71-simplify-path-medium](#71-simplify-path-medium)         |                                                              |
 | [#73-set-matrix-zeros-medium](#73-set-matrix-zeros-medium)   |                                                              |
@@ -39,9 +40,12 @@
 | 201 ~ 300                                                    | 301 ~ 400                                                    |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [#201-bitwise-and-of-numbers-range-medium](#201-bitwise-and-of-numbers-range-medium) |                                                              |
-|                                                              |                                                              |
+| [#217-contains-duplicate-easy](#217-contains-duplicate-easy) |                                                              |
+| [#219-contains-duplicate-ii-easy](#219-contains-duplicate-ii-easy) |                                                              |
+| [#220-contains-duplicate-iii-medium](#220-contains-duplicate-iii-medium) |                                                              |
 | [#223-rectangle-area-medium](#223-rectangle-area-medium)     |                                                              |
 | [#228-summary-ranges-medium](#228-summary-ranges-medium)     |                                                              |
+| [#229-majority-element-ii-medium](#229-majority-element-ii-medium) |                                                              |
 |                                                              | [#335-self-crossing-hard](#335-self-crossing-hard)           |
 | [#241-different-ways-to-add-parentheses-medium](#241-different-ways-to-add-parentheses-medium) |                                                              |
 |                                                              |                                                              |
@@ -54,12 +58,21 @@
 
 | 401 ~ 500                                                    | 501 ~ 600                                                    |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
+|                                                              |                                                              |
 | [#406-queue-reconstruction-by-height-medium](#406-queue-reconstruction-by-height-medium) |                                                              |
 | [#419-battleships-in-a-board-medium](#419-battleships-in-a-board-medium) |                                                              |
 |                                                              | [#560-subarray-sum-equals-k-medium](#560-subarray-sum-equals-k-medium) |
+| [#476-number-complement-easy](#476-number-complement-easy)   |                                                              |
 |                                                              |                                                              |
-|                                                              |                                                              |
-|                                                              |                                                              |
+| [#500-keyboard-row-easy](#500-keyboard-row-easy)             |                                                              |
+
+#### 601 ~ 800
+
+| 601 ~ 700                                                    | 701 ~ 800 |
+| ------------------------------------------------------------ | --------- |
+| [#604-compressed-string-iterator-easy](#604-compressed-string-iterator-easy) |           |
+|                                                              |           |
+|                                                              |           |
 
 
 
@@ -2482,6 +2495,130 @@ Clone an undirected graph. Each node in the graph contains a `label` and a list 
     }
 ```
 
+---
+
+
+
+---
+
+#### #146-lru-cache-hard
+
+Design and implement a data structure for [Least Recently Used (LRU) cache](https://en.wikipedia.org/wiki/Cache_replacement_policies#LRU). It should support the following operations: `get` and `put`.
+
+`get(key)` - Get the value (will always be positive) of the key if the key exists in the cache, otherwise return -1.
+`put(key, value)` - Set or insert the value if the key is not already present. When the cache reached its capacity, it should invalidate the least recently used item before inserting a new item.
+
+**Follow up:**
+Could you do both operations in **O(1)** time complexity?
+
+**Example:**
+
+```
+LRUCache cache = new LRUCache( 2 /* capacity */ );
+
+cache.put(1, 1);
+cache.put(2, 2);
+cache.get(1);       // returns 1
+cache.put(3, 3);    // evicts key 2
+cache.get(2);       // returns -1 (not found)
+cache.put(4, 4);    // evicts key 1
+cache.get(1);       // returns -1 (not found)
+cache.get(3);       // returns 3
+cache.get(4);       // returns 4
+```
+
+```java
+class LRUCache {
+    // implement double linked list
+    // most recent at head
+    // least recent at tail
+    DListNode head = null;
+    DListNode tail = null;
+    int capacity = 0;
+    Map<Integer,DListNode> map; // save key, node
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+        map = new HashMap<>();
+        // init head tail
+        head = new DListNode();
+        tail = new DListNode();
+        head.next = tail;
+        tail.prev = head;
+    }
+    
+    public int get(int key) {
+        if(!map.containsKey(key))
+            return -1;
+        DListNode node = map.get(key);
+        moveToHead(node);   // most recent
+        return node.val;
+    }
+    
+    public void put(int key, int value) {
+        // notice when same key, diff val
+        if(map.containsKey(key)){
+            DListNode node = map.get(key);
+            node.setVal(value);
+            moveToHead(node);   // active
+            return;
+        }
+        DListNode node = new DListNode(key,value);
+        if(capacity == 0){
+            int removeKey = removeLast();
+            // remove least from list and map
+            map.remove(removeKey);
+            capacity ++;
+        }
+        addFirst(node);
+        map.put(key,node);
+        capacity --;
+    }
+    // add most recent to head    
+    private void addFirst(DListNode node){
+        node.prev = head;
+        node.next = head.next;
+        head.next.prev = node;
+        head.next = node;
+    }
+    // remove a node
+    private void remove(DListNode node){
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+        node.prev = null;
+        node.next = null;            
+    }
+    // remove least recent node, return key
+    private int removeLast(){
+        DListNode last = tail.prev;
+        remove(tail.prev);
+        return last.key;
+    }
+    // set to head
+    private void moveToHead(DListNode node){
+        remove(node);
+        addFirst(node);
+    }
+    
+    private class DListNode{
+        int key;
+        int val;
+        DListNode prev;
+        DListNode next;
+        public DListNode(){}
+        public DListNode(int key,int val){
+            this.key = key;
+            this.val = val;
+        }
+        // use when put with same key
+        public void setVal(int val){
+            this.val = val;
+        }
+    }
+}
+```
+
+---
+
 
 
 ---
@@ -2552,6 +2689,50 @@ return the root of the binary tree `[4,5,2,#,#,3,1]`.
 
 
 
+---
+
+#### #163-missing-ranges-medium
+
+Given a sorted integer array where **the range of elements are in the inclusive range [lower, upper]**, return its missing ranges.
+
+For example, given `[0, 1, 3, 50, 75]`, *lower* = 0 and *upper* = 99, return `["2", "4->49", "51->74", "76->99"].`
+
+**Corner cases:  Integer.min, Integer.max**  [#228-summary-ranges-medium](#228-summary-ranges-medium)
+
+```java
+    public List<String> findMissingRanges(int[] nums, int lower, int upper) {
+        List<String> result = new ArrayList<>();
+        if(nums==null)
+            return result;
+        int head = lower;
+        for(int i=0; i<nums.length; i++){
+            // deal with corner case
+            // [-2147483648,-2147483648,0,2147483647,2147483647]
+            // -2147483648
+            // 2147483647
+            if(nums[i] == Integer.MIN_VALUE){
+                // tail cannot be nums[i] - 1
+                head = nums[i] + 1;
+                continue;
+            }
+            int tail = nums[i] - 1;
+            
+            if(tail >= head)
+                result.add(head + (tail>head? "->"+tail : ""));           
+            // deal with corner case, return here
+            if(nums[i] == Integer.MAX_VALUE)
+                return result;
+            head = nums[i] + 1;
+        }
+        // deal with last num
+        if(head <= upper)
+            result.add(head + (upper>head? "->"+upper : ""));
+        return result;
+    }
+```
+
+---
+
 
 
 
@@ -2596,6 +2777,31 @@ Here is an example of version numbers ordering:
 ```
 
 ---
+
+
+
+---
+
+#### #169-majority-element-easy
+
+Given an array of size *n*, find the majority element. The majority element is the element that appears **more than** `⌊ n/2 ⌋` times.
+
+You may assume that the array is non-empty and the majority element always exist in the array.
+
+**Can use sorting as well** [#229-majority-element-ii-medium](#229-majority-element-ii-medium)
+
+```java
+    public int majorityElement(int[] nums) {
+        // Boyer-Moore Voting Algorithm
+        int result = 0, count = 0;
+        for(int num : nums){
+            if(count == 0)
+                result = num;
+            count += num == result ? 1 : -1;
+        }
+        return result;
+    }
+```
 
 
 
@@ -2738,6 +2944,73 @@ For example, given the range [5, 7], you should return 4.
 
 ---
 
+#### #217-contains-duplicate-easy
+
+Given an array of integers, find if the array contains any duplicates. Your function should return true if any value appears at least twice in the array, and it should return false if every element is distinct.
+
+**Use HashSet: time O(n), space O(n)**
+
+**Use Sort: time O(nlgn), space O(1)**
+
+---
+
+#### #219-contains-duplicate-ii-easy
+
+Given an array of integers and an integer *k*, find out whether there are two distinct indices *i* and *j* in the array such that **nums[i] = nums[j]** and the **absolute** difference between *i* and *j* is at most *k*.
+
+```java
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+        if(k<=0) return false;
+        Set<Integer> visited = new HashSet<>();
+        for(int i=0;i<nums.length;i++){
+            if(i-k>0) visited.remove(nums[i-k-1]);
+            if(!visited.add(nums[i])) return true;
+        }
+        return false;
+    }
+```
+
+---
+
+#### #220-contains-duplicate-iii-medium
+
+Given an array of integers, find out whether there are two distinct indices *i* and *j* in the array such that the **absolute** difference between **nums[i]** and **nums[j]** is at most *t* and the **absolute** difference between *i* and *j* is at most *k*. **Use TreeSet**
+
+```java
+    public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+        // abs(nums[i] - nums[j]) <= t
+        // abs(i - j) <= k
+        // O(n log k)
+        if(nums==null || nums.length==0 || t<0 || k<0)
+            return false;
+        TreeSet<Integer> set = new TreeSet<>();
+        for(int i=0; i<nums.length; i++){
+            // maintance a window
+            if(i - k > 0)
+                set.remove(nums[i - k - 1]);
+            // floor: greatest less or equal to
+            // ceiling: smallest greater or equal to
+            // NOTICE: overflow
+            Integer left = set.ceiling(Integer.MIN_VALUE + t < nums[i] ? 
+                                       nums[i] - t : Integer.MIN_VALUE);
+            Integer right = set.floor(Integer.MAX_VALUE - t > nums[i] ?
+                                     nums[i] + t : Integer.MAX_VALUE);
+            if(left != null && left <= nums[i] ||
+              right != null && right >= nums[i])
+                return true;
+            // add set
+            set.add(nums[i]);
+        }
+        return false;
+    }
+```
+
+
+
+
+
+---
+
 #### #223-rectangle-area-medium
 
 Find the total area covered by two **rectilinear** rectangles in a **2D** plane.
@@ -2851,7 +3124,54 @@ Output: ["0","2->4","6","8->9"]
     }
 ```
 
+---
 
+#### #229-majority-element-ii-medium
+
+Given an integer array of size *n*, find all elements that appear more than `⌊ n/3 ⌋` times. The algorithm should run in linear time and in O(1) space.
+
+**Check existence first!!**
+
+```java
+    public List<Integer> majorityElement(int[] nums) {
+        // majority vote
+        List<Integer> result = new ArrayList<>();
+        if(nums == null || nums.length == 0)
+            return result;
+        int major1 = 0, major2 = 0, cnt1 = 0, cnt2 = 0;
+        for(int num : nums){
+            // order matters
+            if(major1 == num)
+                cnt1 ++;
+            else if(major2 == num)
+                cnt2 ++;             
+            else if(cnt1 == 0){
+                major1 = num;
+                cnt1 ++;
+            }else if(cnt2 == 0){
+                major2 = num;  
+                cnt2 ++;
+            }else{
+                cnt1 --;
+                cnt2 --;
+            }
+        }
+        // 2nd pass, cnt accurance
+        cnt1 = cnt2 = 0;
+        for(int num : nums){
+            if(major1 == num)
+                cnt1 ++;
+            else if(major2 == num)
+                cnt2 ++;
+        }
+        // add to result
+        if(cnt1 > nums.length / 3)
+            result.add(major1);
+        if(cnt2 > nums.length / 3)
+            result.add(major2);
+        return result;
+    }
+```
 
 ---
 
@@ -3385,6 +3705,119 @@ This is an invalid board that you will not receive - as battleships will always 
 
 ---
 
+
+
+
+
+---
+
+#### #476-number-complement-easy
+
+Given a positive integer, output its complement number. The complement strategy is to flip the bits of its binary representation.
+
+**Note:**
+
+1. The given integer is guaranteed to fit within the range of a 32-bit signed integer.
+2. You could assume no leading zero bit in the integer’s binary representation.
+
+**Example 1:**
+
+```
+Input: 5
+Output: 2
+Explanation: The binary representation of 5 is 101 (no leading zero bits), and its complement is 010. So you need to output 2.
+```
+
+**Example 2:**
+
+```
+Input: 1
+Output: 0
+Explanation: The binary representation of 1 is 1 (no leading zero bits), and its complement is 0. So you need to output 0.
+```
+
+```java
+    public int findComplement(int num) {
+        // use 11111 - num
+        int n = 1;
+        while(n < num)
+            n = n << 1 | 1;
+        return n - num;
+    }
+```
+
+---
+
+
+
+---
+
+#### #500-keyboard-row-easy
+
+Given a List of words, return the words that can be typed using letters of **alphabet** on only one row's of American keyboard like the image below. 
+
+![American keyboard](https://leetcode.com/static/images/problemset/keyboard.png)
+
+**Example 1:**
+
+```
+Input: ["Hello", "Alaska", "Dad", "Peace"]
+Output: ["Alaska", "Dad"]
+```
+
+**Note:**
+
+1. You may use one character in the keyboard more than once.
+2. You may assume the input string will only contain letters of alphabet.
+
+```java
+    public String[] findWords(String[] words) {
+        List<String> result = new ArrayList<>();
+        if(words==null || words.length==0)
+            return result.toArray(new String[0]);
+        // build map
+        String[] rows = {"QWERTYUIOP","ASDFGHJKL","ZXCVBNM"};
+        Map<Character,Integer> map = new HashMap<>();
+        for(int i=0;i<rows.length;i++)
+            for(char c : rows[i].toCharArray())
+                map.put(c,i);
+        // add to result
+        WORDS:
+        for(String word : words){
+            if(word.equals(""))
+                continue;
+            int idx = map.get(Character.toUpperCase(word.charAt(0)));
+            for(int i=1;i<word.length();i++){
+                if(map.get(Character.toUpperCase(word.charAt(i))) != idx)
+                    continue WORDS;
+            }
+            result.add(word);
+        }
+        return result.toArray(new String[result.size()]);
+    }
+```
+
+```java
+    public String[] findWords(String[] words) {
+        List<String> result = new ArrayList<>();
+        if(words==null || words.length==0)
+            return result.toArray(new String[0]);
+        String regex = "[QWERTYUIOP]*|[ASDFGHJKL]*|[ZXCVBNM]*";
+        for(String word : words){
+            if(word.toUpperCase().matches(regex)){
+                result.add(word);
+            }
+        }
+        return result.toArray(new String[result.size()]);
+    }
+```
+
+
+
+
+
+---
+
 #### #560-subarray-sum-equals-k-medium
 
 Given an array of integers and an integer **k**, you need to find the total number of continuous subarrays whose sum equals to **k**.
@@ -3416,5 +3849,80 @@ Output: 2
         }
         return count;
     }
+```
+
+---
+
+
+
+---
+
+#### #604-compressed-string-iterator-easy
+
+Design and implement a data structure for a compressed string iterator. It should support the following operations: `next` and `hasNext`.
+
+The given compressed string will be in the form of each letter followed by a positive integer representing the number of this letter existing in the original uncompressed string.
+
+`next()` - if the original string still has uncompressed characters, return the next letter; Otherwise return a white space.
+`hasNext()` - Judge whether there is any letter needs to be uncompressed.
+
+**Note:**
+Please remember to **RESET** your class variables declared in StringIterator, as static/class variables are **persisted across multiple test cases**. Please see [here](https://leetcode.com/faq/#different-output) for more details.
+
+**Example:**
+
+```
+StringIterator iterator = new StringIterator("L1e2t1C1o1d1e1");
+
+iterator.next(); // return 'L'
+iterator.next(); // return 'e'
+iterator.next(); // return 'e'
+iterator.next(); // return 't'
+iterator.next(); // return 'C'
+iterator.next(); // return 'o'
+iterator.next(); // return 'd'
+iterator.hasNext(); // return true
+iterator.next(); // return 'e'
+iterator.hasNext(); // return false
+iterator.next(); // return ' '
+```
+
+```java
+class StringIterator {
+    // use int[2] save char, count
+    // use queue
+    Queue<int[]> queue;
+    public StringIterator(String compressedString) {
+        queue = new LinkedList<>();
+        int len = compressedString.length();
+        for(int i=0; i<len;){
+            int[] pair = new int[2];
+            pair[0] = compressedString.charAt(i);
+            int j = i + 1;
+            // num is before letters
+            String cnt = "";
+            while(j<len && compressedString.charAt(j)<'A'){
+                cnt += compressedString.charAt(j);
+                j ++;
+            }
+            pair[1] = Integer.parseInt(cnt);
+            queue.offer(pair);
+            i = j;
+        }
+    }
+    
+    public char next() {
+        if(queue.isEmpty())
+            return ' ';
+        int[] pair = queue.peek();
+        if(--pair[1] == 0)
+            queue.poll();
+        return (char) pair[0];
+    }
+    
+    public boolean hasNext() {
+        return !queue.isEmpty();
+    }
+}
 ```
 

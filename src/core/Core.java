@@ -42,11 +42,7 @@ public class Core {
 //		arrayNesting(new int[] { 5, 4, 0, 3, 1, 6, 2 });
 //		Test.regularExpressionMatch("xabyc", "xa*b.*");
 //		Test.inorderPreorderGetPostorder(new int[] { 1, 2, 3, 4, 5, 6, 7 }, new int[] { 4, 2, 1, 3, 6, 5, 7 });
-		String v1 = "01";
-		logger.debug("{}", v1.split("\\.")[0]);
-		List<Integer> result = new LinkedList<>();
-		result.add(0, 1);
-		result.add(1, 2);
+		logger.debug("{}", (int) 'a');
 	}
 
 }
