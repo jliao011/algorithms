@@ -34,6 +34,15 @@
 | [#82-remove-duplicates-from-sorted-list-ii-medium](#82-remove-duplicates-from-sorted-list-ii-medium) |                                                              |
 | [#83-remove-duplicates-from-sorted-list-easy](#83-remove-duplicates-from-sorted-list-easy) |                                                              |
 | [#84-largest-rectangle-in-histogram-hard](#84-largest-rectangle-in-histogram-hard) |                                                              |
+|                                                              |                                                              |
+| [#86-partition-list-medium](#86-partition-list-medium)       |                                                              |
+|                                                              |                                                              |
+| [#88-merge-sorted-array-easy](#88-merge-sorted-array-easy)   |                                                              |
+| [#89-gray-code-medium](#89-gray-code-medium)                 |                                                              |
+| [#90-subsets-ii-medium](#90-subsets-ii-medium)               |                                                              |
+|                                                              |                                                              |
+| [#92-reverse-linked-list-ii-medium](#92-reverse-linked-list-ii-medium) |                                                              |
+| [#93-restore-ip-addresses-medium](#93-restore-ip-addresses-medium) |                                                              |
 
 #### 201 ~ 400
 
@@ -2316,7 +2325,256 @@ return `10`.
     }
 ```
 
+---
 
+
+
+---
+
+#### #86-partition-list-medium
+
+Given a linked list and a value *x*, partition it such that all nodes less than *x* come before nodes greater than or equal to *x*.
+
+You should preserve the original relative order of the nodes in each of the two partitions.
+
+**Example:**
+
+```
+Input: head = 1->4->3->2->5->2, x = 3
+Output: 1->2->2->4->3->5
+```
+
+```java
+    public ListNode partition(ListNode head, int x) {
+        // use two head;
+        ListNode dummy1 = new ListNode(0), prev1 = dummy1;
+        ListNode dummy2 = new ListNode(0), prev2 = dummy2;
+        while(head != null){
+            if(head.val < x){
+                prev1.next = head;
+                prev1 = prev1.next;
+            }else{
+                prev2.next = head;
+                prev2 = prev2.next;
+            }
+            head = head.next;
+        }
+        // combine two list
+        prev1.next = dummy2.next;
+        prev2.next = null;
+        return dummy1.next;
+    }
+```
+
+---
+
+#### #88-merge-sorted-array-easy
+
+Given two sorted integer arrays *nums1* and *nums2*, merge *nums2* into *nums1* as one sorted array.
+
+**Note:**
+
+- The number of elements initialized in *nums1* and *nums2* are *m* and *n* respectively.
+- You may assume that *nums1* has enough space (size that is greater or equal to *m* + *n*) to hold additional elements from *nums2*.
+
+**Example:**
+
+```
+Input:
+nums1 = [1,2,3,0,0,0], m = 3
+nums2 = [2,5,6],       n = 3
+
+Output: [1,2,2,3,5,6]
+```
+
+```java
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        // from end to head,
+        int i = m - 1, j = n - 1, k = m + n - 1;
+        while(i >= 0 && j >= 0)
+            nums1[k--] = nums1[i] > nums2[j] ? nums1[i--] : nums2[j--];
+        while(j >= 0)  // nums2 rest
+            nums1[k--] = nums2[j--];
+    }
+```
+
+---
+
+#### #89-gray-code-medium
+
+The gray code is a binary numeral system where two successive values differ in only one bit.
+
+Given a non-negative integer *n* representing the total number of bits in the code, print the sequence of gray code. A gray code sequence must begin with 0.
+
+For example, given *n* = 2, return `[0,1,3,2]`. Its gray code sequence is:
+
+```
+00 - 0
+01 - 1
+11 - 3
+10 - 2
+```
+
+**Note:**
+For a given *n*, a gray code sequence is not uniquely defined.
+
+For example, `[0,2,3,1]` is also a valid gray code sequence according to the above definition.
+
+For now, the judge is able to judge based on one instance of gray code sequence. Sorry about that.
+
+```java
+    public List<Integer> grayCode(int n) {
+        // bit manipulate
+        List<Integer> result = new ArrayList();
+        // total should < 1 << n
+        for(int i=0; i < 1<<n; i++){
+            result.add(i ^ i>>1);
+        }
+        return result;
+    }
+```
+
+---
+
+#### #90-subsets-ii-medium
+
+Given a collection of integers that might contain duplicates, **nums**, return all possible subsets (the power set).
+
+**Note:** The solution set must not contain duplicate subsets.
+
+**Example:**
+
+```
+Input: [1,2,2]
+Output:
+[
+  [2],
+  [1],
+  [1,2,2],
+  [2,2],
+  [1,2],
+  []
+]
+```
+
+```java
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        // since remove duplicate, need sorting
+        Arrays.sort(nums);
+        backtrack(result,nums,new ArrayList<>(),0);
+        return result;
+    }
+    private void backtrack(List<List<Integer>> result,int[] nums,List<Integer> temp,int idx){
+        // no need to check
+        result.add(new ArrayList<>(temp));
+        for(int i=idx;i<nums.length;i++){
+            // jump duplicate
+            // notice its > idx not > 0
+            if(i>idx && nums[i]==nums[i-1])
+                continue;
+            temp.add(nums[i]);
+            backtrack(result,nums,temp,i+1);
+            temp.remove(temp.size()-1);
+        }
+    }
+```
+
+---
+
+
+
+
+
+---
+
+#### #92-reverse-linked-list-ii-medium
+
+Reverse a linked list from position *m* to *n*. Do it in one-pass.
+
+**Note:** 1 ≤ *m* ≤ *n* ≤ length of list.
+
+**Example:**
+
+```
+Input: 1->2->3->4->5->NULL, m = 2, n = 4
+Output: 1->4->3->2->5->NULL
+```
+
+```java
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        ListNode dummy = new ListNode(0);
+        ListNode start = dummy;
+        dummy.next = head;
+        // find slow prev first
+        for(int i=1; i<m; i++)
+            start = start.next;
+        // end not change, curr for saving
+        ListNode end = start.next, curr = null;
+        for(int i=0; i<n-m; i++){
+            curr = end.next;
+            end.next = curr.next;
+            curr.next = start.next;
+            start.next = curr;
+        }
+        return dummy.next;
+    }
+```
+
+---
+
+#### #93-restore-ip-addresses-medium
+
+Given a string containing only digits, restore it by returning all possible valid IP address combinations.
+
+**Example:**
+
+```
+Input: "25525511135"
+Output: ["255.255.11.135", "255.255.111.35"]
+```
+
+```java
+    public List<String> restoreIpAddresses(String s) {
+        List<String> result = new ArrayList<>();
+        backtrack(result,s,new StringBuilder(),0,1);
+        return result;
+    }
+    private void backtrack(List<String> result,String s,StringBuilder sb,int idx,int block){
+        // to 5 block and s is empty
+        if(block == 5 && idx == s.length()){
+            result.add(sb.toString());
+            return;
+        }
+        // s left or block left
+        if(block > 4 || idx == s.length())
+            return;
+        int len = sb.length(); // for reset
+        // one block most 3 digit
+        for(int i=1; i<4 && idx+i<=s.length(); i++){
+            String partition = s.substring(idx,idx+i);
+            // case 001 && 256
+            if(i!=1 && partition.charAt(0)=='0' ||
+              i==3 && Integer.parseInt(partition)>255)
+                continue;
+            sb.append(partition);
+            // for seperator
+            if(block < 4)
+                sb.append('.');
+            // backtrack
+            backtrack(result,s,sb,idx+i,block+1);
+            sb.setLength(len);
+        }
+    }
+```
+
+---
+
+
+
+
+
+---
 
 ---
 
