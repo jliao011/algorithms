@@ -61,6 +61,7 @@
 | [#243-shortest-word-distance-easy](#243-shortest-word-distance-easy) |                                                              |
 | [#244-shortest-word-distance-ii-medium](#244-shortest-word-distance-ii-medium) |                                                              |
 | [#245-shortest-word-distance-iii-medium](#245-shortest-word-distance-iii-medium) |                                                              |
+|                                                              | **[#371-sum-of-two-integers-easy](#371-sum-of-two-integers-easy)** |
 |                                                              | [#384-shuffle-an-array-medium](#384-shuffle-an-array-medium) |
 
 #### 401 ~ 600
@@ -3788,6 +3789,46 @@ Return true (self crossing)
                 return true;
         }
         return false;
+    }
+```
+
+---
+
+
+
+---
+
+#### #371-sum-of-two-integers-easy
+
+Calculate the sum of two integers *a* and *b*, but you are **not allowed** to use the operator `+` and `-`.
+
+**Example:**
+Given *a* = 1 and *b* = 2, return 3.
+
+**Iteration:**
+
+```java
+    public int getSum(int a, int b) {
+        int sum = a, carry = b;
+        while(carry != 0){
+            int nextSum = sum ^ carry;
+            int nextCarry = (sum & carry) << 1;
+            sum = nextSum;
+            carry = nextCarry;
+        }
+        return sum;
+    }
+```
+
+**Recursion:**
+
+```java
+    public int getSum(int a, int b) {
+        if(b == 0)
+            return a;
+        int sum = a ^ b;
+        int carry = (a & b) << 1;
+        return getSum(sum,carry);
     }
 ```
 
