@@ -7,6 +7,7 @@
 |                                                              | [#130-surrounded-regions](#130-surrounded-regions)           |
 | [#32-longest-valid-parentheses-hard](#32-longest-valid-parentheses-hard) |                                                              |
 | [#33-search-in-rotated-sorted-array-medium](#33-search-in-rotated-sorted-array-medium) | [#133-clone-graph-medium](#133-clone-graph-medium)           |
+| [#38-count-and-say-easy](#38-count-and-say-easy)             |                                                              |
 | [#42-trapping-rain-water-hard](#42-trapping-rain-water-hard) |                                                              |
 |                                                              | [#146-lru-cache-hard](#146-lru-cache-hard)                   |
 |                                                              | [#149-max-points-on-a-line-hard](#149-max-points-on-a-line-hard) |
@@ -49,6 +50,8 @@
 | 201 ~ 300                                                    | 301 ~ 400                                                    |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [#201-bitwise-and-of-numbers-range-medium](#201-bitwise-and-of-numbers-range-medium) |                                                              |
+| [#204-count-primes-easy](#204-count-primes-easy)             |                                                              |
+|                                                              | [#313-supper-ugly-number-medium](#313-supper-ugly-number-medium) |
 | [#217-contains-duplicate-easy](#217-contains-duplicate-easy) |                                                              |
 | [#219-contains-duplicate-ii-easy](#219-contains-duplicate-ii-easy) |                                                              |
 | [#220-contains-duplicate-iii-medium](#220-contains-duplicate-iii-medium) |                                                              |
@@ -61,7 +64,9 @@
 | [#243-shortest-word-distance-easy](#243-shortest-word-distance-easy) |                                                              |
 | [#244-shortest-word-distance-ii-medium](#244-shortest-word-distance-ii-medium) |                                                              |
 | [#245-shortest-word-distance-iii-medium](#245-shortest-word-distance-iii-medium) |                                                              |
-|                                                              | **[#371-sum-of-two-integers-easy](#371-sum-of-two-integers-easy)** |
+| [#263-ugly-number-easy](#263-ugly-number-easy)               |                                                              |
+| [#271-encode-and-decode-strings-medium](#271-encode-and-decode-strings-medium) | **[#371-sum-of-two-integers-easy](#371-sum-of-two-integers-easy)** |
+| [#279-perfect-squares-medium](#279-perfect-squares-medium)   |                                                              |
 |                                                              | [#384-shuffle-an-array-medium](#384-shuffle-an-array-medium) |
 
 #### 401 ~ 600
@@ -71,6 +76,7 @@
 |                                                              |                                                              |
 | [#406-queue-reconstruction-by-height-medium](#406-queue-reconstruction-by-height-medium) |                                                              |
 | [#419-battleships-in-a-board-medium](#419-battleships-in-a-board-medium) |                                                              |
+| **[#443-string-compression-easy](#443-string-compression-easy)** |                                                              |
 |                                                              | [#560-subarray-sum-equals-k-medium](#560-subarray-sum-equals-k-medium) |
 | [#476-number-complement-easy](#476-number-complement-easy)   |                                                              |
 |                                                              |                                                              |
@@ -81,7 +87,7 @@
 | 601 ~ 700                                                    | 701 ~ 800 |
 | ------------------------------------------------------------ | --------- |
 | [#604-compressed-string-iterator-easy](#604-compressed-string-iterator-easy) |           |
-|                                                              |           |
+| [#625-minimun-factorization-medium](#625-minimun-factorization-medium) |           |
 |                                                              |           |
 
 
@@ -323,7 +329,7 @@ A sudoku puzzle...
 
 -------------
 
-#### 38. Count and Say (easy)
+#### #38-count-and-say-easy
 
 The count-and-say sequence is the sequence of integers with the first five terms as following:
 
@@ -358,25 +364,21 @@ Output: "1211"
 ```
 ```java
     public String countAndSay(int n) {
-        if(n == 0)
-            return "";
+        if(n == 1)
+            return "1";
         String result = "1";
-        for(int i=1;i<n;i++){
+        for(int i=2;i<=n;i++){
+            int idx = 0;
             StringBuilder sb = new StringBuilder();
-            int count = 0;  // init at least count 0
-            char c = result.charAt(0);  // head char
-            // from 0, cuz append only in loop
-            for(int j=0;j<result.length();j++){
-                if(result.charAt(j) == c)
-                    count ++;   // same char, count ++
-                else{   // change head, append curr result
-                    sb.append(count).append(c);
-                    count = 1;
-                    c = result.charAt(j);
+            while(idx < result.length()){
+                char curr = result.charAt(idx);
+                int count = 1;
+                while(idx<result.length()-1 && result.charAt(idx)==result.charAt(idx+1)){
+                    idx ++;
+                    count ++;
                 }
-                // case '1' & last element
-                if(j == result.length()-1)
-                    sb.append(count).append(c);
+                sb.append(count).append(curr);
+                idx ++;
             }
             result = sb.toString();
         }
@@ -3203,6 +3205,40 @@ For example, given the range [5, 7], you should return 4.
 
 ---
 
+#### #204-count-primes-easy
+
+**Description:**
+
+Count the number of prime numbers less than a non-negative number, **n**.
+
+```java
+    public int countPrimes(int n) {
+        if(n < 1)
+            return 0;
+        // indicate whether prime
+        boolean[] prime = new boolean[n]; 
+        Arrays.fill(prime,true);
+        int count = 0;
+        for(int i=2; i<n; i++){
+            if(prime[i]){
+                count ++;
+                for(int j=2; i*j<n; j++){
+                    prime[i * j] = false;
+                }
+            }
+        }
+        return count;
+    }
+```
+
+---
+
+
+
+
+
+---
+
 #### #217-contains-duplicate-easy
 
 Given an array of integers, find if the array contains any duplicates. Your function should return true if any value appears at least twice in the array, and it should return false if every element is distinct.
@@ -3725,6 +3761,196 @@ You may assume *word1* and *word2* are both in the list.
 
 ---
 
+#### #263-ugly-number-easy
+
+Write a program to check whether a given number is an ugly number.
+
+Ugly numbers are positive numbers whose prime factors only include `2, 3, 5`. For example, `6, 8` are ugly while `14` is not ugly since it includes another prime factor `7`.
+
+**Note:**
+
+1. `1` is typically treated as an ugly number.
+2. Input is within the 32-bit signed integer range.
+
+```java
+    public boolean isUgly(int num) {
+        if(num == 0)
+            return false;
+        if(num == 1)
+            return true;
+        while(num % 2 == 0) num /= 2;
+        while(num % 3 == 0) num /= 3;
+        while(num % 5 == 0) num /= 5;
+        return num == 1;
+    }
+```
+
+---
+
+#### #264-ugly-number-ii-medium
+
+Write a program to find the `n`-th ugly number.
+
+Ugly numbers are positive numbers whose prime factors only include `2, 3, 5`. For example, `1, 2, 3, 4, 5, 6, 8, 9, 10, 12` is the sequence of the first `10` ugly numbers.
+
+Note that `1` is typically treated as an ugly number, and *n* **does not exceed 1690**.
+
+The idea of this solution is from this page:<http://www.geeksforgeeks.org/ugly-numbers/>
+
+```java
+    public int nthUglyNumber(int n) {
+        // pointer for multi of 2,3,5
+        int i2 = 0, i3 = 0, i5 = 0;
+        // dp 
+        int[] dp = new int[n];
+        dp[0] = 1;
+        for(int i=1; i<n; i++){
+            int ugly = Math.min(dp[i5]*5,
+                       Math.min(dp[i2]*2,
+                                dp[i3]*3));
+            dp[i] = ugly;
+            // check to increase pointer
+            if(dp[i2]*2 == ugly) i2++;
+            if(dp[i3]*3 == ugly) i3++;
+            if(dp[i5]*5 == ugly) i5++;
+        }
+        return dp[n-1];
+    }
+```
+
+---
+
+
+
+
+
+---
+
+#### #271-encode-and-decode-strings-medium
+
+Design an algorithm to encode **a list of strings** to **a string**. The encoded string is then sent over the network and is decoded back to the original list of strings.
+
+```java
+public class Codec {
+
+    // Encodes a list of strings to a single string.
+    public String encode(List<String> strs) {
+        // count#str
+        StringBuilder sb = new StringBuilder();
+        for(String str : strs){
+            // append one by one
+            sb.append(str.length() + "#" + str);
+        }
+        return sb.toString();
+    }
+
+    // Decodes a single string to a list of strings.
+    public List<String> decode(String s) {
+        List<String> result = new ArrayList<>();
+        int i = 0;
+        while(i < s.length()){
+            int j = i;
+            while(s.charAt(j) != '#')
+                j ++;
+            int len = Integer.parseInt(s.substring(i,j));
+            result.add(s.substring(j+1,j+1+len));
+            i = j + 1 + len;
+        }
+        return result;
+    }
+}
+// Your Codec object will be instantiated and called as such:
+// Codec codec = new Codec();
+// codec.decode(codec.encode(strs));
+```
+
+---
+
+
+
+---
+
+#### #279-perfect-squares-medium
+
+Given a positive integer *n*, find the least number of perfect square numbers (for example, `1, 4, 9, 16, ...`) which sum to *n*.
+
+For example, given *n* = `12`, return `3` because `12 = 4 + 4 + 4`; given *n* = `13`, return `2` because `13 = 4 + 9`.
+
+```java
+    public int numSquares(int n) {
+        // use dp check prev sum
+        int[] dp = new int[n+1];
+        // dp iteration
+        for(int i=1; i<=n; i++){
+            // for num i, check all squares
+            // curr square + (i-square)
+            int min = Integer.MAX_VALUE;
+            for(int j=1; j*j<=i; j++){
+                // dp[j*j] is 1
+                // so population not needed
+                min = Math.min(min, dp[i-j*j] + 1);
+            }      
+            dp[i] = min;
+        }
+        return dp[n];
+    }
+```
+
+---
+
+
+
+---
+
+#### #313-supper-ugly-number-medium
+
+Write a program to find the nth super ugly number.
+
+Super ugly numbers are positive numbers whose all prime factors are in the given prime list `primes` of size `k`. For example, `[1, 2, 4, 7, 8, 13, 14, 16, 19, 26, 28, 32] `is the sequence of the first 12 super ugly numbers given `primes` = `[2, 7, 13, 19]` of size 4.
+
+**Note:**
+(1) `1` is a super ugly number for any given `primes`.
+(2) The given numbers in `primes` are in ascending order.
+(3) 0 < `k` ≤ 100, 0 < `n` ≤ 106, 0 < `primes[i]` < 1000.
+(4) The nth super ugly number is guaranteed to fit in a 32-bit signed integer.
+
+```java
+    public int nthSuperUglyNumber(int n, int[] primes) {
+        // use idea of ugly number ii
+        // array to save result, first is 1
+        int[] nums = new int[n];
+        nums[0] = 1;
+        // array to save index
+        int[] idx = new int[primes.length];
+        for(int i=1; i<n; i++){
+            // find min to be curr ugly num
+            int ugly = Integer.MAX_VALUE;
+            for(int j=0; j<idx.length; j++){
+                // nums[idx for j] * primes[j]
+                int candidate = primes[j] * nums[idx[j]];
+                ugly = Math.min(ugly,candidate);
+            }
+            // set curr result
+            nums[i] = ugly;
+            // update index for all primes
+            for(int j=0; j<idx.length; j++){
+                int prev = nums[idx[j]];
+                if(prev * primes[j] == ugly)
+                    idx[j] ++;
+            }
+        }
+        return nums[n-1];
+    }
+```
+
+---
+
+
+
+
+
+---
+
 #### #335-self-crossing-hard
 
 You are given an array *x* of `n` positive numbers. You start at point `(0,0)` and moves `x[0]` metres to the north, then `x[1]` metres to the west, `x[2]` metres to the south, `x[3]` metres to the east and so on. In other words, after each move your direction changes counter-clockwise.
@@ -4006,6 +4232,67 @@ This is an invalid board that you will not receive - as battleships will always 
 
 
 
+---
+
+#### #443-string-compression-easy
+
+Given an array of characters, compress it [**in-place**](https://en.wikipedia.org/wiki/In-place_algorithm).
+
+The length after compression must always be smaller than or equal to the original array.
+
+Every element of the array should be a **character** (not int) of length 1.
+
+After you are done **modifying the input array in-place**, return the new length of the array.
+
+**Follow up:**
+Could you solve it using only O(1) extra space?
+
+**Example:**
+
+```
+Input:
+["a","b","b","b","b","b","b","b","b","b","b","b","b"]
+
+Output:
+Return 4, and the first 4 characters of the input array should be: ["a","b","1","2"].
+
+Explanation:
+Since the character "a" does not repeat, it is not compressed. "bbbbbbbbbbbb" is replaced by "b12".
+Notice each digit has it's own entry in the array.
+```
+
+**Note:**
+
+1. All characters have an ASCII value in `[35, 126]`.
+2. `1 <= len(chars) <= 1000`.
+
+```java
+    public int compress(char[] chars) {
+        if(chars==null || chars.length==0)
+            return 0;
+        // start for result tail, end for curr
+        int start = 0, end = 0;
+        while(end < chars.length){
+            char curr = chars[end];
+            int count = 1;
+            // count same char
+            while(end<chars.length-1 && chars[end]==chars[end+1]){
+                count ++;
+                end ++;
+            }
+            // put curr char down
+            chars[start++] = chars[end++];
+            // then add count
+            if(count != 1)
+                for(char c : String.valueOf(count).toCharArray())
+                    chars[start++] = c;
+        }
+        return start;
+    }
+```
+
+---
+
 
 
 ---
@@ -4223,5 +4510,51 @@ class StringIterator {
         return !queue.isEmpty();
     }
 }
+```
+
+---
+
+
+
+---
+
+#### #625-minimun-factorization-medium
+
+Given a positive integer `a`, find the smallest positive integer `b` whose multiplication of each digit equals to `a`. 
+
+If there is no answer or the answer is not fit in 32-bit signed integer, then return 0.
+
+**Example 1**
+Input:
+
+```
+48 
+```
+
+Output:
+
+```
+68
+```
+
+```java
+    public int smallestFactorization(int a) {
+        if(a < 9)
+            return a;
+        // try larger first
+        long result = 0, multi = 1;
+        for(int i=9; i>=2; i--){
+            while(a % i == 0){
+                a /= i;
+                result += multi * i;
+                if(result > Integer.MAX_VALUE)
+                    return 0;
+                multi *= 10;
+            }
+        }
+        if(a != 1)
+            return 0;
+        return (int) result;
+    }
 ```
 
