@@ -2,11 +2,18 @@
 
 | 1 ~ 100                                                      | 101 ~ 200                                                    |
 | :----------------------------------------------------------- | :----------------------------------------------------------- |
+|                                                              | [#101-symmetric-tree-easy](#101-symmetric-tree-easy)         |
+|                                                              | [#102-level-order-traversal-medium](#102-level-order-traversal-medium) |
+|                                                              | [#103-zigzag-level-order-traversal-medium](#103-zigzag-level-order-traversal-medium) |
+|                                                              | [#110-balanced-binary-tree-easy](#110-balanced-binary-tree-easy) |
+|                                                              | [#111-min-depth-of-binary-tree-easy](#111-min-depth-of-binary-tree-easy) |
 |                                                              | [#120-triangle-medium](#120-triangle-medium)                 |
+|                                                              |                                                              |
 | [#22-generate-parentheses-medium](#22-generate-parentheses-medium) |                                                              |
 |                                                              | [#130-surrounded-regions](#130-surrounded-regions)           |
 | [#32-longest-valid-parentheses-hard](#32-longest-valid-parentheses-hard) |                                                              |
 | [#33-search-in-rotated-sorted-array-medium](#33-search-in-rotated-sorted-array-medium) | [#133-clone-graph-medium](#133-clone-graph-medium)           |
+|                                                              | [#136-single-number-easy](#136-single-number-easy)           |
 | [#38-count-and-say-easy](#38-count-and-say-easy)             |                                                              |
 | [#42-trapping-rain-water-hard](#42-trapping-rain-water-hard) |                                                              |
 |                                                              | [#146-lru-cache-hard](#146-lru-cache-hard)                   |
@@ -44,6 +51,9 @@
 |                                                              |                                                              |
 | [#92-reverse-linked-list-ii-medium](#92-reverse-linked-list-ii-medium) |                                                              |
 | [#93-restore-ip-addresses-medium](#93-restore-ip-addresses-medium) |                                                              |
+| [#94-binary-tree-inorder-traversal-medium](#94-binary-tree-inorder-traversal-medium) |                                                              |
+| [#98-validate-binary-search-tree-medium](#98-validate-binary-search-tree-medium) |                                                              |
+| [#100-same-tree-easy](#100-same-tree-easy)                   |                                                              |
 
 #### 201 ~ 400
 
@@ -2573,6 +2583,310 @@ Output: ["255.255.11.135", "255.255.111.35"]
 
 ---
 
+#### #94-binary-tree-inorder-traversal-medium
+
+**Recursion:**
+
+```java
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        dfs(root,result);
+        return result;
+    }
+    private void dfs(TreeNode root,List<Integer> result){
+        if(root == null)
+            return;
+        dfs(root.left,result);
+        result.add(root.val);
+        dfs(root.right,result);
+    }
+```
+
+**Iteration:**
+
+```java
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        while(!stack.isEmpty() || root!=null){
+            if(root != null){
+                stack.push(root);
+                root = root.left;
+            }else{
+                TreeNode curr = stack.pop();
+                result.add(curr.val);
+                root = curr.right;
+            }
+        }
+        return result;
+    }
+```
+
+---
+
+
+
+---
+
+#### #98-validate-binary-search-tree-medium
+
+Given a binary tree, determine if it is a valid binary search tree (BST).
+
+Assume a BST is defined as follows:
+
+- The left subtree of a node contains only nodes with keys **less than** the node's key.
+- The right subtree of a node contains only nodes with keys **greater than** the node's key.
+- Both the left and right subtrees must also be binary search trees.
+
+```java
+    public boolean isValidBST(TreeNode root) {
+        // inorder iteration
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode prev = null;
+        while(!stack.isEmpty() || root!=null){
+            if(root != null){
+                stack.push(root);
+                root = root.left;
+            }else{
+                TreeNode curr = stack.pop();
+                // do inorder here
+                if(prev==null || prev.val<curr.val)
+                    prev = curr;    // valid, mush < 
+                else
+                    return false;
+                root = curr.right;
+            }
+        }
+        return true;
+    }
+```
+
+---
+
+
+
+---
+
+#### #100-same-tree-easy
+
+```java
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        if(p==null && q==null)
+            return true;
+        if(p==null || q==null)
+            return false;
+        if(p.val == q.val)
+            return isSameTree(p.left,q.left) && isSameTree(p.right,q.right);
+        return false;
+    }
+```
+
+---
+
+#### #101-symmetric-tree-easy
+
+**recursion:**
+
+```java
+    public boolean isSymmetric(TreeNode root) {
+        return root == null || isSymmetric(root.left,root.right);        
+    }
+    private boolean isSymmetric(TreeNode left,TreeNode right){
+        if(left == null && right == null)
+            return true;
+        if(left == null || right == null)
+            return false;
+        if(left.val == right.val)
+            return isSymmetric(left.left,right.right) &&
+                    isSymmetric(left.right,right.left);
+        return false;
+    }
+```
+
+**iteration:**
+
+```java
+    public boolean isSymmetric(TreeNode root) {
+        if(root == null)
+            return true;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root.left);
+        queue.offer(root.right);
+        while(queue.size() >= 2){
+            TreeNode left = queue.poll();
+            TreeNode right = queue.poll();
+            if(left==null && right==null)
+                continue;
+            if(left==null || right==null)
+                return false;
+            if(left.val != right.val)
+                return false;
+            queue.add(left.left);
+            queue.add(right.right);
+            queue.add(left.right);
+            queue.add(right.left);
+        }
+        return true;
+    }
+```
+
+---
+
+#### #102-level-order-traversal-medium
+
+```java
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if(root == null)
+            return result;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            List<Integer> level = new ArrayList<>(size);
+            result.add(level);
+            for(int i=0; i<size; i++){
+                TreeNode curr = queue.poll();
+                level.add(curr.val);
+                if(curr.left != null)
+                    queue.offer(curr.left);
+                if(curr.right != null)
+                    queue.offer(curr.right);
+            }
+        }
+        return result;
+    }
+```
+
+**Level order II**
+
+```java
+    public List<List<Integer>> levelOrderBottom(TreeNode root) {
+        List<List<Integer>> result = new LinkedList<>();
+        if(root == null)
+            return result;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            List<Integer> level = new ArrayList<>(size);
+            result.add(0,level);
+            for(int i=0; i<size; i++){
+                TreeNode curr = queue.poll();
+                level.add(curr.val);
+                if(curr.left != null)
+                    queue.offer(curr.left);
+                if(curr.right != null)
+                    queue.offer(curr.right);
+            }
+        }
+        return result;
+    }
+```
+
+
+
+
+
+---
+
+#### #103-zigzag-level-order-traversal-medium
+
+Given a binary tree, return the *zigzag level order* traversal of its nodes' values. (ie, from left to right, then right to left for the next level and alternate between).
+
+For example:
+Given binary tree `[3,9,20,null,null,15,7]`,
+
+```
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+
+return its zigzag level order traversal as:
+
+```
+[
+  [3],
+  [20,9],
+  [15,7]
+]
+```
+
+```java
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if(root == null)
+            return result;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        int cnt = 0;
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            List<Integer> level = new LinkedList<>();
+            result.add(level);
+            for(int i=0; i<size; i++){
+                TreeNode curr = queue.poll();
+                if(cnt % 2 == 0)
+                    level.add(curr.val);
+                else
+                    level.add(0,curr.val);
+                if(curr.left != null)
+                    queue.offer(curr.left);
+                if(curr.right != null)
+                    queue.offer(curr.right);
+            }
+            cnt ++;
+        }
+        return result;
+    }
+```
+
+---
+
+
+
+
+
+---
+
+#### #110-balanced-binary-tree-easy
+
+```java
+    public boolean isBalanced(TreeNode root) {
+        if(root == null)
+            return true;
+        int left = depth(root.left);
+        int right = depth(root.right);
+        if(Math.abs(left - right) > 1)
+            return false;
+        return isBalanced(root.left) && isBalanced(root.right);
+    }
+    private int depth(TreeNode root){
+        return root == null ? 0 :
+              1 + Math.max(depth(root.left),depth(root.right));
+    }
+```
+
+---
+
+#### #111-min-depth-of-binary-tree-easy
+
+```java
+    public int minDepth(TreeNode root) {
+        if(root == null)
+            return 0;
+        int left = minDepth(root.left);
+        int right = minDepth(root.right);
+        if(left == 0 || right == 0)
+            return left + right + 1;
+        else
+            return Math.min(left,right) + 1;
+    }
+```
+
 
 
 
@@ -2757,6 +3071,27 @@ Clone an undirected graph. Each node in the graph contains a `label` and a list 
 ```
 
 ---
+
+
+
+---
+
+#### #136-single-number-easy
+
+Given a **non-empty** array of integers, every element appears *twice* except for one. Find that single one.
+
+```java
+    public int singleNumber(int[] nums) {
+        int result = 0;
+        for(int num : nums)
+            result ^= num;
+        return result;
+    }
+```
+
+---
+
+
 
 
 
