@@ -5,6 +5,8 @@
 |                                                              | [#101-symmetric-tree-easy](#101-symmetric-tree-easy)         |
 |                                                              | [#102-level-order-traversal-medium](#102-level-order-traversal-medium) |
 |                                                              | [#103-zigzag-level-order-traversal-medium](#103-zigzag-level-order-traversal-medium) |
+|                                                              | **[#105-construct-tree-preorder-inorder-medium](#105-construct-tree-preorder-inorder-medium)** |
+|                                                              | [#106-construct-tree-inorder-postorder-medium](#106-construct-tree-inorder-postorder-medium) |
 |                                                              | [#110-balanced-binary-tree-easy](#110-balanced-binary-tree-easy) |
 |                                                              | [#111-min-depth-of-binary-tree-easy](#111-min-depth-of-binary-tree-easy) |
 |                                                              | [#120-triangle-medium](#120-triangle-medium)                 |
@@ -2847,6 +2849,112 @@ return its zigzag level order traversal as:
 ---
 
 
+
+---
+
+#### #105-construct-tree-preorder-inorder-medium
+
+Given preorder and inorder traversal of a tree, construct the binary tree.
+
+**Note:**
+You may assume that duplicates do not exist in the tree.
+
+For example, given
+
+```
+preorder = [3,9,20,15,7]
+inorder = [9,3,15,20,7]
+```
+
+Return the following binary tree:
+
+```
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+
+```java
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        // use preorder traverse root, inorder find left & right
+        return helper(preorder,inorder,0,0,inorder.length-1);
+    }
+    private TreeNode helper(int[] preorder,int[] inorder,int preTail,int inHead,int inTail){
+        if(inHead > inTail || preTail==preorder.length)
+            return null;
+        TreeNode node = new TreeNode(preorder[preTail]);
+        // search node in inorder
+        int idx = 0;
+        for(int i=inHead; i<=inTail; i++){
+            if(inorder[i] == node.val)
+                idx = i;
+        }
+        // [inHead, i-1] left part, [i+1,inTail] right part
+        int leftNode = preTail + 1;
+        int rightNode = preTail + 1 + idx - inHead;
+        node.left = helper(preorder,inorder,leftNode,inHead,idx-1);
+        node.right = helper(preorder,inorder,rightNode,idx+1,inTail);
+        return node;
+    }
+```
+
+---
+
+#### #106-construct-tree-inorder-postorder-medium
+
+Given inorder and postorder traversal of a tree, construct the binary tree.
+
+**Note:**
+You may assume that duplicates do not exist in the tree.
+
+For example, given
+
+```
+inorder = [9,3,15,20,7]
+postorder = [9,15,7,20,3]
+```
+
+Return the following binary tree:
+
+```
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+
+```java
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        // from postorder define root, left child,
+        // from inorder define left half, right half
+        return helper(inorder, postorder, 0, inorder.length-1, 0, postorder.length-1);
+    }
+    private TreeNode helper(int[] inorder, int[] postorder, int inHead, int inTail, int postHead, int postTail){
+        // postHead,postTail not matter
+        if(inHead > inTail || postHead > postTail)
+            return null;
+        // use postTail define root
+        TreeNode node = new TreeNode(postorder[postTail]);
+        // define left half and right half, search in inorder
+        int idx = 0;
+        for(int i=inHead; i<=inTail; i++)
+            if(inorder[i] == node.val){
+                idx = i;
+                break;
+            }
+        // define left child and right child
+        int leftNode = postHead + (idx - inHead - 1);
+        int rightNode = leftNode + 1;
+        node.left = helper(inorder,postorder,inHead,idx-1,postHead,leftNode);
+        node.right = helper(inorder,postorder,idx+1,inTail,rightNode,postTail-1);
+        return node;
+    }
+```
+
+---
 
 
 
