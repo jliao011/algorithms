@@ -7,8 +7,12 @@
 |                                                              | [#103-zigzag-level-order-traversal-medium](#103-zigzag-level-order-traversal-medium) |
 |                                                              | **[#105-construct-tree-preorder-inorder-medium](#105-construct-tree-preorder-inorder-medium)** |
 |                                                              | [#106-construct-tree-inorder-postorder-medium](#106-construct-tree-inorder-postorder-medium) |
+|                                                              | **[#109-sorted-list-to-bst-medium](#109-sorted-list-to-bst=medium)** |
 |                                                              | [#110-balanced-binary-tree-easy](#110-balanced-binary-tree-easy) |
 |                                                              | [#111-min-depth-of-binary-tree-easy](#111-min-depth-of-binary-tree-easy) |
+|                                                              | [#112-path-sum-easy](#112-path-sum-easy)                     |
+|                                                              | [#113-path-sum-ii-medium](#113-path-sum-ii-medium)           |
+|                                                              | [#114-flatten-binary-tree-to-linked-list-medium](#114-flatten-binary-tree-to-linked-list-medium) |
 |                                                              | [#120-triangle-medium](#120-triangle-medium)                 |
 |                                                              |                                                              |
 | [#22-generate-parentheses-medium](#22-generate-parentheses-medium) |                                                              |
@@ -2960,6 +2964,59 @@ Return the following binary tree:
 
 ---
 
+#### #109-sorted-list-to-bst-medium
+
+Given a singly linked list where elements are sorted in ascending order, convert it to a height balanced BST.
+
+For this problem, a height-balanced binary tree is defined as a binary tree in which the depth of the two subtrees of *every* node never differ by more than 1.
+
+**Example:**
+
+```
+Given the sorted linked list: [-10,-3,0,5,9],
+
+One possible answer is: [0,-3,9,-10,null,5], which represents the following height balanced BST:
+
+      0
+     / \
+   -3   9
+   /   /
+ -10  5
+```
+
+```java
+    public TreeNode sortedListToBST(ListNode head) {
+        if(head == null)
+            return null;
+        // from here see tail init null, exclude
+        return helper(head,null);
+    }
+    private TreeNode helper(ListNode head,ListNode tail){
+        // tail exclude
+        if(head == tail)
+            return null;
+        ListNode slow = head, fast = head;
+        // find mid when fast reach tail
+        while(fast != tail && fast.next != tail){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        // mid is slow
+        TreeNode node = new TreeNode(slow.val);
+        node.left = helper(head,slow);// mid exclude
+        node.right = helper(slow.next,tail);
+        return node;
+    }
+```
+
+---
+
+
+
+
+
+---
+
 #### #110-balanced-binary-tree-easy
 
 ```java
@@ -2994,6 +3051,101 @@ Return the following binary tree:
             return Math.min(left,right) + 1;
     }
 ```
+
+---
+
+#### #112-path-sum-easy
+
+Given a binary tree and a sum, determine if the tree has a root-to-leaf path such that adding up all the values along the path equals the given sum.
+
+```java
+    public boolean hasPathSum(TreeNode root, int sum) {
+        if(root == null)
+            return false;
+        // when leaf node
+        if(root.left==null && root.right==null && root.val==sum)
+            return true;
+        return hasPathSum(root.left,sum-root.val) || hasPathSum(root.right,sum-root.val);
+    }
+```
+
+---
+
+#### #113-path-sum-ii-medium
+
+Given a binary tree and a sum, find all root-to-leaf paths where each path's sum equals the given sum.
+
+```java
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        List<List<Integer>> result = new ArrayList<>();
+        helper(root,sum,result,new ArrayList<>());
+        return result;
+    }
+    private void helper(TreeNode root,int sum,List<List<Integer>> result,List<Integer> temp){
+        if(root == null)
+            return;
+        // add here, add when null=>duplicate result
+        temp.add(root.val);
+        // valid result added
+        if(root.left==null && root.right==null && root.val==sum)
+            result.add(new ArrayList<>(temp));
+        // left and right
+        helper(root.left,sum-root.val,result,temp);
+        helper(root.right,sum-root.val,result,temp);
+        // remove curr
+        temp.remove(temp.size()-1);
+    }
+```
+
+---
+
+#### #114-flatten-binary-tree-to-linked-list-medium
+
+Given a binary tree, flatten it to a linked list in-place.
+
+For example, given the following tree:
+
+```
+    1
+   / \
+  2   5
+ / \   \
+3   4   6
+```
+
+The flattened tree should look like:
+
+```
+1
+ \
+  2
+   \
+    3
+     \
+      4
+       \
+        5
+         \
+          6
+```
+
+```java
+class Solution {
+    TreeNode prev = null;
+    public void flatten(TreeNode root) {
+        if(root == null)
+            return;
+        // use reverse post order
+        flatten(root.right);
+        flatten(root.left);
+        root.right = prev;
+        root.left = null;
+        prev = root;
+    }
+}
+```
+
+---
 
 
 
