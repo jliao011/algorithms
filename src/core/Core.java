@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.util.*;
 import java.io.*;
 import algorithms.dp.KnapSack;
+import algorithms.dp.RegularExpressionMatch;
 import algorithms.personal.Other;
 import algorithms.personal.ReverseWordsInString;
 import algorithms.personal.StringDeduplication;
@@ -22,7 +23,7 @@ public class Core {
 
 	private static void tests() {
 		logger.info("test function runs");
-
+		RegularExpressionMatch.interleavingString("dbbca", "aabcc", "aadbbcbcac");
 //		Test.mergeSort(Tool.getIntArray(10, 100));
 //		Test.quickSort(list);
 //		Test.sortColors("abcbcbacbacbaabccb");
