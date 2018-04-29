@@ -7,7 +7,7 @@
 |                                                              | [#103-zigzag-level-order-traversal-medium](#103-zigzag-level-order-traversal-medium) |
 |                                                              | **[#105-construct-tree-preorder-inorder-medium](#105-construct-tree-preorder-inorder-medium)** |
 |                                                              | [#106-construct-tree-inorder-postorder-medium](#106-construct-tree-inorder-postorder-medium) |
-|                                                              | **[#109-sorted-list-to-bst-medium](#109-sorted-list-to-bst=medium)** |
+|                                                              | **[#109-sorted-list-to-bst-medium](#109-sorted-list-to-bst-medium)** |
 |                                                              | [#110-balanced-binary-tree-easy](#110-balanced-binary-tree-easy) |
 |                                                              | [#111-min-depth-of-binary-tree-easy](#111-min-depth-of-binary-tree-easy) |
 |                                                              | [#112-path-sum-easy](#112-path-sum-easy)                     |
@@ -87,6 +87,7 @@
 | [#271-encode-and-decode-strings-medium](#271-encode-and-decode-strings-medium) | **[#371-sum-of-two-integers-easy](#371-sum-of-two-integers-easy)** |
 | [#279-perfect-squares-medium](#279-perfect-squares-medium)   |                                                              |
 |                                                              | [#384-shuffle-an-array-medium](#384-shuffle-an-array-medium) |
+|                                                              | [#388-longest-absolute-file-path-medium](#388-longest-absolute-file-path-medium) |
 
 #### 401 ~ 600
 
@@ -4992,6 +4993,84 @@ class Solution {
         nums[j] = temp;
     }
 }
+```
+
+---
+
+
+
+---
+
+#### #388-longest-absolute-file-path-medium
+
+Suppose we abstract our file system by a string in the following manner:
+
+The string `"dir\n\tsubdir1\n\tsubdir2\n\t\tfile.ext"` represents:
+
+```
+dir
+    subdir1
+    subdir2
+        file.ext
+```
+
+The directory `dir` contains an empty sub-directory `subdir1` and a sub-directory `subdir2` containing a file `file.ext`.
+
+The string `"dir\n\tsubdir1\n\t\tfile1.ext\n\t\tsubsubdir1\n\tsubdir2\n\t\tsubsubdir2\n\t\t\tfile2.ext"` represents:
+
+```
+dir
+    subdir1
+        file1.ext
+        subsubdir1
+    subdir2
+        subsubdir2
+            file2.ext
+```
+
+The directory `dir` contains two sub-directories `subdir1` and `subdir2`. `subdir1` contains a file `file1.ext` and an empty second-level sub-directory `subsubdir1`. `subdir2` contains a second-level sub-directory `subsubdir2` containing a file `file2.ext`.
+
+We are interested in finding the longest (number of characters) absolute path to a file within our file system. For example, in the second example above, the longest absolute path is `"dir/subdir2/subsubdir2/file2.ext"`, and its length is `32` (not including the double quotes).
+
+Given a string representing the file system in the above format, return the length of the longest absolute path to file in the abstracted file system. If there is no file in the system, return `0`.
+
+**Note:**
+
+- The name of a file contains at least a `.` and an extension.
+- The name of a directory or sub-directory will not contain a `.`.
+
+Time complexity required: `O(n)` where `n` is the size of the input string.
+
+Notice that `a/aa/aaa/file1.txt` is not the longest file path, if there is another path `aaaaaaaaaaaaaaaaaaaaa/sth.png`.
+
+```java
+    public int lengthLongestPath(String input) {
+        // use stack, 
+        // for a level, stack saves only higher level len
+        // if same level exit then pop
+        if(input == null)
+            return 0;
+        Stack<Integer> stack = new Stack<>();
+        stack.push(0);  // dummy bottom
+        int maxLen = 0;
+        // every \n => a folder or a file
+        for(String s : input.split("\n")){
+            // define the level
+            // first level -1+1=0, \t=>1, \t\t=>2
+            int level = s.lastIndexOf("\t") + 1;
+            // check whether stack has only higher level
+            // l0=>size 1,l1=>size 2,l2=>size 3
+            while(stack.size() > level+1) // find parent
+                stack.pop();
+            // push curr level len to stack, remove \t, add /
+            int len = stack.peek() + s.length() - level + 1;
+            stack.push(len);
+            // if it's a file, compute maxlen
+            if(s.contains("."))
+                maxLen = Math.max(maxLen,len - 1);  // remove /
+        }
+        return maxLen;
+    }
 ```
 
 ---
