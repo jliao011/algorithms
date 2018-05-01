@@ -1,3 +1,5 @@
+
+
 #### 1 ~ 200
 
 | 1 ~ 100                                                      | 101 ~ 200                                                    |
@@ -98,6 +100,7 @@
 | [#419-battleships-in-a-board-medium](#419-battleships-in-a-board-medium) |                                                              |
 | **[#443-string-compression-easy](#443-string-compression-easy)** |                                                              |
 |                                                              | [#560-subarray-sum-equals-k-medium](#560-subarray-sum-equals-k-medium) |
+| [#463-island-perimeter-easy](#463-island-perimeter-easy)     |                                                              |
 | [#476-number-complement-easy](#476-number-complement-easy)   |                                                              |
 |                                                              |                                                              |
 | [#500-keyboard-row-easy](#500-keyboard-row-easy)             |                                                              |
@@ -3563,7 +3566,7 @@ XXXXXXXXXXOX
             if(i > 1)
                 check(board,m,n,i-1,j);
             if(i < m-1)
-            check(board,m,n,i+1,j);
+            	check(board,m,n,i+1,j);
             // use j>1 instead of j>=1
             if(j > 1)
                 check(board,m,n,i,j-1);
@@ -5237,6 +5240,52 @@ Notice each digit has it's own entry in the array.
                     chars[start++] = c;
         }
         return start;
+    }
+```
+
+---
+
+
+
+---
+
+#### #463-island-perimeter-easy
+
+**Example:**
+
+```
+[[0,1,0,0],
+ [1,1,1,0],
+ [0,1,0,0],
+ [1,1,0,0]]
+
+Answer: 16
+Explanation: The perimeter is the 16 yellow stripes in the image below:
+```
+
+![img](https://leetcode.com/static/images/problemset/island.png)
+
+```java
+    public int islandPerimeter(int[][] grid) {
+        if(grid==null || grid.length==0 || grid[0].length==0)
+            return 0;
+        final int row = grid.length;
+        final int col = grid[0].length;
+        int count = 0;
+        for(int i=0; i<row; i++){
+            for(int j=0; j<col; j++){
+                if(grid[i][j] == 0)
+                    continue;
+                // check up and left, if nei is 1, remove edge
+                count += 4; // default 4 added first
+                // -2 : two block double edge remove
+                if(i > 0 && grid[i-1][j] == 1)
+                    count -= 2; 
+                if(j > 0 && grid[i][j-1] == 1)
+                    count -= 2;
+            }
+        }
+        return count;
     }
 ```
 
