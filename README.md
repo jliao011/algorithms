@@ -10,12 +10,13 @@
 |                                                              | **[#105-construct-tree-preorder-inorder-medium](#105-construct-tree-preorder-inorder-medium)** |
 |                                                              | [#106-construct-tree-inorder-postorder-medium](#106-construct-tree-inorder-postorder-medium) |
 |                                                              | **[#109-sorted-list-to-bst-medium](#109-sorted-list-to-bst-medium)** |
-|                                                              | [#110-balanced-binary-tree-easy](#110-balanced-binary-tree-easy) |
+| [#10-regular-expression-match-hard](#10-regular-expression-match-hard) | [#110-balanced-binary-tree-easy](#110-balanced-binary-tree-easy) |
 |                                                              | [#111-min-depth-of-binary-tree-easy](#111-min-depth-of-binary-tree-easy) |
 |                                                              | [#112-path-sum-easy](#112-path-sum-easy)                     |
 |                                                              | [#113-path-sum-ii-medium](#113-path-sum-ii-medium)           |
 |                                                              | [#114-flatten-binary-tree-to-linked-list-medium](#114-flatten-binary-tree-to-linked-list-medium) |
 |                                                              | **[#115-distinct-subsequences-hard](#115-distinct-subsequences-hard)** |
+|                                                              | [#116-populating-next-right-pointer-medium](#116-populating-next-right-pointer-medium) |
 |                                                              | [#120-triangle-medium](#120-triangle-medium)                 |
 |                                                              |                                                              |
 | [#22-generate-parentheses-medium](#22-generate-parentheses-medium) |                                                              |
@@ -115,7 +116,69 @@
 
 
 
+#### #10-regular-expression-match-hard
 
+Given an input string (`s`) and a pattern (`p`), implement regular expression matching with support for `'.'` and `'*'`.
+
+```
+'.' Matches any single character.
+'*' Matches zero or more of the preceding element.
+```
+
+The matching should cover the **entire** input string (not partial).
+
+**Note:**
+
+- `s` could be empty and contains only lowercase letters `a-z`.
+- `p` could be empty and contains only lowercase letters `a-z`, and characters like `.` or `*`.
+
+**Example 1:**
+
+```
+Input:
+s = "aa"
+p = "a"
+Output: false
+Explanation: "a" does not match the entire string "aa".
+```
+
+```java
+    public boolean isMatch(String s, String p) {
+		if (s == null || p == null)
+			return false;
+		boolean[][] dp = new boolean[s.length() + 1][p.length() + 1];
+		dp[0][0] = true;
+		// initial the first line
+		for (int j = 1; j <= p.length(); j++) {
+			if (p.charAt(j - 1) == '*')
+				dp[0][j] = dp[0][j - 2];
+		}
+		// dp conditions:
+		// (1) p.char == . || p.char == s.char
+		// (2) p.char == *:
+		// 1. treat as 0 : check i, j-2
+		// 2. if p[j-1] == s.char || .: check i-1,j
+		for (int i = 1; i <= s.length(); i++) {
+			for (int j = 1; j <= p.length(); j++) {
+				if (p.charAt(j - 1) == '.' || p.charAt(j - 1) == s.charAt(i - 1))
+					dp[i][j] = dp[i - 1][j - 1];
+				else if (p.charAt(j - 1) == '*') {
+					// check * is 0
+					dp[i][j] = dp[i][j - 2];
+					if (dp[i][j])
+						continue;
+					// if p.prev equal or .
+					if (p.charAt(j - 2) == s.charAt(i - 1) || p.charAt(j - 2) == '.') {
+						dp[i][j] = dp[i - 1][j];
+					}
+				}
+			}
+		}
+		return dp[s.length()][p.length()];
+    }
+```
+
+---
 
 #### #22-generate-parentheses-medium
 
@@ -3425,6 +3488,54 @@ rabbbit
             }
         }
         return dp[t.length()][s.length()];        
+    }
+```
+
+---
+
+#### #116-populating-next-right-pointer-medium
+
+Given a binary tree
+
+```
+struct TreeLinkNode {
+  TreeLinkNode *left;
+  TreeLinkNode *right;
+  TreeLinkNode *next;
+}
+```
+
+Populate each next pointer to point to its next right node. If there is no next right node, the next pointer should be set to `NULL`.
+
+Initially, all next pointers are set to `NULL`.
+
+After calling your function, the tree should look like:
+
+```
+     1 -> NULL
+   /  \
+  2 -> 3 -> NULL
+ / \  / \
+4->5->6->7 -> NULL
+```
+
+```java
+    public void connect(TreeLinkNode root) {
+        if(root == null)
+            return;
+        TreeLinkNode level = root, curr = null;
+        while(level != null){
+            curr = level;
+            while(curr != null){
+                if(curr.left != null){
+                    curr.left.next = curr.right;
+                    if(curr.next != null)
+                        curr.right.next = curr.next.left;
+                }
+                curr = curr.next;
+            }
+            level = level.left;
+        }
     }
 ```
 

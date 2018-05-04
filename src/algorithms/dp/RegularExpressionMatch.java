@@ -20,7 +20,7 @@ public class RegularExpressionMatch {
 		boolean[][] dp = new boolean[s.length() + 1][p.length() + 1];
 		dp[0][0] = true;
 		// initial the first line
-		for (int j = 1; j < p.length(); j++) {
+		for (int j = 1; j <= p.length(); j++) {
 			if (p.charAt(j - 1) == '*')
 				dp[0][j] = dp[0][j - 2];
 		}
