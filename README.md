@@ -1,5 +1,4 @@
 
-
 #### 1 ~ 200
 
 | 1 ~ 100                                                      | 101 ~ 200                                                    |
@@ -16,7 +15,7 @@
 |                                                              | [#113-path-sum-ii-medium](#113-path-sum-ii-medium)           |
 |                                                              | [#114-flatten-binary-tree-to-linked-list-medium](#114-flatten-binary-tree-to-linked-list-medium) |
 |                                                              | **[#115-distinct-subsequences-hard](#115-distinct-subsequences-hard)** |
-|                                                              | [#116-populating-next-right-pointer-medium](#116-populating-next-right-pointer-medium) |
+|                                                              | **[#116-populating-next-right-pointer-medium](#116-populating-next-right-pointer-medium)** |
 |                                                              | [#120-triangle-medium](#120-triangle-medium)                 |
 |                                                              |                                                              |
 | [#22-generate-parentheses-medium](#22-generate-parentheses-medium) |                                                              |
@@ -113,6 +112,15 @@
 | [#604-compressed-string-iterator-easy](#604-compressed-string-iterator-easy) |           |
 | [#625-minimun-factorization-medium](#625-minimun-factorization-medium) |           |
 |                                                              |           |
+
+#### 801 ~ 1000
+
+| 801 ~ 900                                                    | 901 ~ 1000 |
+| ------------------------------------------------------------ | ---------- |
+| [#814-binary-tree-pruning-medium](#814-binary-tree-pruning-medium) |            |
+| [#817-linked-list-components-medium](#817-linked-list-components-medium) |            |
+|                                                              |            |
+|                                                              |            |
 
 
 
@@ -3439,6 +3447,10 @@ class Solution {
 
 ---
 
+
+
+---
+
 #### #115-distinct-subsequences-hard
 
 Given a string **S** and a string **T**, count the number of distinct subsequences of **S** which equals **T**.
@@ -5664,6 +5676,91 @@ Output:
         if(a != 1)
             return 0;
         return (int) result;
+    }
+```
+
+---
+
+#### #814-binary-tree-pruning-medium
+
+We are given the head node `root` of a binary tree, where additionally every node's value is either a 0 or a 1.
+
+Return the same tree where every subtree (of the given tree) not containing a 1 has been removed.
+
+(Recall that the subtree of a node X is X, plus every node that is a descendant of X.)
+
+```java
+    public TreeNode pruneTree(TreeNode root) {
+        // can use no helper
+        if(root == null)
+            return root;
+        root.left = pruneTree(root.left);
+        root.right = pruneTree(root.right);
+        // post order
+        if(root.left==null && root.right==null && root.val==0)
+            return null;
+        return root;
+    }
+```
+
+
+
+---
+
+#### #817-linked-list-components-medium
+
+We are given `head`, the head node of a linked list containing **unique integer values**.
+
+We are also given the list `G`, a subset of the values in the linked list.
+
+Return the number of connected components in `G`, where two values are connected if they appear consecutively in the linked list.
+
+**Example 1:**
+
+```
+Input: 
+head: 0->1->2->3
+G = [0, 1, 3]
+Output: 2
+Explanation: 
+0 and 1 are connected, so [0, 1] and [3] are the two connected components.
+```
+
+**Example 2:**
+
+```
+Input: 
+head: 0->1->2->3->4
+G = [0, 3, 1, 4]
+Output: 2
+Explanation: 
+0 and 1 are connected, 3 and 4 are connected, so [0, 1] and [3, 4] are the two connected components.
+```
+
+**Note:** 
+
+- If `N` is the length of the linked list given by `head`, `1 <= N <= 10000`.
+- The value of each node in the linked list will be in the range` [0, N - 1]`.
+- `1 <= G.length <= 10000`.
+- `G` is a subset of all values in the linked list.
+
+```java
+    public int numComponents(ListNode head, int[] G) {
+        // use set, count tail of components
+        Set<Integer> set = new HashSet<>();
+        for(int num : G)
+            set.add(num);
+        int count = 0;
+        while(head != null){
+            // if contains curr:
+            // 1. this is end
+            // 2. not contain next (tail)
+            if(set.contains(head.val) && 
+               (head.next==null || !set.contains(head.next.val)))
+                count ++;
+            head = head.next;
+        }
+        return count;
     }
 ```
 

@@ -16,15 +16,17 @@ import util.*;
 public class Core {
 	private final static Logger logger = LoggerFactory.getLogger(Core.class);
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		logger.info("Core main function runs");
 		tests();
+		System.out.println("Test1 waiting:");
+		System.in.read();
 	}
 
 	private static void tests() {
 		logger.info("test function runs");
 		RegularExpressionMatch.interleavingString("dbbca", "aabcc", "aadbbcbcac");
-//		Test.mergeSort(Tool.getIntArray(10, 100));
+		// Test.mergeSort(Tool.getIntArray(10, 100));
 //		Test.quickSort(list);
 //		Test.sortColors("abcbcbacbacbaabccb");
 //		Test.findKthLargest(list, 1);
