@@ -19,8 +19,8 @@ public class Core {
 	public static void main(String[] args) throws IOException {
 		logger.info("Core main function runs");
 		tests();
-		System.out.println("Test1 waiting:");
-		System.in.read();
+		String a = "1.2.3";
+		logger.info("{}", a.indexOf(".", 1));
 	}
 
 	private static void tests() {
