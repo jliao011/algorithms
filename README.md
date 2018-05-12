@@ -24,7 +24,8 @@
 | [#33-search-in-rotated-sorted-array-medium](#33-search-in-rotated-sorted-array-medium) | [#133-clone-graph-medium](#133-clone-graph-medium)           |
 |                                                              | [#136-single-number-easy](#136-single-number-easy)           |
 | [#38-count-and-say-easy](#38-count-and-say-easy)             |                                                              |
-| [#42-trapping-rain-water-hard](#42-trapping-rain-water-hard) |                                                              |
+|                                                              | [#141-linked-list-cycle-easy](#141-linked-list-cycle-easy)   |
+| [#42-trapping-rain-water-hard](#42-trapping-rain-water-hard) | [#142-linked-list-cycle-ii-medium](#142-linked-list-cycle-ii-medium) |
 |                                                              | [#146-lru-cache-hard](#146-lru-cache-hard)                   |
 |                                                              | [#149-max-points-on-a-line-hard](#149-max-points-on-a-line-hard) |
 |                                                              | [#156-binary-tree-upside-down-medium](#156-binary-tree-upside-down-medium) |
@@ -77,6 +78,7 @@
 | [#219-contains-duplicate-ii-easy](#219-contains-duplicate-ii-easy) |                                                              |
 | [#220-contains-duplicate-iii-medium](#220-contains-duplicate-iii-medium) |                                                              |
 | [#223-rectangle-area-medium](#223-rectangle-area-medium)     |                                                              |
+|                                                              | [#325-max-size-subarray-sum-equals-k-medium](#325-max-size-subarray-sum-equals-k-medium) |
 | [#228-summary-ranges-medium](#228-summary-ranges-medium)     |                                                              |
 | [#229-majority-element-ii-medium](#229-majority-element-ii-medium) |                                                              |
 |                                                              | [#335-self-crossing-hard](#335-self-crossing-hard)           |
@@ -3756,6 +3758,69 @@ Given a **non-empty** array of integers, every element appears *twice* except fo
 
 
 
+---
+
+#### #141-linked-list-cycle-easy
+
+Given a linked list, determine if it has a cycle in it.
+
+```java
+    public boolean hasCycle(ListNode head) {
+        if(head == null)
+            return false;
+        ListNode slow = head, fast = head;
+        do{
+            if(fast==null || fast.next==null)
+                return false;
+            slow = slow.next;
+            fast = fast.next.next;
+        }while(slow != fast);
+        return true;
+    }
+```
+
+```java
+    public boolean hasCycle(ListNode head) {
+        if(head==null)
+            return false;
+        ListNode slow = head, fast = head;
+        while(fast !=null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow == fast)
+                return true;;
+        }
+        return false;
+    }
+```
+
+---
+
+#### #142-linked-list-cycle-ii-medium
+
+Given a linked list, return the node where the cycle begins. If there is no cycle, return `null`.
+
+```java
+    public ListNode detectCycle(ListNode head) {
+        if(head==null || head.next==null)
+            return null;
+        ListNode slow = head, fast = head;
+        do{
+            if(fast==null || fast.next==null)
+                return null;
+            slow = slow.next;
+            fast = fast.next.next;
+        }while(slow != fast);
+        while(head != fast){
+            head = head.next;
+            fast = fast.next;
+        }
+        return head;
+    }
+```
+
+
+
 
 
 ---
@@ -4944,6 +5009,46 @@ Super ugly numbers are positive numbers whose all prime factors are in the given
 ---
 
 
+
+---
+
+#### #325-max-size-subarray-sum-equals-k-medium
+
+Given an array *nums* and a target value *k*, find the maximum length of a subarray that sums to *k*. If there isn't one, return 0 instead.
+
+**Note:**
+The sum of the entire *nums* array is guaranteed to fit within the 32-bit signed integer range.
+
+**Example 1:**
+
+Given *nums* = `[1, -1, 5, -2, 3]`, *k* = `3`,
+return `4`. (because the subarray `[1, -1, 5, -2]` sums to 3 and is the longest)
+
+**Example 2:**
+
+Given *nums* = `[-2, -1, 2, 1]`, *k* = `1`,
+return `2`. (because the subarray `[-1, 2]` sums to 1 and is the longest)
+
+```java
+    public int maxSubArrayLen(int[] nums, int k) {
+        if(nums==null || nums.length==0)
+            return 0;
+        Map<Integer,Integer> map = new HashMap<>();
+        int sum = 0, maxLen = 0;
+        for(int i=0; i<nums.length; i++){
+            sum += nums[i];
+            if(sum == k)
+                maxLen = i + 1;
+            else if(map.containsKey(sum - k))
+                maxLen = Math.max(maxLen,i-map.get(sum-k));
+            if(!map.containsKey(sum))
+                map.put(sum,i);
+        }
+        return maxLen;
+    }
+```
+
+---
 
 
 
