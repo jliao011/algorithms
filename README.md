@@ -5,7 +5,7 @@
 | :----------------------------------------------------------- | :----------------------------------------------------------- |
 |                                                              | [#101-symmetric-tree-easy](#101-symmetric-tree-easy)         |
 |                                                              | [#102-level-order-traversal-medium](#102-level-order-traversal-medium) |
-|                                                              | [#103-zigzag-level-order-traversal-medium](#103-zigzag-level-order-traversal-medium) |
+| [#3-longest-substring-without-repeating-characters-medium](#3-longest-substring-without-repeating-characters-medium) | [#103-zigzag-level-order-traversal-medium](#103-zigzag-level-order-traversal-medium) |
 |                                                              | **[#105-construct-tree-preorder-inorder-medium](#105-construct-tree-preorder-inorder-medium)** |
 |                                                              | [#106-construct-tree-inorder-postorder-medium](#106-construct-tree-inorder-postorder-medium) |
 |                                                              | **[#109-sorted-list-to-bst-medium](#109-sorted-list-to-bst-medium)** |
@@ -29,6 +29,7 @@
 |                                                              | [#146-lru-cache-hard](#146-lru-cache-hard)                   |
 |                                                              | [#149-max-points-on-a-line-hard](#149-max-points-on-a-line-hard) |
 |                                                              | [#156-binary-tree-upside-down-medium](#156-binary-tree-upside-down-medium) |
+|                                                              | [#159-longest-substring-with-at-most-2-distince-characters-hard](#159-longest-substring-with-at-most-2-distince-characters-hard) |
 | [#61-rotate-list-medium](#61-rotate-list-medium)             |                                                              |
 | [#62-unique-paths-medium](#62-unique-paths-medium)           |                                                              |
 | [#63-unique-paths-ii-medium](#63-unique-paths-ii-medium)     | [#163-missing-ranges-medium](#163-missing-ranges-medium)     |
@@ -125,7 +126,52 @@
 |                                                              |            |
 |                                                              |            |
 
+---
 
+#### #3-longest-substring-without-repeating-characters-medium
+
+Given a string, find the length of the **longest substring** without repeating characters.
+
+**Examples:**
+
+Given `"abcabcbb"`, the answer is `"abc"`, which the length is 3.
+
+Given `"bbbbb"`, the answer is `"b"`, with the length of 1.
+
+Given `"pwwkew"`, the answer is `"wke"`, with the length of 3. Note that the answer must be a **substring**, `"pwke"` is a *subsequence* and not a substring.
+
+```java
+	public static int lengthOfLongestSubstringDistinct(String s) {
+		int maxLen = 0;
+		Map<Character, Integer> map = new HashMap<>();	// save character, index
+		for (int head = 0, tail = 0; tail < s.length(); tail++) {
+			// if duplicated, move head
+			if (map.containsKey(s.charAt(tail)))
+				// head cannot move back e.g. abbbbbba
+				head = Math.max(head, map.get(s.charAt(tail)) + 1);
+			map.put(s.charAt(tail), tail);
+			maxLen = Math.max(maxLen, tail - head + 1);
+		}
+		return maxLen;
+	}
+```
+
+```java
+	public static int lengthOfLongestSubstringDistinctOPT(String s) {
+		int maxLen = 0;
+		int[] bin = new int[26];	// case only alphabet, save index
+		for (int head = 0, tail = 0; tail < s.length(); tail++) {
+			head = Math.max(head, bin[s.charAt(tail) - 'a']);	// maybe 0
+			bin[s.charAt(tail) - 'a'] = tail + 1; // save same's next
+			maxLen = Math.max(maxLen, tail - head + 1);
+		}
+		return maxLen;
+	}
+```
+
+
+
+---
 
 #### #10-regular-expression-match-hard
 
@@ -4010,6 +4056,54 @@ return the root of the binary tree `[4,5,2,#,#,3,1]`.
 ```
 
 ---
+
+
+
+---
+
+#### #159-longest-substring-with-at-most-2-distince-characters-hard
+
+Given a string **s** , find the length of the longest substring **t**  that contains **at most** 2 distinct characters.
+
+**Example 1:**
+
+```
+Input: "eceba"
+Output: 3
+Explanation: t is "ece" which its length is 3.
+```
+
+**Example 2:**
+
+```
+Input: "ccaabbb"
+Output: 5
+Explanation: t is "aabbb" which its length is 5.
+```
+
+```java
+    public int lengthOfLongestSubstringTwoDistinct(String s) {
+        // sliding window
+        if(s == null || s.length() == 0)
+            return 0;
+        int[] bin = new int[256];
+        int head = 0, maxLen = 0, count = 0;
+        for(int tail=0; tail<s.length(); tail++){
+            if(bin[s.charAt(tail)] == 0)    // new char
+                count ++;
+            bin[s.charAt(tail)] ++;
+            while(count > 2){   // make it most 2
+                if(bin[s.charAt(head)] == 1)
+                    // remove a distinct char
+                    count --;
+                bin[s.charAt(head)] --;
+                head++;
+            }
+            maxLen = Math.max(maxLen,tail-head+1);
+        }
+        return maxLen;
+    }
+```
 
 
 
