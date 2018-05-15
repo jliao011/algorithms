@@ -16,6 +16,8 @@
 |                                                              | [#114-flatten-binary-tree-to-linked-list-medium](#114-flatten-binary-tree-to-linked-list-medium) |
 |                                                              | **[#115-distinct-subsequences-hard](#115-distinct-subsequences-hard)** |
 |                                                              | **[#116-populating-next-right-pointer-medium](#116-populating-next-right-pointer-medium)** |
+|                                                              | **[#117-populating-next-right-pointer-ii-medium](#117-populating-next-right-pointer-ii-medium)** |
+|                                                              | [#118-pascals-triangle-easy](#118-pascals-triangle-easy)     |
 |                                                              | [#120-triangle-medium](#120-triangle-medium)                 |
 |                                                              |                                                              |
 | [#22-generate-parentheses-medium](#22-generate-parentheses-medium) |                                                              |
@@ -28,6 +30,7 @@
 | [#42-trapping-rain-water-hard](#42-trapping-rain-water-hard) | [#142-linked-list-cycle-ii-medium](#142-linked-list-cycle-ii-medium) |
 |                                                              | [#146-lru-cache-hard](#146-lru-cache-hard)                   |
 |                                                              | [#149-max-points-on-a-line-hard](#149-max-points-on-a-line-hard) |
+|                                                              | [#151-reverse-words-in-a-string-medium](#151-reverse-words-in-a-string-medium) |
 |                                                              | [#156-binary-tree-upside-down-medium](#156-binary-tree-upside-down-medium) |
 |                                                              | [#159-longest-substring-with-at-most-2-distince-characters-hard](#159-longest-substring-with-at-most-2-distince-characters-hard) |
 | [#61-rotate-list-medium](#61-rotate-list-medium)             |                                                              |
@@ -88,6 +91,7 @@
 | [#243-shortest-word-distance-easy](#243-shortest-word-distance-easy) |                                                              |
 | [#244-shortest-word-distance-ii-medium](#244-shortest-word-distance-ii-medium) |                                                              |
 | [#245-shortest-word-distance-iii-medium](#245-shortest-word-distance-iii-medium) |                                                              |
+| [#248-strobogrammatic-number-iii-hard](#248-strobogrammatic-number-iii-hard) |                                                              |
 | [#263-ugly-number-easy](#263-ugly-number-easy)               |                                                              |
 | [#271-encode-and-decode-strings-medium](#271-encode-and-decode-strings-medium) | **[#371-sum-of-two-integers-easy](#371-sum-of-two-integers-easy)** |
 | [#279-perfect-squares-medium](#279-perfect-squares-medium)   |                                                              |
@@ -3600,6 +3604,93 @@ After calling your function, the tree should look like:
     }
 ```
 
+---
+
+#### #117-populating-next-right-pointer-ii-medium
+
+Given the following binary tree,
+
+```
+     1
+   /  \
+  2    3
+ / \    \
+4   5    7
+```
+
+After calling your function, the tree should look like:
+
+```
+     1 -> NULL
+   /  \
+  2 -> 3 -> NULL
+ / \    \
+4-> 5 -> 7 -> NULL
+```
+
+```java
+    public void connect(TreeLinkNode root) {
+        TreeLinkNode curr = root;   // one high level
+        TreeLinkNode head = null, prev = null; // two low level
+        while(curr != null){
+            // in curr level
+            while(curr != null){
+                if(curr.left != null){
+                    if(prev == null){   // no head found
+                        head = curr.left;
+                    }else{
+                        prev.next = curr.left;
+                    }
+                    prev = curr.left;
+                }
+                if(curr.right != null){
+                    if(prev == null){
+                        head = curr.right;
+                    }else{
+                        prev.next = curr.right;
+                    }
+                    prev = curr.right;
+                }
+                curr = curr.next;
+            }
+            // jump to next level head & reset
+            curr = head;
+            head = null;
+            prev = null;
+        }
+    }
+```
+
+---
+
+#### #118-pascals-triangle-easy
+
+```
+Input: 5
+Output:
+[
+     [1],
+    [1,1],
+   [1,2,1],
+  [1,3,3,1],
+ [1,4,6,4,1]
+]
+```
+
+```java
+    public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
+        for(int row=1; row<=numRows; row++){
+            temp.add(1);
+            for(int i=temp.size()-2; i>0; i--)
+                temp.set(i,temp.get(i)+temp.get(i-1));
+            result.add(new ArrayList<>(temp));
+        }
+        return result;
+    }
+```
+
 
 
 ---
@@ -3996,6 +4087,56 @@ class LRUCache {
 #### #149-max-points-on-a-line-hard
 
 Given *n* points on a 2D plane, find the maximum number of points that lie on the same straight line.
+
+
+
+---
+
+#### #151-reverse-words-in-a-string-medium
+
+```java
+    public String reverseWords(String s) {
+        if(s == null || s.length() == 0)
+            return "";
+        char[] input = s.toCharArray();    
+        int l = 0, r = 0;
+        while(r < input.length){
+            // find head
+            l = r;
+            while(l<input.length && input[l]==' ') l++;
+            // find tail
+            r = l;
+            while(r<input.length && input[r]!=' ') r++;
+            // reverse
+            reverse(input,l,r-1);
+        }
+        // reverse whole
+        reverse(input,0,input.length-1);
+        return reduce(input);
+        
+    }
+    private String reduce(char[] c){
+        int head = 0;
+        for(int tail=0; tail<c.length; tail++){
+            if(c[tail]==' ' && (head==0 || c[tail-1]==' '))
+                continue;
+            c[head++] = c[tail];
+        }
+        // case last " "
+        if(head > 0 && c[head-1] == ' ')
+            return new String(c,0,head-1);
+        return new String(c,0,head);
+    }
+    private void reverse(char[] c,int i,int j){
+        while(i < j){
+            char temp = c[i];
+            c[i] = c[j];
+            c[j] = temp;
+            i++;
+            j--;
+        }
+    }
+```
 
 
 
@@ -4913,6 +5054,64 @@ You may assume *word1* and *word2* are both in the list.
 ```
 
 ---
+
+
+
+---
+
+#### #248-strobogrammatic-number-iii-hard
+
+A strobogrammatic number is a number that looks the same when rotated 180 degrees (looked at upside down).
+
+Write a function to count the total strobogrammatic numbers that exist in the range of low <= num <= high.
+
+**Example:**
+
+```
+Input: low = "50", high = "100"
+Output: 3 
+Explanation: 69, 88, and 96 are three strobogrammatic numbers.
+```
+
+**Note:**
+Because the range might be a large number, the *low* and *high* numbers are represented as string.
+
+```java
+    public int strobogrammaticInRange(String low, String high) {
+        List<String> list = new ArrayList<>();
+        for(int i=low.length(); i<=high.length(); i++){
+            list.addAll(findStrobogrammatic(i));
+        }
+        int count = 0;
+        for(String s : list){
+            if(s.length()==low.length() && s.compareTo(low)<0 || 
+               s.length()==high.length() && s.compareTo(high)>0)
+                continue;
+            count ++;
+        }
+        return count;
+    }
+    public List<String> findStrobogrammatic(int n) {
+        List<String> result = new ArrayList<>();
+        if(n % 2 == 0)
+            result = Arrays.asList("");
+        else
+            result = Arrays.asList("0","1","8");
+        for(int i=(n%2)+2; i<=n; i+=2){
+            List<String> list = new ArrayList<>();
+            for(String s : result){
+                if(i != n)
+                    list.add("0" + s + "0");
+                list.add("1" + s + "1");
+                list.add("8" + s + "8");
+                list.add("6" + s + "9");
+                list.add("9" + s + "6");
+            }
+            result = list;
+        }
+        return result;
+    }
+```
 
 
 
