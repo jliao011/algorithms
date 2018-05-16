@@ -94,8 +94,10 @@
 | [#248-strobogrammatic-number-iii-hard](#248-strobogrammatic-number-iii-hard) |                                                              |
 | [#263-ugly-number-easy](#263-ugly-number-easy)               |                                                              |
 | [#271-encode-and-decode-strings-medium](#271-encode-and-decode-strings-medium) | **[#371-sum-of-two-integers-easy](#371-sum-of-two-integers-easy)** |
+| [#272-closest-bst-value-ii-hard](#272-closest-bst-value-ii-hard) |                                                              |
 | [#279-perfect-squares-medium](#279-perfect-squares-medium)   |                                                              |
 |                                                              | [#384-shuffle-an-array-medium](#384-shuffle-an-array-medium) |
+| **[#285-inorder-successor-in-bst-medium](#285-inorder-successor-in-bst-medium)** |                                                              |
 |                                                              | [#388-longest-absolute-file-path-medium](#388-longest-absolute-file-path-medium) |
 
 #### 401 ~ 600
@@ -5222,6 +5224,80 @@ public class Codec {
 
 ---
 
+#### #272-closest-bst-value-ii-hard
+
+Given a non-empty binary search tree and a target value, find *k* values in the BST that are closest to the target.
+
+**Note:**
+
+- Given target value is a floating point.
+- You may assume *k* is always valid, that is: *k* ≤ total nodes.
+- You are guaranteed to have only one unique set of *k* values in the BST that are closest to the target.
+
+**Example:**
+
+```
+Input: root = [4,2,5,1,3], target = 3.714286, and k = 2
+
+    4
+   / \
+  2   5
+ / \
+1   3
+
+Output: [4,3]
+```
+
+```java
+    public List<Integer> closestKValues(TreeNode root, double target, int k) {
+        // use two stack, one for pre one for suc
+        // 12345, 3,7
+        // => pres 1,2,3
+        // => succ 5,4
+        List<Integer> result = new ArrayList<>();
+        if(root == null)
+            return result;
+        Stack<Integer> pres = new Stack<>();
+        Stack<Integer> sucs = new Stack<>();
+        // notice one of should have equal condition
+        inorderPre(root,target,pres);
+        inorderSuc(root,target,sucs);
+        // then find k
+        while(k-- > 0){
+            if(pres.isEmpty())
+                result.add(sucs.pop());
+            else if(sucs.isEmpty())
+                result.add(pres.pop());
+            else if(Math.abs(pres.peek()-target) < Math.abs(sucs.peek()-target))
+                result.add(pres.pop());
+            else
+                result.add(sucs.pop());
+        }
+        return result;
+    }
+    private void inorderPre(TreeNode root, double target, Stack<Integer> pres){
+        if(root == null)
+            return;
+        inorderPre(root.left, target, pres);
+        // push all smaller pred, choose equal (or sucs equal)
+        if(root.val >= target)
+            return;
+        pres.push(root.val);
+        inorderPre(root.right, target, pres);
+    }
+    private void inorderSuc(TreeNode root, double target, Stack<Integer> sucs){
+        // reverse inorder
+        if(root == null)
+            return;
+        inorderSuc(root.right, target, sucs);
+        // find all larger suc
+        if(root.val < target)
+            return;
+        sucs.push(root.val);
+        inorderSuc(root.left, target, sucs);
+    }
+```
+
 
 
 ---
@@ -5253,6 +5329,62 @@ For example, given *n* = `12`, return `3` because `12 = 4 + 4 + 4`; given *n* = 
 ```
 
 ---
+
+---
+
+#### #285-inorder-successor-in-bst-medium
+
+Given a binary search tree and a node in it, find the in-order successor of that node in the BST.
+
+**Note**: If the given node has no in-order successor in the tree, return `null`.
+
+**recursion: **
+
+```java
+    public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+        if(root == null)
+            return root;
+        // if root <= p, just check right side
+        if(root.val <= p.val)
+            return inorderSuccessor(root.right,p);
+        // if root > p, root is possible result
+        TreeNode result = inorderSuccessor(root.left,p);
+        return result == null? root : result;
+    }
+```
+
+**iteration:**
+
+```java
+    public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+        if(root == null)
+            return root;
+        // if root.val > p, it's possible result
+        TreeNode result = null;
+        while(root != null){
+            if(root.val > p.val){
+                result = root;
+                root = root.left;
+            }else
+                root = root.right;
+        }
+        return result;
+    }
+```
+
+**predecessor:**
+
+```java
+    public TreeNode inorderPredecessor(TreeNode root, TreeNode p) {
+        if(root == null)
+            return null;
+        // if root.val < p, possible result
+        if(root.val >= p)
+            return inorderPredecessor(root.left,p);
+        TreeNode result = inorderPredecessor(root.right,p);
+        return result == null ? root : result;
+    }
+```
 
 
 
