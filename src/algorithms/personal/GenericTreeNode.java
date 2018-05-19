@@ -1,4 +1,4 @@
-package util.structure;
+package algorithms.personal;
 
 class GenericTreeNode<T extends Comparable<T>> implements Comparable<GenericTreeNode<T>> {
 

@@ -5,6 +5,7 @@ import java.util.*;
 import java.io.*;
 import algorithms.dp.KnapSack;
 import algorithms.dp.RegularExpressionMatch;
+import algorithms.personal.GenericBST;
 import algorithms.personal.Other;
 import algorithms.personal.ReverseWordsInString;
 import algorithms.personal.StringDeduplication;

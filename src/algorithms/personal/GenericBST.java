@@ -1,4 +1,4 @@
-package util.structure;
+package algorithms.personal;
 
 import java.util.ArrayList;
 import java.util.Collection;
