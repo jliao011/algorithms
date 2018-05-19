@@ -92,6 +92,7 @@
 | [#244-shortest-word-distance-ii-medium](#244-shortest-word-distance-ii-medium) |                                                              |
 | [#245-shortest-word-distance-iii-medium](#245-shortest-word-distance-iii-medium) |                                                              |
 | [#248-strobogrammatic-number-iii-hard](#248-strobogrammatic-number-iii-hard) |                                                              |
+| [#253-meeting-rooms-ii-medium](#253-meeting-rooms-ii-medium) |                                                              |
 | [#263-ugly-number-easy](#263-ugly-number-easy)               |                                                              |
 | [#271-encode-and-decode-strings-medium](#271-encode-and-decode-strings-medium) | **[#371-sum-of-two-integers-easy](#371-sum-of-two-integers-easy)** |
 | [#272-closest-bst-value-ii-hard](#272-closest-bst-value-ii-hard) |                                                              |
@@ -5112,6 +5113,77 @@ Because the range might be a large number, the *low* and *high* numbers are repr
             result = list;
         }
         return result;
+    }
+```
+
+---
+
+#### #253-meeting-rooms-ii-medium
+
+Given an array of meeting time intervals consisting of start and end times `[[s1,e1],[s2,e2],...]` (si < ei), find the minimum number of conference rooms required.
+
+**Example 1:**
+
+```
+Input: [[0, 30],[5, 10],[15, 20]]
+Output: 2
+```
+
+**Example 2:**
+
+```
+Input: [[7,10],[2,4]]
+Output: 1
+```
+
+```java
+    public int minMeetingRooms(Interval[] intervals) {
+		if (intervals.length <= 1)
+			return intervals.length;
+		int[] starts = new int[intervals.length];
+		int[] ends = new int[intervals.length];
+		for (int i = 0; i < intervals.length; i++) {
+			starts[i] = intervals[i].start;
+			ends[i] = intervals[i].end;
+		}
+		Arrays.sort(starts);
+		Arrays.sort(ends);
+		int count = 0, end = 0;
+		for (int i = 0; i < intervals.length; i++) {
+			if (starts[i] < ends[end])
+				count++;
+			else
+				end++;
+		}
+		return count;       
+    }
+```
+
+**Greedy: **
+
+```java
+    public int minMeetingRooms(Interval[] intervals) {      
+        // greedy attempt, remove smallest end first until none
+        if(intervals.length <= 1)
+            return intervals.length;
+        // sort earliest start time
+        Arrays.sort(intervals,(o1,o2)->o1.start-o2.start);
+        // sort earliest end time
+        PriorityQueue<Interval> heap = new PriorityQueue<>((o1,o2)->o1.end-o2.end);
+        heap.offer(intervals[0]);
+        for(int i=1;i<intervals.length;i++){
+            // find earliest prev earliest stop
+            Interval prev = heap.poll();    // cannot peek here
+            // if curr earliest start has no conflict, merge
+            if(intervals[i].start >= prev.end)
+                // if peek(), heap not updated
+                prev.end = intervals[i].end;
+            else
+                // more rooms needed
+                heap.offer(intervals[i]);
+            heap.offer(prev);
+        }
+        return heap.size();
     }
 ```
 

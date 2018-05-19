@@ -19,13 +19,12 @@ public class Core {
 	public static void main(String[] args) throws IOException {
 		logger.info("Core main function runs");
 		tests();
-		String a = "1.2.3";
-		logger.info("{}", a.indexOf(".", 1));
+
 	}
 
 	private static void tests() {
 		logger.info("test function runs");
-		RegularExpressionMatch.interleavingString("dbbca", "aabcc", "aadbbcbcac");
+//		RegularExpressionMatch.interleavingString("dbbca", "aabcc", "aadbbcbcac");
 		// Test.mergeSort(Tool.getIntArray(10, 100));
 //		Test.quickSort(list);
 //		Test.sortColors("abcbcbacbacbaabccb");
@@ -45,6 +44,10 @@ public class Core {
 //		arrayNesting(new int[] { 5, 4, 0, 3, 1, 6, 2 });
 //		Test.regularExpressionMatch("xabyc", "xa*b.*");
 //		Test.inorderPreorderGetPostorder(new int[] { 1, 2, 3, 4, 5, 6, 7 }, new int[] { 4, 2, 1, 3, 6, 5, 7 });
+		List<String> list = Arrays.asList("bg", "a", "c", "d");
+		GenericBST<String> tree = new GenericBST<>(list);
+		List<String> result = tree.preorder();
+		logger.info("{}", result);
 	}
 
 }
