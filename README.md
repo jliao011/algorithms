@@ -77,7 +77,10 @@
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [#201-bitwise-and-of-numbers-range-medium](#201-bitwise-and-of-numbers-range-medium) |                                                              |
 | [#204-count-primes-easy](#204-count-primes-easy)             |                                                              |
+| [#207-course-schedule-medium](#207-course-schedule-medium)   |                                                              |
+| **[#210-course-schedule-ii-medium](#210-course-schedule-ii-medium)** |                                                              |
 |                                                              | [#313-supper-ugly-number-medium](#313-supper-ugly-number-medium) |
+|                                                              |                                                              |
 | [#217-contains-duplicate-easy](#217-contains-duplicate-easy) |                                                              |
 | [#219-contains-duplicate-ii-easy](#219-contains-duplicate-ii-easy) |                                                              |
 | [#220-contains-duplicate-iii-medium](#220-contains-duplicate-iii-medium) |                                                              |
@@ -121,7 +124,7 @@
 | ------------------------------------------------------------ | --------- |
 | [#604-compressed-string-iterator-easy](#604-compressed-string-iterator-easy) |           |
 | [#625-minimun-factorization-medium](#625-minimun-factorization-medium) |           |
-|                                                              |           |
+| [#632-smallest-range-hard](#632-smallest-range-hard)         |           |
 
 #### 801 ~ 1000
 
@@ -3096,6 +3099,8 @@ Assume a BST is defined as follows:
 
 #### #102-level-order-traversal-medium
 
+**Iteration:**
+
 ```java
     public List<List<Integer>> levelOrder(TreeNode root) {
         List<List<Integer>> result = new ArrayList<>();
@@ -3119,6 +3124,62 @@ Assume a BST is defined as follows:
         return result;
     }
 ```
+
+**DFS recursion:**
+
+```java
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if(root == null)
+            return result;
+        dfs(result,root,0);
+        return result;
+    }
+    private void dfs(List<List<Integer>> result, TreeNode root,int level){
+        if(root == null)
+            return;
+        if(result.size() < level + 1)
+            result.add(new ArrayList<>());
+        result.get(level).add(root.val);
+        dfs(result,root.left,level+1);
+        dfs(result,root.right,level+1);
+    }
+```
+
+**DFS iteration:**
+
+```java
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if(root == null)
+            return result;
+        Map<TreeNode,Integer> map = new HashMap<>();
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        map.put(root,0);
+        while(!stack.isEmpty()){
+            TreeNode node = stack.pop();
+            int level = map.get(node);
+            
+            if(level + 1 > result.size())
+                result.add(new ArrayList<>());
+            
+            result.get(level).add(node.val);
+            
+            if(node.right != null){
+                stack.push(node.right);
+                map.put(node.right,level+1);
+            }
+            if(node.left != null){
+                stack.push(node.left);
+                map.put(node.left,level+1);
+            }
+        }
+        return result;
+    }
+```
+
+
 
 **Level order II**
 
@@ -4534,7 +4595,151 @@ Count the number of prime numbers less than a non-negative number, **n**.
 
 ---
 
+#### #207-course-schedule-medium
 
+There are a total of *n* courses you have to take, labeled from `0` to `n-1`.
+
+Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair: `[0,1]`
+
+Given the total number of courses and a list of prerequisite **pairs**, is it possible for you to finish all courses?
+
+**Example 1:**
+
+```
+Input: 2, [[1,0]] 
+Output: true
+Explanation: There are a total of 2 courses to take. 
+             To take course 1 you should have finished course 0. So it is possible.
+```
+
+```java
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        // detect cycle
+        // use adjacency list, assume input valid
+        List<List<Integer>> graph = new ArrayList<>();
+        for(int i=0; i<numCourses; i++)
+            graph.add(new ArrayList<>());
+        for(int[] prerequisite : prerequisites){
+            graph.get(prerequisite[0]).add(prerequisite[1]);
+        }
+        // track visited node
+        Set<Integer> visited = new HashSet<>();
+        // track along a path for one start
+        Set<Integer> path = new HashSet<>();
+        for(int i=0; i<numCourses; i++){
+            if(hasCycle(graph,visited,path,i))
+                return false;
+        }
+        return true;
+    }
+    private boolean hasCycle(List<List<Integer>> graph,Set<Integer> visited,Set<Integer> path,int node){
+        // visited in path, cycle
+        if(path.contains(node))
+            return true;
+        // no need to visit
+        if(visited.contains(node))
+            return false;
+        visited.add(node);  // set visited
+        path.add(node); // add to path
+        for(int child : graph.get(node)){
+            if(hasCycle(graph,visited,path,child))
+                return true;
+        }
+        path.remove(node);  // path finish, remove
+        return false;
+    }
+```
+
+---
+
+#### #210-course-schedule-ii-medium
+
+**topological sort a directed graph**
+
+**dfs with check cycle:**
+
+```java
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // dfs topological, stack result
+        // no outcome node bottom, no income top
+        List<List<Integer>> graph = new ArrayList<>();
+        // graph save cout come edge
+        for(int i=0; i<numCourses; i++)
+            graph.add(new ArrayList<>());
+        for(int[] p : prerequisites)
+            graph.get(p[1]).add(p[0]);
+        //  check path, and visited (in result)
+        // use stack to save visited node
+        boolean[] path = new boolean[numCourses];
+        boolean[] visited = new boolean[numCourses];
+        Stack<Integer> order = new Stack<>();
+        // start dfs
+        for(int i=0; i<numCourses; i++){
+            if(hasCycle(graph,order,visited,path,i))
+                return new int[0];
+        }
+        int[] result = new int[numCourses];
+        int idx = 0;
+        while(!order.isEmpty())
+            result[idx++] = order.pop();
+        return result;
+    }
+    private boolean hasCycle(List<List<Integer>> graph,Stack<Integer> order,boolean[] visited,boolean[] path,int curr){
+        if(visited[curr])
+            return false;        
+        if(path[curr])
+            return true;
+        path[curr] = true;
+        for(int child : graph.get(curr)){
+            if(hasCycle(graph,order,visited,path,child))
+                return true;
+        }
+        path[curr] = false;
+        visited[curr] = true;
+        order.push(curr);
+        return false;
+    }
+```
+
+**BFS: ADJ list save outcome, then count income**
+
+```java
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        // topological output: no income node firse, this case no pre
+        // check degree 0 node (no prerequisites), add to queue,
+        // adj list save out edge [0,1] => 1 -> 0, when save 1 : 0
+        List<List<Integer>> graph = new ArrayList<>();
+        // graph saved is node and outcome
+        // but countPre save income number
+        int[] countPre = new int[numCourses];
+        for(int i=0; i<numCourses; i++)
+            graph.add(new LinkedList<>());
+        for(int[] p : prerequisites){
+            graph.get(p[1]).add(p[0]); // save outcome
+            countPre[p[0]]++; // count income (pre)
+        }
+        // init queue, find course with no pre
+        int[] order = new int[numCourses];
+        int idx = 0;
+        Queue<Integer> queue = new LinkedList<>();
+        for(int i=0; i<countPre.length; i++){
+            if(countPre[i] == 0)
+                queue.offer(i);
+        }
+        // start bfs
+        while(!queue.isEmpty()){
+            int curr = queue.poll();
+            order[idx++] = curr; // no income(pre)
+            for(int child : graph.get(curr)){
+                // for all outcome node, income --
+                countPre[child]--;
+                if(countPre[child] == 0)
+                    queue.offer(child);
+            }
+        }
+        return idx == numCourses ? order : new int[0];
+    }
+```
 
 
 
@@ -5138,53 +5343,76 @@ Output: 1
 
 ```java
     public int minMeetingRooms(Interval[] intervals) {
-		if (intervals.length <= 1)
-			return intervals.length;
-		int[] starts = new int[intervals.length];
-		int[] ends = new int[intervals.length];
-		for (int i = 0; i < intervals.length; i++) {
-			starts[i] = intervals[i].start;
-			ends[i] = intervals[i].end;
-		}
-		Arrays.sort(starts);
-		Arrays.sort(ends);
-		int count = 0, end = 0;
-		for (int i = 0; i < intervals.length; i++) {
-			if (starts[i] < ends[end])
-				count++;
-			else
-				end++;
-		}
-		return count;       
+        // seperate array of start and end then sort
+        if(intervals == null || intervals.length == 0)
+            return 0;
+        int[] starts = new int[intervals.length];
+        int[] ends = new int[intervals.length];
+        for(int i=0; i<intervals.length; i++){
+            starts[i] = intervals[i].start;
+            ends[i] = intervals[i].end;
+        }
+        Arrays.sort(starts);
+        Arrays.sort(ends);
+        // if start < end add room, else update end
+        int count = 0, end = 0;
+        for(int i=0; i<starts.length; i++){
+            if(starts[i] < ends[end])
+                count ++;
+            else
+                end ++;
+        }
+        return count;
     }
 ```
 
 **Greedy: **
 
 ```java
-    public int minMeetingRooms(Interval[] intervals) {      
-        // greedy attempt, remove smallest end first until none
-        if(intervals.length <= 1)
-            return intervals.length;
-        // sort earliest start time
+    public int minMeetingRooms(Interval[] intervals) {
+        // greedy, sort on start first
+        // then use heap on end time to track rooms
+        if(intervals == null || intervals.length == 0)
+            return 0;
+        // sort start time and init end sorted heap
         Arrays.sort(intervals,(o1,o2)->o1.start-o2.start);
-        // sort earliest end time
         PriorityQueue<Interval> heap = new PriorityQueue<>((o1,o2)->o1.end-o2.end);
+		// start
         heap.offer(intervals[0]);
-        for(int i=1;i<intervals.length;i++){
-            // find earliest prev earliest stop
-            Interval prev = heap.poll();    // cannot peek here
-            // if curr earliest start has no conflict, merge
-            if(intervals[i].start >= prev.end)
-                // if peek(), heap not updated
-                prev.end = intervals[i].end;
-            else
-                // more rooms needed
-                heap.offer(intervals[i]);
-            heap.offer(prev);
-        }
-        return heap.size();
+		Interval prev = intervals[0], curr = null;
+		for (int i = 1; i < intervals.length; i++) {
+			// find min end room, cannot use peek
+			prev = heap.poll();
+			curr = intervals[i];
+			// can put in this min end room, update end time
+			if(curr.start >= prev.end)
+				prev.end = curr.end;
+			else	// sign a new room
+				heap.offer(curr);
+			heap.offer(prev);
+		}
+		return heap.size();
     }
+```
+
+**count max schedules**
+
+```java
+	public int maxSchedules(Interval[] intervals) {
+		if(intervals == null || intervals.length == 0)
+			return 0;
+		// sort on end time
+		Arrays.sort(intervals, (o1,o2)->o1.end-o2.end);
+		int count = 0;
+		Interval prev = null;
+		for(int i=0; i<intervals.length; i++) {
+			if(prev == null || intervals[i].start>=prev.end) {
+				count ++;
+				prev = intervals[i];
+			}
+		}
+		return count;
+	}
 ```
 
 
@@ -6281,6 +6509,68 @@ Output:
         return (int) result;
     }
 ```
+
+---
+
+#### #632-smallest-range-hard
+
+You have `k` lists of sorted integers in ascending order. Find the **smallest** range that includes at least one number from each of the `k`lists. 
+
+We define the range [a,b] is smaller than range [c,d] if `b-a < d-c` or `a < c` if `b-a == d-c`.
+
+**Example 1:**
+
+```
+Input:[[4,10,15,24,26], [0,9,12,20], [5,18,22,30]]
+Output: [20,24]
+Explanation: 
+List 1: [4, 10, 15, 24,26], 24 is in range [20,24].
+List 2: [0, 9, 12, 20], 20 is in range [20,24].
+List 3: [5, 18, 22, 30], 22 is in range [20,24].
+```
+
+```java
+    public int[] smallestRange(List<List<Integer>> nums) {
+        // use heap similar to merge k sorted list
+        // maintain a max, when poll a min, update result, offer its next
+        if(nums == null || nums.size() == 0)
+            return new int[0];
+        // use int[3] save: {row,idx,val}
+        PriorityQueue<int[]> heap = new PriorityQueue<>(new Comparator<int[]>(){
+            @Override
+            public int compare(int[] o1,int[] o2){
+                return o1[2] - o2[2];
+            }
+        });
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+        int minRange = Integer.MAX_VALUE;
+        int[] result = new int[2];
+        // init max and heap use first col
+        for(int row=0; row<nums.size(); row++){
+            int value = nums.get(row).get(0);
+            max = Math.max(max,value);
+            heap.offer(new int[]{row,0,value});
+        }
+        // start, condition: heap size 
+        while(heap.size() == nums.size()){
+            int[] curr = heap.poll();
+            // update result
+            if(max - curr[2] < minRange){
+                minRange = max - curr[2];
+                result = new int[]{curr[2],max};
+            }
+            // offer min's next, update max
+            if(curr[1] + 1 < nums.get(curr[0]).size()){
+                int next = nums.get(curr[0]).get(curr[1]+1);
+                max = Math.max(max,next);
+                heap.offer(new int[]{curr[0],curr[1]+1,next});
+            }
+        }
+        return result;
+    }
+```
+
+
 
 ---
 

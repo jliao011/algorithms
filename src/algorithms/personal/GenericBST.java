@@ -13,29 +13,42 @@ public class GenericBST<T extends Comparable<T>> {
 	private static final Logger logger = LoggerFactory.getLogger(GenericBST.class);
 	public GenericTreeNode<T> root;
 
+	public GenericBST() {
+	}
+
 	public GenericBST(Collection<T> collection) {
 		for (T value : collection) {
 			if (root == null) {
 				root = new GenericTreeNode<>(value);
 			} else {
-				insert(root, value);
+				GenericTreeNode<T> node = new GenericTreeNode<T>(value);
+				insert(root, node);
 			}
 		}
 	}
 
-	public void insert(GenericTreeNode<T> root, T value) {
+	public void insert(GenericTreeNode<T> node) {
+		if (node == null)
+			return;
+		if (this.root == null)
+			this.root = node;
+		else
+			insert(this.root, node);
+	}
+
+	private void insert(GenericTreeNode<T> root, GenericTreeNode<T> node) {
 		if (root == null)
 			return;
-		if (root.value.compareTo(value) > 0) {
+		if (root.value.compareTo(node.value) > 0) {
 			if (root.left == null)
-				root.left = new GenericTreeNode<>(value);
+				root.left = node;
 			else
-				insert(root.left, value);
+				insert(root.left, node);
 		} else {
 			if (root.right == null)
-				root.right = new GenericTreeNode<>(value);
+				root.right = node;
 			else
-				insert(root.right, value);
+				insert(root.right, node);
 		}
 	}
 
