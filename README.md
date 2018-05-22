@@ -18,10 +18,13 @@
 |                                                              | **[#116-populating-next-right-pointer-medium](#116-populating-next-right-pointer-medium)** |
 |                                                              | **[#117-populating-next-right-pointer-ii-medium](#117-populating-next-right-pointer-ii-medium)** |
 |                                                              | [#118-pascals-triangle-easy](#118-pascals-triangle-easy)     |
+| [#29-divide-two-integers-medium](#29-divide-two-integers-medium) |                                                              |
 |                                                              | [#120-triangle-medium](#120-triangle-medium)                 |
 |                                                              |                                                              |
 | [#22-generate-parentheses-medium](#22-generate-parentheses-medium) |                                                              |
+| [#25-reverse-nodes-in-k-group-hard](#25-reverse-nodes-in-k-group-hard) |                                                              |
 |                                                              | [#130-surrounded-regions](#130-surrounded-regions)           |
+|                                                              |                                                              |
 | [#32-longest-valid-parentheses-hard](#32-longest-valid-parentheses-hard) |                                                              |
 | [#33-search-in-rotated-sorted-array-medium](#33-search-in-rotated-sorted-array-medium) | [#133-clone-graph-medium](#133-clone-graph-medium)           |
 |                                                              | [#136-single-number-easy](#136-single-number-easy)           |
@@ -288,6 +291,94 @@ For example, given *n* = 3, a solution set is:
             backtrack(result,temp,left,right+1,n);
             temp.setLength(len);
         }
+    }
+```
+
+---
+
+#### #25-reverse-nodes-in-k-group-hard
+
+Given a linked list, reverse the nodes of a linked list *k* at a time and return its modified list.
+
+*k* is a positive integer and is less than or equal to the length of the linked list. If the number of nodes is not a multiple of *k* then left-out nodes in the end should remain as it is.
+
+
+**Example:**
+
+Given this linked list: `1->2->3->4->5`
+
+For *k* = 2, you should return: `2->1->4->3->5`
+
+For *k* = 3, you should return: `3->2->1->4->5`
+
+```java
+    public ListNode reverseKGroup(ListNode head, int k) {
+        // constant memory, cannot use recursion (dummy)
+        if(head==null || k==1)
+            return head;
+        ListNode dummy = new ListNode(0), prev = dummy, tail = dummy, next = null, curr = null;
+        prev.next = head;
+        while(true){
+            // find group first, k th node
+            int count = 0;
+            while(count<k && tail!=null){
+                count ++;
+                tail = tail.next;
+            }
+            // less than k break
+            if(tail == null)
+                break;
+            // reverse prev to curr
+            // D -> 1 -> 2 -> 3(T) -> N
+            // move 1 after 3: D 2 3 1 N
+            head = prev.next;
+            for(int i=0;i<k-1;i++){
+                next = prev.next;   // save 1
+                prev.next = next.next;  // assign head
+                next.next = tail.next;  // assign tail
+                tail.next = next;   
+            }  
+            prev = head;
+            tail = head;
+        }
+        return dummy.next;
+    }
+```
+
+---
+
+#### #29-divide-two-integers-medium
+
+Given two integers `dividend` and `divisor`, divide two integers without using multiplication, division and mod operator.
+
+```java
+    public int divide(int dividend, int divisor) {
+        if(divisor == 0)
+            return Integer.MAX_VALUE;
+        if(dividend == 0)
+            return 0;
+        if(divisor == 1)
+            return dividend;
+        if(divisor == -1)
+            return dividend == Integer.MIN_VALUE? Integer.MAX_VALUE : -dividend;
+        
+        int sign = 1;
+        if(dividend < 0 ^ divisor <0)
+            sign = -1;
+        
+        long ldividend = Math.abs((long)dividend);  // notice long inside
+        long ldivisor = Math.abs((long)divisor);
+        int result = 0;
+        while(ldividend >= ldivisor){
+            long temp = ldivisor, multi = 1;
+            while(temp << 1 < ldividend){
+                temp <<= 1;
+                multi <<= 1;
+            }
+            ldividend -= temp;
+            result += multi;
+        }
+        return sign==1? result : -result;
     }
 ```
 

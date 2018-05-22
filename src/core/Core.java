@@ -10,6 +10,7 @@ import algorithms.personal.GenericTreeNode;
 import algorithms.personal.Other;
 import algorithms.personal.ReverseWordsInString;
 import algorithms.personal.StringDeduplication;
+import algorithms.stack.NextLargerDistance;
 import util.structure.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,22 +52,7 @@ public class Core {
 //		List<String> result = tree.preorder();
 //		logger.info("{}", result);
 //		GTree.buildTree();
-		logger.info("{}", squareArray(new int[] { -4, -3, -2, -1 }));
-	}
-
-	public static int[] squareArray(int[] nums) {
-		int[] result = new int[nums.length];
-		int i = 0, j = nums.length - 1, k = j;
-		while (k >= 0) {
-			if (Math.abs(nums[i]) >= Math.abs(nums[j])) {
-				result[k--] = nums[i] * nums[i];
-				i++;
-			} else {
-				result[k--] = nums[j] * nums[j];
-				j--;
-			}
-		}
-		return result;
+		logger.info("{}", NextLargerDistance.nextDistance(new int[] { 0, 5, 2, 3, 8, 5, 9, 7 }));
 	}
 
 }
