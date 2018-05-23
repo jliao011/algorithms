@@ -11,9 +11,12 @@ public class NextLargerDistance {
 		for (int i = 0; i < nums.length; i++) {
 			while (!stack.isEmpty() && nums[stack.peek()] < nums[i]) {
 				int idx = stack.pop();
-				result[idx] = i - idx;
+				result[idx] = nums[i];
 			}
 			stack.push(i);
+		}
+		while (!stack.isEmpty()) {
+			result[stack.pop()] = -1;
 		}
 		return result;
 	}

@@ -52,7 +52,8 @@ public class Core {
 //		List<String> result = tree.preorder();
 //		logger.info("{}", result);
 //		GTree.buildTree();
-		logger.info("{}", NextLargerDistance.nextDistance(new int[] { 0, 5, 2, 3, 8, 5, 9, 7 }));
+		logger.info("{}");
+
 	}
 
 }

@@ -29,7 +29,7 @@
 | [#33-search-in-rotated-sorted-array-medium](#33-search-in-rotated-sorted-array-medium) | [#133-clone-graph-medium](#133-clone-graph-medium)           |
 |                                                              | [#136-single-number-easy](#136-single-number-easy)           |
 | [#38-count-and-say-easy](#38-count-and-say-easy)             |                                                              |
-|                                                              | [#141-linked-list-cycle-easy](#141-linked-list-cycle-easy)   |
+| [#41-first-missing-positive-hard](#41-first-missing-positive-hard) | [#141-linked-list-cycle-easy](#141-linked-list-cycle-easy)   |
 | [#42-trapping-rain-water-hard](#42-trapping-rain-water-hard) | [#142-linked-list-cycle-ii-medium](#142-linked-list-cycle-ii-medium) |
 |                                                              | [#146-lru-cache-hard](#146-lru-cache-hard)                   |
 |                                                              | [#149-max-points-on-a-line-hard](#149-max-points-on-a-line-hard) |
@@ -45,7 +45,7 @@
 | [#67-add-binary-easy](#67-add-binary-easy)                   |                                                              |
 |                                                              |                                                              |
 |                                                              | [#169-majority-element-easy](#169-majority-element-easy)     |
-| [#70-climbing-stairs-easy](#70-climbing-stairs-easy)         |                                                              |
+| **[#70-climbing-stairs-easy](#70-climbing-stairs-easy)**     |                                                              |
 | [#71-simplify-path-medium](#71-simplify-path-medium)         |                                                              |
 | [#72-edit-distance-hard](#72-edit-distance-hard)             |                                                              |
 | [#73-set-matrix-zeros-medium](#73-set-matrix-zeros-medium)   |                                                              |
@@ -91,7 +91,9 @@
 |                                                              | [#325-max-size-subarray-sum-equals-k-medium](#325-max-size-subarray-sum-equals-k-medium) |
 | [#228-summary-ranges-medium](#228-summary-ranges-medium)     |                                                              |
 | [#229-majority-element-ii-medium](#229-majority-element-ii-medium) |                                                              |
-|                                                              | [#335-self-crossing-hard](#335-self-crossing-hard)           |
+|                                                              |                                                              |
+| [#235-lca-of-a-bst-easy](#235-lca-of-a-bst-easy)             | [#335-self-crossing-hard](#335-self-crossing-hard)           |
+| [#236-lca-of-a-binary-tree-medium](#236-lca-of-a-binary-tree-medium) |                                                              |
 | [#241-different-ways-to-add-parentheses-medium](#241-different-ways-to-add-parentheses-medium) |                                                              |
 |                                                              |                                                              |
 | [#243-shortest-word-distance-easy](#243-shortest-word-distance-easy) |                                                              |
@@ -100,11 +102,14 @@
 | [#248-strobogrammatic-number-iii-hard](#248-strobogrammatic-number-iii-hard) |                                                              |
 | [#253-meeting-rooms-ii-medium](#253-meeting-rooms-ii-medium) |                                                              |
 | [#263-ugly-number-easy](#263-ugly-number-easy)               |                                                              |
+| [#268-missing-number-easy](#268-missing-number-easy)         |                                                              |
 | [#271-encode-and-decode-strings-medium](#271-encode-and-decode-strings-medium) | **[#371-sum-of-two-integers-easy](#371-sum-of-two-integers-easy)** |
 | [#272-closest-bst-value-ii-hard](#272-closest-bst-value-ii-hard) |                                                              |
+|                                                              | [#373-find-k-pairs-with-smallest-sum-medium](#373-find-k-pairs-with-smallest-sum-medium) |
 | [#279-perfect-squares-medium](#279-perfect-squares-medium)   |                                                              |
 |                                                              | [#384-shuffle-an-array-medium](#384-shuffle-an-array-medium) |
 | **[#285-inorder-successor-in-bst-medium](#285-inorder-successor-in-bst-medium)** |                                                              |
+| [#287-find-duplicate-number-medium](#287-find-duplicate-number-medium) |                                                              |
 |                                                              | [#388-longest-absolute-file-path-medium](#388-longest-absolute-file-path-medium) |
 
 #### 401 ~ 600
@@ -115,6 +120,7 @@
 | [#406-queue-reconstruction-by-height-medium](#406-queue-reconstruction-by-height-medium) |                                                              |
 | [#419-battleships-in-a-board-medium](#419-battleships-in-a-board-medium) |                                                              |
 | **[#443-string-compression-easy](#443-string-compression-easy)** |                                                              |
+| [#448-find-all-disappeared-number-easy](#448-find-all-disappeared-number-easy) |                                                              |
 |                                                              | [#560-subarray-sum-equals-k-medium](#560-subarray-sum-equals-k-medium) |
 | [#463-island-perimeter-easy](#463-island-perimeter-easy)     |                                                              |
 | [#476-number-complement-easy](#476-number-complement-easy)   |                                                              |
@@ -734,7 +740,7 @@ A solution set is:
 
 ------------
 
-#### 41. First Missing Positive (hard)
+#### #41-first-missing-positive-hard
 
 Given an unsorted integer array, find the first missing positive integer.
 
@@ -1882,18 +1888,7 @@ Each time you can either climb 1 or 2 steps. In how many distinct ways can you c
 
 **Note:** Given *n* will be a positive integer.
 
-**Example 1:**
-
-```
-Input: 2
-Output:  2
-Explanation:  There are two ways to climb to the top.
-
-1. 1 step + 1 step
-2. 2 steps
-```
-
-**Example 2:**
+****Example 2:**
 
 ```
 Input: 3
@@ -1904,6 +1899,14 @@ Explanation:  There are three ways to climb to the top.
 2. 1 step + 2 steps
 3. 2 steps + 1 step
 ```
+
+**basic:**
+
+Assume `T(n-1) = O(2``n-1``)`, *therefore*
+
+`T(n) = T(n-1) + T(n-2) + O(1)` *which is equal to*
+
+`T(n) = O(2``n-1``) + O(2``n-2``) + O(1) = O(2``n``)`
 
 ```java
     public int climbStairs(int n) {
@@ -1919,6 +1922,56 @@ Explanation:  There are three ways to climb to the top.
         return curr;
     }
 ```
+
+**add memo top down:**
+
+```java
+    public int climbStairs(int n) {
+        // 0:1, 1:1, 2:2, 3:3, 4:5, 5:8
+        if(n <= 1)    return 1;
+        int[] memo = new int[n+1];
+        return helper(n,memo);
+    }
+    private int helper(int n,int[] memo){
+        if(n <= 1)
+            return 1;
+        if(memo[n] != 0)
+            return memo[n];
+        memo[n] = helper(n-1,memo) + helper(n-2,memo);
+        return memo[n];
+    }
+```
+
+**top down dp iteration space O(n)**
+
+```java
+    public int climbStairs(int n) {
+        int[] dp = new int[n+1];
+        dp[0] = 1;
+        dp[1] = 1;
+        for(int i=2; i<=n; i++)
+            dp[i] = dp[i-1] + dp[i-2];
+        return dp[n];
+    }
+```
+
+**iteration O(1)**
+
+```java
+    public int climbStairs(int n) {
+        if(n <= 1)
+            return 1;
+        int first = 1, second = 1, result = 0;
+        for(int i=2; i<=n; i++){
+            result = first + second;
+            first = second;
+            second = result;
+        }
+        return result;
+    }
+```
+
+
 
 ---
 
@@ -5067,9 +5120,45 @@ Given an integer array of size *n*, find all elements that appear more than `⌊
 
 ---
 
+#### #235-lca-of-a-bst-easy
 
+Given a binary search tree (BST), find the lowest common ancestor (LCA) of two given nodes in the BST.
 
+```java
+     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root == null)
+            return null;
+        if(root.val < p.val && root.val < q.val)
+            return lowestCommonAncestor(root.right,p,q);
+        if(root.val > p.val && root.val > q.val)
+            return lowestCommonAncestor(root.left,p,q);
+        return root;
+    }
+```
 
+---
+
+#### #236-lca-of-a-binay-tree-medium
+
+Given a binary tree, find the lowest common ancestor (LCA) of two given nodes in the tree.
+
+According to the [definition of LCA on Wikipedia](https://en.wikipedia.org/wiki/Lowest_common_ancestor): “The lowest common ancestor is defined between two nodes v and w as the lowest node in T that has both v and w as descendants (where we allow **a node to be a descendant of itself**).”
+
+```java
+	public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root == null || root == p || root == q)
+            return root;
+        TreeNode left = lowestCommonAncestor(root.left,p,q);
+        TreeNode right = lowestCommonAncestor(root.right,p,q);
+        if(left == null)
+            return right;
+        if(right == null)
+            return left;
+        return root;
+    }
+```
+
+---
 
 
 
@@ -5569,7 +5658,40 @@ The idea of this solution is from this page:<http://www.geeksforgeeks.org/ugly-n
 
 ---
 
+#### #268-missing-number-easy
 
+Given an array containing *n* distinct numbers taken from `0, 1, 2, ..., n`, find the one that is missing from the array.
+
+**Example 1:**
+
+```
+Input: [3,0,1]
+Output: 2
+```
+
+**Example 2:**
+
+```
+Input: [9,6,4,2,3,5,7,0,1]
+Output: 8
+```
+
+```java
+    public int missingNumber(int[] nums) {
+        for(int i=0; i<nums.length; i++){
+            while(nums[i]!=nums.length && nums[i]!=nums[nums[i]]){
+                int temp = nums[nums[i]];
+                nums[nums[i]] = nums[i];
+                nums[i] = temp;
+            }
+        }
+        for(int i=0; i<nums.length; i++){
+            if(nums[i] != i)
+                return i;
+        }
+        return nums.length;
+    }
+```
 
 
 
@@ -5777,6 +5899,37 @@ Given a binary search tree and a node in it, find the in-order successor of that
     }
 ```
 
+---
+
+#### #287-find-duplicate-number-medium
+
+Given an array *nums* containing *n* + 1 integers where each integer is between 1 and *n* (inclusive), prove that at least one duplicate number must exist. Assume that there is only one duplicate number, find the duplicate one.
+
+**Example 1:**
+
+```
+Input: [1,3,4,2,2]
+Output: 2
+[2,2,2,2]
+```
+
+```java
+    public int findDuplicate(int[] nums) {
+        // find entrance of cycle
+        int slow = nums[0], fast = nums[0];
+        do{
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+        }while(slow != fast);
+        int idx1 = nums[0], idx2 = slow;
+        while(idx1 != idx2){
+            idx1 = nums[idx1];
+            idx2 = nums[idx2];
+        }
+        return idx1;
+    }
+```
+
 
 
 ---
@@ -5979,7 +6132,51 @@ Given *a* = 1 and *b* = 2, return 3.
 
 ---
 
+#### #373-find-k-pairs-with-smallest-sum-medium
 
+You are given two integer arrays **nums1** and **nums2** sorted in ascending order and an integer **k**. 
+
+Define a pair **(u,v)** which consists of one element from the first array and one element from the second array.
+
+Find the k pairs **(u1,v1),(u2,v2) ...(uk,vk)** with the smallest sums.
+
+**Example 1:**
+
+```
+Given nums1 = [1,7,11], nums2 = [2,4,6],  k = 3
+
+Return: [1,2],[1,4],[1,6]
+
+The first 3 pairs are returned from the sequence:
+[1,2],[1,4],[1,6],[7,2],[7,4],[11,2],[7,6],[11,4],[11,6]
+```
+
+```java
+    public List<int[]> kSmallestPairs(int[] nums1, int[] nums2, int k) {
+        List<int[]> result = new ArrayList<>();
+        if(nums1.length==0 || nums2.length==0)
+            return result;
+        PriorityQueue<int[]> heap = new PriorityQueue<>(k,new Comparator<int[]>(){
+            @Override
+            public int compare(int[] o1,int[] o2){
+                return o1[0] + o1[1] - o2[0] - o2[1];
+            }
+        });
+        // populate first array first, curr[2] save index
+        for(int i=0;i<nums1.length && i<k;i++)
+            heap.offer(new int[]{nums1[i],nums2[0],0});
+        
+        while(!heap.isEmpty() && result.size()<k){
+            int[] curr = heap.poll();
+            int n1 = curr[0], n2 = curr[1], idx2 = curr[2];
+            result.add(new int[]{n1,n2});
+            if(idx2 == nums2.length - 1)
+                continue;
+            heap.offer(new int[]{n1,nums2[idx2+1],idx2+1});
+        }
+        return result;
+    }
+```
 
 
 
@@ -6289,6 +6486,43 @@ Notice each digit has it's own entry in the array.
 ```
 
 ---
+
+#### #448-find-all-disappeared-number-easy
+
+Given an array of integers where 1 ≤ a[i] ≤ *n* (*n* = size of array), some elements appear twice and others appear once.
+
+Find all the elements of [1, *n*] inclusive that do not appear in this array.
+
+Could you do it without extra space and in O(*n*) runtime? You may assume the returned list does not count as extra space.
+
+**Example:**
+
+```
+Input:
+[4,3,2,7,8,2,3,1]
+
+Output:
+[5,6]
+```
+
+```java
+    public List<Integer> findDisappearedNumbers(int[] nums) {
+        List<Integer> result = new ArrayList<>();
+        // 2 passes
+        // 1 pass to set negative
+        for(int num : nums){
+            int index = Math.abs(num) - 1;
+            if(nums[index] > 0)
+                nums[index] *= -1;
+        }
+        // second pass find positive index
+        for(int i=0;i<nums.length;i++){
+            if(nums[i] > 0)
+                result.add(i+1);
+        }
+        return result;
+    }
+```
 
 
 
