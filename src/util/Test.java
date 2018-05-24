@@ -21,7 +21,7 @@ public class Test {
 
 	public static void findKthLargest(int[] nums, int k) {
 		int[] clone = nums.clone();
-		int result = FindKthLargest.findKthLargest(clone, k);
+		int result = QuickSelect.findKthLargest(clone, k);
 		System.out.println("Find " + k + "th Largest is " + result + " in:");
 		Tool.print(nums);
 	}

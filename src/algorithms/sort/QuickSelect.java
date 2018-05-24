@@ -2,7 +2,7 @@ package algorithms.sort;
 
 import core.Core;
 
-public class FindKthLargest {
+public class QuickSelect {
 	// time O(n) space O(1)
 
 	public static int findKthLargest(int[] nums, int k) {

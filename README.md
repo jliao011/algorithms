@@ -36,6 +36,7 @@
 |                                                              | [#151-reverse-words-in-a-string-medium](#151-reverse-words-in-a-string-medium) |
 |                                                              | [#156-binary-tree-upside-down-medium](#156-binary-tree-upside-down-medium) |
 |                                                              | [#159-longest-substring-with-at-most-2-distince-characters-hard](#159-longest-substring-with-at-most-2-distince-characters-hard) |
+|                                                              | [#160-intersection-of-two-linked-list-easy](#160-intersection-of-two-linked-list-easy) |
 | [#61-rotate-list-medium](#61-rotate-list-medium)             |                                                              |
 | [#62-unique-paths-medium](#62-unique-paths-medium)           |                                                              |
 | [#63-unique-paths-ii-medium](#63-unique-paths-ii-medium)     | [#163-missing-ranges-medium](#163-missing-ranges-medium)     |
@@ -99,7 +100,9 @@
 | [#243-shortest-word-distance-easy](#243-shortest-word-distance-easy) |                                                              |
 | [#244-shortest-word-distance-ii-medium](#244-shortest-word-distance-ii-medium) |                                                              |
 | [#245-shortest-word-distance-iii-medium](#245-shortest-word-distance-iii-medium) |                                                              |
+|                                                              | [#347-top-k-frequent-elements-medium](#347-top-k-frequent-elements-medium) |
 | [#248-strobogrammatic-number-iii-hard](#248-strobogrammatic-number-iii-hard) |                                                              |
+|                                                              | [#350-intersection-of-two-arrays-easy](#350-intersection-of-two-arrays-easy) |
 | [#253-meeting-rooms-ii-medium](#253-meeting-rooms-ii-medium) |                                                              |
 | [#263-ugly-number-easy](#263-ugly-number-easy)               |                                                              |
 | [#268-missing-number-easy](#268-missing-number-easy)         |                                                              |
@@ -111,6 +114,7 @@
 | **[#285-inorder-successor-in-bst-medium](#285-inorder-successor-in-bst-medium)** |                                                              |
 | [#287-find-duplicate-number-medium](#287-find-duplicate-number-medium) |                                                              |
 |                                                              | [#388-longest-absolute-file-path-medium](#388-longest-absolute-file-path-medium) |
+| [#297-encode-and-decode-binary-tree-hard](#297-encode-and-decode-binary-tree-hard) |                                                              |
 
 #### 401 ~ 600
 
@@ -118,6 +122,7 @@
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 |                                                              |                                                              |
 | [#406-queue-reconstruction-by-height-medium](#406-queue-reconstruction-by-height-medium) |                                                              |
+|                                                              | [#516-longest-palindromic-subsequence-medium](#516-longest-palindromic-subsequence-medium) |
 | [#419-battleships-in-a-board-medium](#419-battleships-in-a-board-medium) |                                                              |
 | **[#443-string-compression-easy](#443-string-compression-easy)** |                                                              |
 | [#448-find-all-disappeared-number-easy](#448-find-all-disappeared-number-easy) |                                                              |
@@ -4454,6 +4459,38 @@ Explanation: t is "aabbb" which its length is 5.
     }
 ```
 
+---
+
+#### #160-intersection-of-two-linked-list-easy
+
+Write a program to find the node at which the intersection of two singly linked lists begins.
+
+For example, the following two linked lists: 
+
+```
+A:          a1 → a2
+                   ↘
+                     c1 → c2 → c3
+                   ↗            
+B:     b1 → b2 → b3
+```
+
+**O(n) & O(1)**
+
+```java
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if(headA==null || headB==null)    return null;
+        ListNode pointer1 = headA;
+        ListNode pointer2 = headB;
+        // 2 iterations to overcome the difference
+        while(pointer1 != pointer2){
+            pointer1 = pointer1==null? headB:pointer1.next;
+            pointer2 = pointer2==null? headA:pointer2.next;
+        }
+        return pointer1;
+    }
+```
+
 
 
 ---
@@ -5160,6 +5197,54 @@ According to the [definition of LCA on Wikipedia](https://en.wikipedia.org/wiki/
 
 ---
 
+#### #239-sliding-window-maxmum-hard
+
+Given an array *nums*, there is a sliding window of size *k* which is moving from the very left of the array to the very right. You can only see the *k* numbers in the window. Each time the sliding window moves right by one position. Return the max sliding window.
+
+**Example:**
+
+```
+Input: nums = [1,3,-1,-3,5,3,6,7], and k = 3
+Output: [3,3,5,5,6,7] 
+Explanation: 
+
+Window position                Max
+---------------               -----
+[1  3  -1] -3  5  3  6  7       3
+ 1 [3  -1  -3] 5  3  6  7       3
+ 1  3 [-1  -3  5] 3  6  7       5
+ 1  3  -1 [-3  5  3] 6  7       5
+ 1  3  -1  -3 [5  3  6] 7       6
+ 1  3  -1  -3  5 [3  6  7]      7
+```
+
+```java
+    // use deque maintains max at head
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        if(nums==null || nums.length==0)
+            return new int[0];
+        int[] result = new int[nums.length - k + 1];
+        Deque<Integer> deque = new ArrayDeque<>();
+        for(int i=0;i<k-1;i++)
+            inQueue(deque,nums[i]);
+        for(int i=k-1;i<nums.length;i++){
+            inQueue(deque,nums[i]);
+            result[i-k+1] = deque.peekFirst();
+            outQueue(deque,nums[i-k+1]);
+        }
+        return result;
+    }
+    private void inQueue(Deque<Integer> deque,int num){
+        while(!deque.isEmpty() && deque.peekLast()<num)
+            deque.pollLast();
+        deque.offerLast(num);
+    }
+    private void outQueue(Deque<Integer> deque,int num){
+        if(deque.peekFirst() == num)
+            deque.pollFirst();
+    }
+```
+
 
 
 ---
@@ -5735,6 +5820,51 @@ public class Codec {
 // codec.decode(codec.encode(strs));
 ```
 
+**num#len1#len2#12**
+
+```java
+    // Encodes a list of strings to a single string.
+    public String encode(List<String> strs) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(strs.size() + "#");
+        for(String str : strs)
+            sb.append(str.length() + "#");
+        for(String str : strs)
+            sb.append(str);
+        return sb.toString();
+    }
+
+    // Decodes a single string to a list of strings.
+    public List<String> decode(String s) {
+        List<String> result = new ArrayList<>();
+        int head = 0, tail = 0;
+        // find count
+        while(tail<s.length() && s.charAt(tail)!='#')
+            tail++;
+        int count = Integer.parseInt(s.substring(head,tail));
+        int[] len = new int[count];
+        for(int i=0; i<count; i++){
+            head = tail + 1;
+            tail = head;
+            while(tail<s.length() && s.charAt(tail)!='#')
+                tail++;
+            len[i] = Integer.parseInt(s.substring(head,tail));
+        }
+        head = tail + 1;
+        for(int i=0; i<count; i++){
+            if(head == s.length())
+                result.add("");
+            else{
+                result.add(s.substring(head,head+len[i]));
+                head += len[i];
+            }
+        }
+        return result;
+    }
+```
+
+
+
 ---
 
 #### #272-closest-bst-value-ii-hard
@@ -5930,6 +6060,105 @@ Output: 2
     }
 ```
 
+---
+
+#### #297-encode-and-decode-binary-tree-hard
+
+Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.
+
+Design an algorithm to serialize and deserialize a binary tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized to a string and this string can be deserialized to the original tree structure.
+
+**preorder bfs recursion**
+
+```java
+public class Codec {
+    // use preorder dfs
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        buildString(root,sb);
+        return sb.toString();
+    }
+    private void buildString(TreeNode root,StringBuilder sb){
+        if(root == null){
+            sb.append("X").append(",");
+            return;
+        }
+        sb.append(root.val).append(",");
+        buildString(root.left,sb);
+        buildString(root.right,sb);
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        Queue<String> queue = new LinkedList<>();
+        queue.addAll(Arrays.asList(data.split(",")));
+        return buildTree(queue);
+    }
+    private TreeNode buildTree(Queue<String> queue){
+        String val = queue.poll();
+        if(val==null || val.equals("X"))
+            return null;
+        TreeNode root = new TreeNode(Integer.parseInt(val));
+        root.left = buildTree(queue);
+        root.right = buildTree(queue);
+        return root;
+    }
+}
+```
+
+**bfs iteration**
+
+```java
+public class Codec {
+
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        if(root == null)
+            return "";
+        StringBuilder sb = new StringBuilder();
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while(!queue.isEmpty()){
+            TreeNode node = queue.poll();
+            if(node == null){
+                sb.append("X,");
+                continue;
+            }
+            sb.append(node.val+",");
+            queue.offer(node.left);
+            queue.offer(node.right);
+        }
+        return sb.toString();       
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        if(data==null || data.length()==0)
+            return null;
+        String[] values = data.split(",");
+        Queue<TreeNode> queue = new LinkedList<>();
+        TreeNode root = new TreeNode(Integer.parseInt(values[0]));
+        queue.offer(root);
+        int idx = 1;
+        while(!queue.isEmpty()){
+            TreeNode node = queue.poll();
+            if(!values[idx].equals("X")){
+                node.left = new TreeNode(Integer.parseInt(values[idx]));
+                queue.offer(node.left);
+            }
+            idx++;
+            if(!values[idx].equals("X")){
+                node.right = new TreeNode(Integer.parseInt(values[idx]));
+                queue.offer(node.right);
+            }
+            idx++;
+        }
+        return root;
+    }
+}
+```
+
 
 
 ---
@@ -6091,6 +6320,60 @@ Return true (self crossing)
 ```
 
 ---
+
+#### #350-intersection-of-two-arrays-easy
+
+Given two arrays, write a function to compute their intersection.
+
+**Example:**
+Given *nums1* = `[1, 2, 2, 1]`, *nums2* = `[2, 2]`, return `[2, 2]`.
+
+**sort O(nlogn)**
+
+```java
+    public int[] intersect(int[] nums1, int[] nums2) {
+        Arrays.sort(nums1);
+        Arrays.sort(nums2);
+        int idx1 = 0, idx2 = 0;
+        List<Integer> list = new ArrayList<>();
+        while(idx1 < nums1.length && idx2 < nums2.length){
+            if(nums1[idx1] == nums2[idx2]){
+                list.add(nums1[idx1]);
+                idx1++;idx2++;
+            }else if(nums1[idx1] < nums2[idx2])
+                idx1 ++;
+            else
+                idx2 ++;
+        }
+        int[] result = new int[list.size()];
+        for(int i=0; i<result.length; i++)
+            result[i] = list.get(i);
+        return result;
+    }
+```
+
+**map count O(1)**
+
+```java
+    public int[] intersect(int[] nums1, int[] nums2) {
+        List<Integer> list = new ArrayList<>();
+        Map<Integer,Integer> map = new HashMap<>();
+        if(nums1.length > nums2.length)
+            return intersect(nums2,nums1);
+        for(int num : nums1)
+            map.put(num,map.getOrDefault(num,0)+1);
+        for(int num : nums2){
+            if(map.getOrDefault(num,0) != 0){
+                list.add(num);
+                map.put(num,map.get(num)-1);
+            }
+        }
+        int[] result = new int[list.size()];
+        for(int i=0; i<result.length; i++)
+            result[i] = list.get(i);
+        return result;
+    }
+```
 
 
 
@@ -6675,7 +6958,45 @@ Output: ["Alaska", "Dad"]
     }
 ```
 
+---
 
+#### #516-longest-palindromic-subsequence-medium
+
+Given a string s, find the longest palindromic subsequence's length in s. You may assume that the maximum length of s is 1000.
+
+**Example 1:**
+Input: 
+
+```
+"bbbab"
+```
+
+Output: 
+
+```
+4
+```
+
+One possible longest palindromic subsequence is "bbbb".
+
+```java
+    public int longestPalindromeSubseq(String s) {
+        int[][] dp = new int[s.length()][s.length()];
+        // row need to bottom up, to make i+1 available
+        for(int i=s.length()-1; i>=0; i--){
+            dp[i][i] = 1;
+            for(int j=i+1; j<s.length(); j++){
+                // head + tail + len(head to tail)
+                // 2 + dp[i+1][j-1]
+                if(s.charAt(i) == s.charAt(j))
+                    dp[i][j] = 2 + dp[i+1][j-1];
+                else    // [i-1][j] or [i][j-1]
+                    dp[i][j] = Math.max(dp[i+1][j],dp[i][j-1]);
+            }
+        }
+        return dp[0][s.length()-1];
+    }
+```
 
 
 

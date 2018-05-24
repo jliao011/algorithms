@@ -2,8 +2,13 @@ package core;
 
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.Map.Entry;
+
+import javax.swing.text.html.parser.Entity;
+
 import java.io.*;
 import algorithms.dp.KnapSack;
+import algorithms.dp.MaxSubarray;
 import algorithms.dp.RegularExpressionMatch;
 import algorithms.personal.GenericBST;
 import algorithms.personal.GenericTreeNode;
@@ -52,8 +57,7 @@ public class Core {
 //		List<String> result = tree.preorder();
 //		logger.info("{}", result);
 //		GTree.buildTree();
-		logger.info("{}");
+		MaxSubarray.test();
 
 	}
-
 }
