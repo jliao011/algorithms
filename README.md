@@ -1,3 +1,6 @@
+### Will keep updating in my blog:
+
+### [Leet code solution](https://jliao011.github.io/2018/05/27/leet-code/)
 
 #### 1 ~ 200
 
@@ -24,7 +27,7 @@
 | [#22-generate-parentheses-medium](#22-generate-parentheses-medium) |                                                              |
 | [#25-reverse-nodes-in-k-group-hard](#25-reverse-nodes-in-k-group-hard) |                                                              |
 |                                                              | [#130-surrounded-regions](#130-surrounded-regions)           |
-|                                                              |                                                              |
+| [#31-next-permutation-medium](#31-next-permutation-medium)   |                                                              |
 | [#32-longest-valid-parentheses-hard](#32-longest-valid-parentheses-hard) |                                                              |
 | [#33-search-in-rotated-sorted-array-medium](#33-search-in-rotated-sorted-array-medium) | [#133-clone-graph-medium](#133-clone-graph-medium)           |
 |                                                              | [#136-single-number-easy](#136-single-number-easy)           |
@@ -390,6 +393,50 @@ Given two integers `dividend` and `divisor`, divide two integers without using m
             result += multi;
         }
         return sign==1? result : -result;
+    }
+```
+
+---
+
+#### #31-next-permutation-medium
+
+Implement **next permutation**, which rearranges numbers into the lexicographically next greater permutation of numbers.
+
+If such arrangement is not possible, it must rearrange it as the lowest possible order (ie, sorted in ascending order).
+
+The replacement must be **in-place** and use only constant extra memory.
+
+Here are some examples. Inputs are in the left-hand column and its corresponding outputs are in the right-hand column.
+
+`1,2,3` → `1,3,2`
+`3,2,1` → `1,2,3`
+`1,1,5` → `1,5,1`
+
+```java
+    public void nextPermutation(int[] nums) {
+        int head = nums.length - 2;
+        while(head >= 0 && nums[head] >= nums[head+1])
+            head --;
+        if(head >= 0){
+            int tail = nums.length - 1;
+            while(nums[tail] <= nums[head])
+                tail --;
+            swap(nums,head,tail);
+        }
+        // if head == -1, just reverse
+        reverse(nums,head+1,nums.length-1);
+    }
+    private void reverse(int[] nums,int i,int j){
+        while(i < j){
+            swap(nums,i,j);
+            i++;
+            j--;
+        }
+    }
+    private void swap(int[] nums,int i,int j){
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;       
     }
 ```
 
